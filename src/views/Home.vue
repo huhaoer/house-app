@@ -6,6 +6,10 @@
         <div class="header-left">
           <img src="http://webimg.ziroom.com/a8f8d17a-229b-4246-a856-6c9aee9d7323.png" alt />
         </div>
+        <div class="header-middle">
+          <span>首页</span>
+          <span>我要租房</span>
+        </div>
         <div class="header-right">
           <span>登陆</span>
           <span>|</span>
@@ -14,7 +18,11 @@
       </div>
     </header>
     <!-- 背景图部分 -->
-    <div class="house-bg"></div>
+    <div class="house-bg">
+      <el-carousel :interval="5000" arrow="hover" height="600px">
+        <el-carousel-item v-for="item in 3" :key="item"></el-carousel-item>
+      </el-carousel>
+    </div>
     <!-- 中间主体部分 -->
     <div class="house-main">
       <div class="order-house">
@@ -31,8 +39,8 @@
           <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt="">
         </div>
         <div class="order-bottom">
-          <p>租房</p>
-          <p>合租/整租</p>
+          <p>服务</p>
+          <p>保洁/维修</p>
         </div>
       </div>
       <div class="order-house">
@@ -40,8 +48,8 @@
           <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt="">
         </div>
         <div class="order-bottom">
-          <p>租房</p>
-          <p>合租/整租</p>
+          <p>生活</p>
+          <p>社区/品质</p>
         </div>
       </div>
       <div class="order-house">
@@ -49,8 +57,8 @@
           <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt="">
         </div>
         <div class="order-bottom">
-          <p>租房</p>
-          <p>合租/整租</p>
+          <p>业主</p>
+          <p>委托/合作</p>
         </div>
       </div>
     </div>
@@ -140,8 +148,13 @@
         <div class="top-three"></div>
         <div class="top-four"></div>
       </div>
-      <div class="reason-bottom"></div>
     </div>
+    <!-- 底部信息栏部分 -->
+    <footer class="house-footer">
+      <div class="footer-modal">
+        <p>Copyright © 2012-2018 zufang.com. All Rights Reserved </p>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -183,6 +196,18 @@ body {
             height: 35px;
           }
         }
+        .header-middle{
+          color: #fff;
+          line-height: 60px;
+          width: 890px;
+          span:hover{
+            cursor: pointer;
+            color: #41cbc0;
+          }
+          span:nth-of-type(2){
+            margin-left: 40px;
+          }
+        }
         .header-right {
           line-height: 60px;
           color: #fff;
@@ -190,9 +215,15 @@ body {
           span {
             display: inline-block;
             margin-right: 15px;
-            &:nth-last-of-type(1),
-            &:nth-last-of-type(3) {
+            &:nth-of-type(1),
+            &:nth-of-type(3) {
               cursor: pointer;
+            }
+            &:nth-of-type(1):hover{
+              text-decoration: underline;
+            }
+            &:nth-of-type(3):hover{
+              text-decoration: underline;
             }
           }
         }
@@ -200,12 +231,29 @@ body {
     }
     // 中间背景图部分
     .house-bg{
-      width: 100%;
-      height: 500px;
-      background-image: url('../assets/bg.jpg'); 
-      background-repeat: no-repeat;
-      background-position: -192px center;
-      background-size:cover;
+      // width: 100%;
+      // height: 500px;
+      // background-image: url('../assets/bg.jpg'); 
+      // background-repeat: no-repeat;
+      // background-position: -192px center;
+      // background-size:cover;
+      
+      .el-carousel__item:nth-of-type(1) {
+        background-image: url('../assets/bg.jpg');
+        background-repeat: no-repeat;
+        background-position: -240px 0px;
+      }
+      
+      .el-carousel__item:nth-of-type(2) {
+        background-image: url('../assets/bg2.jpg');
+        background-repeat: no-repeat;
+      }
+
+      .el-carousel__item:nth-of-type(3) {
+        background-image: url('../assets/bg.jpg');
+        background-repeat: no-repeat;
+        background-position: -240px 0px;
+      }
     }
     // 中间主体部分
     .house-main{
@@ -310,7 +358,7 @@ body {
     }
     // 选择我们的理由部分
     .house-reason{
-      border: 1px solid red;
+      // border: 1px solid red;
       box-sizing: border-box;
       width: 100%;
       margin-top: 30px;
@@ -338,6 +386,27 @@ body {
         .top-four{
           background-image: url('../assets/instr.png');
           background-position: 0px -180px;
+        }
+      }
+    }
+    // 底部信息栏部分
+    .house-footer{
+      width: 100%;
+      height: 200px;
+      background-color: #41cbc0;
+      position: relative;
+      margin-top: 20px;
+      .footer-modal{
+        width: 100%;
+        height: 50px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, .3);
+        P{
+          text-align: center;
+          line-height: 50px;
+          color: #fff;
         }
       }
     }
