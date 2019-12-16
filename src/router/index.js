@@ -7,11 +7,62 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  linkExactActiveClass: 'exactActive',
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/Home.vue')
+      redirect: '/index'
+    },
+    {
+      path: '/index',
+      name: 'index',
+      redirect: '/index/home',
+      component: () => import('../views/Index.vue'),
+      children: [
+        {
+          path: 'home',
+          name: 'home',
+          component: () => import('../views/Home.vue')
+        },
+        {
+          path: 'rent',
+          name: 'rent',
+          component: () => import('../views/Rent.vue')
+        },
+      ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/Register.vue')
+    },
+    {
+      path: '/personal',
+      name: 'personal',
+      redirect: '/personal/myInformation',
+      component: () => import('../views/Personal.vue'),
+      children: [
+        {
+          path: 'myInformation',
+          name: 'myInformation',
+          component: () => import('../views/MyInformation.vue')
+        },
+        {
+          path: 'myCount',
+          name: 'myCount',
+          component: () => import('../views/MyCount.vue')
+        },
+        {
+          path: 'myOrder',
+          name: 'myOrder',
+          component: () => import('../views/MyOrder.vue')
+        }
+      ]
     },
   ]
 })
