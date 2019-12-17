@@ -68,6 +68,7 @@
 
 <script>
 import api from "../api/index";
+import { red } from 'color-name';
 export default {
   data() {
     // 1.校验用户手机账号
@@ -170,25 +171,46 @@ export default {
           const UserNumber = this.ruleForm.account; //手机号
           const UserPwd = this.ruleForm.pass; //密码
           const UserName = this.ruleForm.name; //姓名
-          api
-            .AddUserInfo({ UserNumber, UserPwd, UserName})
+          const isRegister = false//标记是否被注册过
+          // 判断电话是否被注册过
+          api.FindUserInfo({UserNumber})
             .then(res => {
-              // 上传成功
-              if(res.statusText == 'OK') {
-                // 提示信息
+              // 电话已经存在
+              if(res.data != null) {
+                 // 提示信息
                 this.$message({
-                  message: '注册成功',
-                  type: 'success',
-                  duration: '1500',
+                  message: '该用户已经被注册',
+                  type: 'error',
+                  duration: '2000',
                   center: true,
                   offset: 60
                 })
-                this.$router.push('/login')//跳转到登录页面
+                return
+              }//电话不存在
+              else{
+                  api.AddUserInfo({ UserNumber, UserPwd, UserName})
+                    .then(res => {
+                      // 上传成功
+                      if(res.statusText == 'OK') {
+                        // 提示信息
+                        this.$message({
+                          message: '注册成功',
+                          type: 'success',
+                          duration: '1500',
+                          center: true,
+                          offset: 60
+                        })
+                        this.$router.push('/login')//跳转到登录页面
+                      }
+                    })
+                    .catch(err => {
+                      console.log(err)
+                    })
               }
             })
             .catch(err => {
-              console.log(err);
-            });
+              console.log(err)
+            })
         }
       });
     },

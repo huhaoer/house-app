@@ -1,6 +1,8 @@
 <template>
-  <div>
-    我的订单
+  <div class="order">
+    <div class="order-wrap">
+
+    </div>
   </div>
 </template>
 
@@ -10,6 +12,14 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='less' scoped>
+.order{
+  width: 100%;
+  .order-wrap{
+    width: 80%;
+    height: 300px;
+    margin: 0 auto;
+    background-color: red;
+  }
+}
 </style>

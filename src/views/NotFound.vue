@@ -1,6 +1,6 @@
 <template>
-  <div>
-    我的合同
+  <div class="notFound">
+    页面找不到了
   </div>
 </template>
 

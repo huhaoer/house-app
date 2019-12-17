@@ -10,7 +10,7 @@
     <div class="house-main">
       <div class="order-house">
         <div class="order-top">
-          <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt />
+          <img src="../assets/zufang.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>租房</p>
@@ -19,7 +19,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt />
+          <img src="../assets/fuwu.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>服务</p>
@@ -28,7 +28,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt />
+          <img src="../assets/shenghuo.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>生活</p>
@@ -37,7 +37,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="https://webimg.ziroom.com/f14b0a6b-9b21-4fb8-9e4c-9da3c4f371b8.jpg" alt />
+          <img src="../assets/yezhu.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>业主</p>
@@ -49,11 +49,7 @@
     <div class="house-origin">
       <h1>今日精选房源</h1>
       <div class="origin-wrap">
-        <div class="origin-item" v-for="(item,index) in allHouse" :key="index">
-          <!-- <img
-            src="http://image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          /> -->
+        <div class="origin-item" v-for="(item,index) in homeHouse" :key="index">
           <img
             :src="item.BuildImage"
             alt="加载图片失败"
@@ -79,17 +75,25 @@
 </template>
 
 <script>
+import api from '../api/index'
 export default {
   data() {
     return {
-      allHouse: [],
+      homeHouse: [],
     }
   },
 
   mounted() {
-    this.allHouse = this.$store.state.allHouse
+    // 发送请求,获取首页的6条数据
+    api.UserQueryBuildList()
+      .then(res => {
+        this.homeHouse = res.data._Items.slice(0,6)//首页截取6条数据
+      })
+      .catch(err => {
+        console.log(err)
+    })
   }
-};
+}
 </script>
 
 <style lang='less' scoped>
@@ -223,10 +227,9 @@ export default {
   }
   // 选择我们的理由部分
   .house-reason {
-    // border: 1px solid red;
     box-sizing: border-box;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 50px;
     margin-bottom: 20px;
     .reason-top {
       width: 90%;

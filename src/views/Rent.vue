@@ -50,15 +50,15 @@
     </div>
     <!-- 查询房源信息展示 -->
     <div class="rent-show">
-      <div class="origin-item" v-for="(item,index) in 7" :key="index">
+      <div class="origin-item" v-for="(item,index) in allHouse" :key="index">
         <img
-          src="../assets/bg.jpg"
+          :src="item.BuildImage"
           alt="加载失败"
         />
-        <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
+        <p>{{ item.BuildName }}</p>
         <div>
-          <span>戛纳湾滨江</span>
-          <span>￥580元/月</span>
+          <span>{{ item.BuildLocation }}</span>
+          <span>￥{{ item.BuildPrice }}元/月</span>
         </div>
       </div>
     </div>
@@ -74,7 +74,25 @@
 </template>
 
 <script>
-export default {};
+import api from '../api/index'
+export default {
+  data() {
+    return {
+      allHouse: [],//保存所有的房源信息
+    }
+  },
+  mounted() {
+    api.UserQueryBuildList()
+      .then(res => {
+        console.log(res)
+        // 获取的数据保存 动态渲染
+        this.allHouse = res.data._Items
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
 </script>
 
 <style lang='less' scoped>

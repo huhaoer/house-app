@@ -5,8 +5,8 @@
       <img src="../assets/logo.png" alt="" @click="handToHome">
       <div class="header-title">
         <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
-        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
         <router-link tag="span" to="/personal/myAccount">我的合同</router-link>
+        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
       </div>
       <p>Hi! <span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
     </div>

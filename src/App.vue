@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import api from '../src/api/index'
 export default {
   data() {
     return {
@@ -21,15 +20,6 @@ export default {
     })
     //在页面加载时读取localStorage里的状态信息
     localStorage.getItem("messageStore") && this.$store.replaceState(Object.assign({},this.$store.state,JSON.parse(localStorage.getItem("messageStore"))))
-
-    api.UserQueryBuildList()
-      .then(res => {
-        console.log(res,'我是房子')
-        this.$store.commit('setAllHouse',res.data._Items)
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 };
 </script>

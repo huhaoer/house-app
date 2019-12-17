@@ -10,10 +10,6 @@ const router = new VueRouter({
   linkExactActiveClass: 'exactActive',
   routes: [
     {
-      path: '/',
-      redirect: '/index'
-    },
-    {
       path: '/index',
       name: 'index',
       redirect: '/index/home',
@@ -29,6 +25,11 @@ const router = new VueRouter({
           name: 'rent',
           component: () => import('../views/Rent.vue')
         },
+        {
+          path: 'houseDetail',
+          name: 'houseDetail',
+          component: () => import('../views/HouseDetail.vue')
+        }
       ]
     },
     {
@@ -65,6 +66,22 @@ const router = new VueRouter({
         }
       ]
     },
+    {
+      path : '/notFound',
+      name: 'notFound',
+      component: () => import('../views/NotFound.vue')
+      
+    },
+    {
+      path : '*',
+      redirect (to) {
+        if(to.path === '/'){
+          return '/index'
+        }else{
+          return '/notFound';
+        }
+      }
+    }
   ]
 })
 
