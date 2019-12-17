@@ -49,103 +49,19 @@
     <div class="house-origin">
       <h1>今日精选房源</h1>
       <div class="origin-wrap">
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
+        <div class="origin-item" v-for="(item,index) in allHouse" :key="index">
+          <!-- <img
+            src="http://image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
             alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
+          /> -->
           <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
+            :src="item.BuildImage"
+            alt="加载图片失败"
           />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
+          <p>{{ item.BuildName }}</p>
           <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
-          </div>
-        </div>
-        <div class="origin-item">
-          <img
-            src="//image-etadmin-pub.uoko.com/images/room-lease-picture/2017-05-02/8a9fb2b5-2248-4ed8-91b9-0e5c7422bd1e.jpg?imageView2/1/w/318/h/212"
-            alt
-          />
-          <p>高新区 大源 【七折特价】环球中心 孵化园 天府一街旁 精装合租 免中介费</p>
-          <div>
-            <span>戛纳湾滨江</span>
-            <span>￥580元/月</span>
+            <span>{{ item.BuildLocation }}</span>
+            <span>￥{{ item.BuildPrice }}元/月</span>
           </div>
         </div>
       </div>
@@ -163,7 +79,17 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      allHouse: [],
+    }
+  },
+
+  mounted() {
+    this.allHouse = this.$store.state.allHouse
+  }
+};
 </script>
 
 <style lang='less' scoped>

@@ -4,19 +4,19 @@
     <header class="house-header">
       <div class="header-wrap">
         <div class="header-left">
-          <img src="../assets/logo.png" alt />
+          <img src="../assets/logo.png"/>
         </div>
         <div class="header-middle">
           <router-link tag="span" to="/index/home">首页</router-link>
           <router-link tag="span" to="/index/rent">我要租房</router-link>
         </div>
-        <div class="header-right" v-if="!this.$store.state.userName">
+        <div class="header-right" v-if="!this.$store.state.currentLoginUser.UserName">
           <router-link tag="span" to="/login">登陆</router-link>
           <span>|</span>
           <router-link tag="span" to="/register">注册</router-link>
         </div>
         <div class="header-hi" v-else>
-          <p>Hi! <span @click="enterPersonal">{{ this.$store.state.userName }}</span> <span @click="loginOut">退出</span></p>
+          <p>Hi! <span @click="enterPersonal">{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
         </div>
       </div>
     </header>
@@ -42,12 +42,15 @@ export default {
   methods: {
     // 退出登录
     loginOut() {
-      this.$store.commit('setUserName','')
+      // 清空本地的用户信息
+      this.$store.commit('setCurrentLoginUser',{})
+      // 清除已经登录的标识
+      window.localStorage.removeItem('login')
     },
     // 点击姓名进入个人中心
     enterPersonal() {
       this.$router.push('/personal')
-    }
+    },
   }
 };
 </script>
@@ -123,8 +126,9 @@ body {
             }
             span:nth-of-type(2){
               font-size: 12px;
-              color: #41cbc0;
+              color: #ffa000;
               cursor: pointer;
+              margin-left: 15px;
             }
           }
         }

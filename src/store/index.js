@@ -5,11 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userName: '',//保存用户的登录信息
+    currentLoginUser: {},//当前登录的用户数据保存
+    allHouse: [],//所有房源
   },
   mutations: {
-    setUserName(state,name) {
-      state.userName = name
+    // 设置当前登录用户的所有信息
+    setCurrentLoginUser(state,obj) {
+      state.currentLoginUser = obj
+    },
+    // 设置当前房源
+    setAllHouse(state,house ){
+      state.allHouse = house
     }
   },
   actions: {

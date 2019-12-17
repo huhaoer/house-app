@@ -2,14 +2,15 @@
   <div class="personal">
     <!-- 个人中心导航 -->
     <div class="personal-header">
-      <img src="../assets/logo.png" alt="">
+      <img src="../assets/logo.png" alt="" @click="handToHome">
       <div class="header-title">
-        <span>我的资料</span>
-        <span>我的订单</span>
-        <span>我的账户</span>
+        <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
+        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
+        <router-link tag="span" to="/personal/myAccount">我的合同</router-link>
       </div>
-      <p>Hi! <span>{{ this.$store.state.userName }}</span> <span @click="loginOut">退出</span></p>
+      <p>Hi! <span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
     </div>
+
     <!-- 路由出口 -->
     <router-view></router-view>
   </div>
@@ -23,9 +24,18 @@ export default {
     }
   },
   methods: {
+    // 点击退出登录
     loginOut() {
-      this.$store.commit('setUserName','')
+      // 清除用户信息
+      this.$store.commit('setCurrentLoginUser',{})
+      // 清除已经登录的标识
+      window.localStorage.removeItem('login')
+      // 跳转到首页
       this.$router.push('/index/home')
+    },
+    // 点击logo跳转首页
+    handToHome() {
+      this.$router.push('/index')
     }
   }
 }
@@ -35,7 +45,7 @@ export default {
 .personal{
   width: 100%;
   .personal-header{
-    background-color: red;
+    background-color: #fff;
     width: 80%;
     height: 60px;
     display: flex;
@@ -51,6 +61,9 @@ export default {
       display: flex;
       justify-content: space-between;
       color: #000;
+      span{
+        cursor: pointer;
+      }
     }
     p{
       span:nth-of-type(1){
@@ -59,7 +72,7 @@ export default {
       }
       span:nth-of-type(2){
         font-size: 14px;
-        color: red;
+        color: #ffa000;
         cursor: pointer;
       }
     }

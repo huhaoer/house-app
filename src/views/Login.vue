@@ -2,7 +2,7 @@
   <div class="login">
     <!-- 登录界面的表单 -->
     <div class="login-form">
-      <img src="../assets/logo.png" alt="">
+      <img src="../assets/logo.png" alt="" @click="handToHome">
       <el-form
         :model="ruleForm"
         status-icon
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import api from '../api/index'
 export default {
   data() {
     // 1.校验用户手机账号
@@ -130,15 +131,58 @@ export default {
         if (!valid) {
           return;
         } else {
-          if(this.ruleForm.account == 12311111111 && this.ruleForm.pass.toString() == '123456'){
-            alert("登录成功")
-            this.$store.commit('setUserName',this.ruleForm.account)//讲用户登录后保存到state里面
-            this.$router.push('/index/home')
-          }else{
-            alert("账户名或密码错误");
-          }
+          const UserNumber = this.ruleForm.account//保存用户输入的手机号码
+          api.FindUserInfo({UserNumber})
+            .then(res => {
+              // 没注册
+              if(res.data == null) {
+                // 提示信息
+                this.$message({
+                  message: '该用户没有注册',
+                  type: 'error',
+                  duration: '2000',
+                  center: true,
+                  offset: 60
+                })
+                // 跳转到注册页面
+                this.$router.push('/register')
+              }else{//注册了
+                // 用户名和密码一致
+                if((res.data.UserNumber == this.ruleForm.account) && (res.data.UserPwd == this.ruleForm.pass)) {
+                  // 提示信息
+                  this.$message({
+                    message: '登陆成功',
+                    type: 'success',
+                    duration: '1500',
+                    center: true,
+                    offset: 60
+                  })
+                  this.$store.commit('setCurrentLoginUser',res.data)//登录成功后将当前用户对象信息保存到state
+                  window.localStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
+                  this.$router.push('/index/home')
+                }else{//用户名和密码不一致
+                  // 提示信息
+                  this.$message({
+                    message: '账号或密码错误',
+                    type: 'error',
+                    duration: '1500',
+                    center: true,
+                    offset: 60
+                  })
+                }
+              }
+              
+            })
+            .catch(err => {
+              console.log(err)
+            })
+
         }
-      });
+      })
+    },
+    // 点击logo跳转首页
+    handToHome() {
+      this.$router.push('/index')
     }
   }
 };
