@@ -13,6 +13,10 @@ const butlerAjax = Axios.create({
   baseURL: URLS.butlerBaseURL,
   method: 'get'
 })
+const orderAjax = Axios.create({
+  baseURL: URLS.orderBaseURL,
+  method: 'get'
+})
 
 export default {
   /**
@@ -45,6 +49,7 @@ export default {
     })
   },
 
+
   /**
    * 关于房源信息的所有接口
    */
@@ -75,5 +80,19 @@ export default {
         ButlerId,
       }
     })
-  }
+  },
+
+  /**
+   * 关于订单信息接口
+   */
+
+  //  1.根据用户id查询订单
+  UserQueryOrderList(UserId) {
+    return orderAjax.get(URLS.UserQueryOrderList, {
+      params: {
+        UserId,
+      }
+    })
+  },
+
 }

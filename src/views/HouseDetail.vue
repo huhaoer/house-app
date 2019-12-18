@@ -99,11 +99,8 @@ export default {
   },
 
   mounted() {
-    //保存当前房源的id到vuex中
-    this.$store.commit('setNowHouseId',this.$route.params.BuildId)
-
-    // 根据房源id查看房源具体信息
-    api.UserQueryDetails(this.$store.state.nowHouseId)
+    // 根据房源id查看房源具体信息  动态路由传递房源id
+    api.UserQueryDetails(this.$route.params.id)
       .then(res => {
         this.houseData = res.data._Items[0]
         const that = this

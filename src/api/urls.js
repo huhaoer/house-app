@@ -10,4 +10,7 @@ export default {
 
   butlerBaseURL: '/butlerApi',//获取管家数据需要的基础URL
   GetButlerInfo: '/getButlerInfo',//根据管家id查询管家信息
+
+  orderBaseURL: '/orderApi',//获取订单数据需要的基础URL
+  UserQueryOrderList: '/userQueryOrderList',//根据用户id查询用户订单
 }

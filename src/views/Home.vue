@@ -49,7 +49,8 @@
     <div class="house-origin">
       <h1>今日精选房源</h1>
       <div class="origin-wrap">
-        <div class="origin-item" v-for="(item,index) in homeHouse" :key="index">
+
+        <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="origin-item" v-for="(item,index) in homeHouse" :key="index">
           <img
             :src="item.BuildImage"
             alt="加载图片失败"
@@ -59,7 +60,8 @@
             <span>{{ item.BuildLocation }}</span>
             <span>￥{{ item.BuildPrice }}元/月</span>
           </div>
-        </div>
+        </router-link>
+
       </div>
     </div>
     <!-- 选择我们理由部分 -->

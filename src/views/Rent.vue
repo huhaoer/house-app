@@ -52,7 +52,7 @@
     <div class="rent-show">
 
       <!-- 点击当前房源查看详细信息 传递当前房源的id到详情页面 -->
-      <router-link tag="div" :to="{name: 'houseDetail',params:{BuildId: item.BuildId}}" class="origin-item" v-for="(item,index) in nowHouse" :key="index">
+      <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="origin-item" v-for="(item,index) in nowHouse" :key="index">
         <img
           :src="item.BuildImage"
           alt="加载失败"

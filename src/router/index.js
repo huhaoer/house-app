@@ -26,7 +26,7 @@ const router = new VueRouter({
           component: () => import('../views/Rent.vue')
         },
         {
-          path: 'houseDetail',
+          path: 'houseDetail:id',//动态路由
           name: 'houseDetail',
           component: () => import('../views/HouseDetail.vue')
         }

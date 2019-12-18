@@ -26,6 +26,21 @@
 
     <!-- 底部信息栏部分 -->
     <footer class="house-footer">
+      <div class="footer-title">
+        <div class="title-item">关于我们</div>
+        <div class="title-item">联系我们</div>
+        <div class="title-item">平台服务协议</div>
+        <div class="title-item">房客服务协议</div>
+        <div class="title-item">房东服务协议</div>
+      </div>
+      <div class="footer-logo">
+        <div class="weixin"></div>
+        <div class="weibo"></div>
+        <div class="qq"></div>
+        <!-- <div class="logo-show">
+          <img src="../assets/qq.png" alt="">
+        </div> -->
+      </div>
       <div class="footer-modal">
         <p>Copyright © 2012-2018 zufang.com. All Rights Reserved</p>
       </div>
@@ -37,7 +52,9 @@
 export default {
   name: "home",
   data() {
-    return {};
+    return {
+      erweima: '',//当前显示二维码的路径
+    };
   },
   methods: {
     // 退出登录
@@ -138,8 +155,63 @@ body {
     .house-footer {
       width: 100%;
       height: 200px;
-      background-color: rgba(255, 150, 30, 1);
+      background-color: rgba(0, 0, 0, 0.3);
+      // background-color: rgba(255, 150, 30, 1);
+      // background-color: #f06e5e;
+      margin-top: 50px;
       position: relative;
+      .footer-title{
+        height: 100px;
+        display: flex;
+        justify-content: space-around;
+        line-height: 100px;
+        border-bottom: 1px solid #fff;
+        .title-item{
+          font-size: 16px;
+          color: #fff;
+          cursor: pointer;
+        }
+      }
+      .footer-logo{
+        position: relative;
+        width: 200px;
+        margin: 0 auto;
+        height: 50px;
+        display: flex;
+        justify-content: space-around;
+        div{
+          width: 40px;
+          height: 40px;
+          margin-top: 5px;
+        }
+        .weixin{
+          background: url('../assets/f_logo.png');
+          background-repeat: no-repeat;
+          background-position: 0px 0px;
+          background-size: 120px 40px;
+        }
+        .weibo{
+          background: url('../assets/f_logo.png');
+          background-repeat: no-repeat;
+          background-position: -40px 0px;
+          background-size: 120px 40px;
+        }
+        .qq{
+          background: url('../assets/f_logo.png');
+          background-repeat: no-repeat;
+          background-position: -80px 0px;
+          background-size: 120px 40px;
+        }
+        .logo-show{
+          position: absolute;
+          top: -90px;
+          left: 60px;
+          img{
+            width: 80px;
+            height: 80px;
+          }
+        }
+      }
       .footer-modal {
         width: 100%;
         height: 50px;
