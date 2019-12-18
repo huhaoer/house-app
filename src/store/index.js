@@ -6,16 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentLoginUser: {},//当前登录的用户数据保存
-    allHouse: [],//所有房源
+    nowHouseId: '',//当前选择房源的id
   },
   mutations: {
     // 设置当前登录用户的所有信息
     setCurrentLoginUser(state,obj) {
       state.currentLoginUser = obj
     },
-    // 设置当前房源
-    setAllHouse(state,house ){
-      state.allHouse = house
+    // 设置当前选择房源的id
+    setNowHouseId(state,id) {
+      state.nowHouseId = id
     }
   },
   actions: {

@@ -9,19 +9,26 @@ module.exports = {
   devServer: {
     proxy: {
       "/userApi": {
-        target: "http://192.168.3.29:8080/UserMgeSvr.assx/", // target host
+        target: "http://192.168.3.29:8080/UserMgeSvr.assx/", // 用户 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/userApi": "" // rewrite path
         }
       },
       "/houseApi": {
-        target: "http://192.168.3.27:8080/BuildInfoMgeSvr.assx/", // target host
+        target: "http://192.168.3.27:8080/BuildInfoMgeSvr.assx/", // 房源 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/houseApi": "" // rewrite path
         }
-      }
+      },
+      "/butlerApi": {
+        target: "http://192.168.3.7:8080/ButlerInfoMgeSvr.assx/", // 管家 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/butlerApi": "" // rewrite path
+        }
+      },
     }
   }
 }

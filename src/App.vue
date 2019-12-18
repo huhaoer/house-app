@@ -18,7 +18,7 @@ export default {
     window.addEventListener("beforeunload",()=>{
     localStorage.setItem("messageStore",JSON.stringify(this.$store.state))
     })
-    //在页面加载时读取localStorage里的状态信息
+    // //在页面加载时读取localStorage里的状态信息
     localStorage.getItem("messageStore") && this.$store.replaceState(Object.assign({},this.$store.state,JSON.parse(localStorage.getItem("messageStore"))))
   }
 };
@@ -26,7 +26,7 @@ export default {
 
 <style lang="less">
 .exactActive{
-  color: #ffa000;
+  color: rgba(240, 110, 94, 1);
 }
 * {
   margin: 0;

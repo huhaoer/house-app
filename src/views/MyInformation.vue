@@ -73,7 +73,8 @@ import api from '../api/index'
 export default {
   // to 去到的那个路径信息  from从哪个路径来  next是否跳转,执行就跳转,不执行就不跳转
   beforeRouteLeave(to, from, next) {
-    if (this.isSave) {
+    // 当前保存了信息 或者是直接点击退出按钮的话就跳转到对应页面
+    if (this.isSave || to.fullPath == '/index/home') {
       next(); //点击保存按钮后 可以离开该页面
     } else {
       this.$confirm("还未保存信息,是否离开?",'提示',{
@@ -134,7 +135,7 @@ export default {
           // 修改成功之后重新获取用户的信息
           api.FindUserInfo({UserNumber: this.userPhone})
             .then(res => {
-              this.$store.commit('setCurrentLoginUser',res.data)//重新给当前登录用户的数据更新
+              this.$store.commit('setCurrentLoginUser',res.data._Items[0])//重新给当前登录用户的数据更新
               // 提示信息
               this.$message({
                 message: '修改成功',

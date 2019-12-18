@@ -50,7 +50,9 @@
     </div>
     <!-- 查询房源信息展示 -->
     <div class="rent-show">
-      <div class="origin-item" v-for="(item,index) in allHouse" :key="index">
+
+      <!-- 点击当前房源查看详细信息 传递当前房源的id到详情页面 -->
+      <router-link tag="div" :to="{name: 'houseDetail',params:{BuildId: item.BuildId}}" class="origin-item" v-for="(item,index) in nowHouse" :key="index">
         <img
           :src="item.BuildImage"
           alt="加载失败"
@@ -60,14 +62,18 @@
           <span>{{ item.BuildLocation }}</span>
           <span>￥{{ item.BuildPrice }}元/月</span>
         </div>
-      </div>
+      </router-link>
+
     </div>
     <!-- 分页器 -->
     <div class="rent-pagination">
       <el-pagination
         background
+        :current-page="1"
+        :page-size="pageSize"
+        @current-change="change"
         layout="prev, pager, next"
-        :total="100">
+        :total="totalCount">
       </el-pagination>
     </div>
   </div>
@@ -79,18 +85,37 @@ export default {
   data() {
     return {
       allHouse: [],//保存所有的房源信息
+      nowHouse: [],
+      totalCount: 0,//当前请求数据的总条数
+      pageSize: 6,//每一页有多少条数据
     }
   },
   mounted() {
     api.UserQueryBuildList()
       .then(res => {
-        console.log(res)
-        // 获取的数据保存 动态渲染
+        console.log(res,'房子')
+        // 保存所有数据
         this.allHouse = res.data._Items
+        this.totalCount = res.data._Items.length//总长度
+        if (this.allHouse.length < this.pageSize) {
+          this.nowHouse = this.allHouse
+        }else{
+          this.nowHouse = this.allHouse.slice(0,this.pageSize)
+        }
       })
       .catch(err => {
         console.log(err)
       })
+  },
+
+  methods: {
+    change(page) {
+      if(page == 1){
+        this.nowHouse = this.allHouse.slice(0,this.pageSize)
+      }else{
+        this.nowHouse = this.allHouse.slice((page - 1) * this.pageSize,page * this.pageSize)
+      }
+    }
   }
 }
 </script>
@@ -135,7 +160,7 @@ export default {
           }
         }
         span.active {
-          background-color: #41cbc0;
+          background-color: #ff961e;
           color: #fff;
         }
       }

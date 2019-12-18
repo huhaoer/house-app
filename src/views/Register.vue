@@ -176,7 +176,7 @@ export default {
           api.FindUserInfo({UserNumber})
             .then(res => {
               // 电话已经存在
-              if(res.data != null) {
+              if(res.data._Items.length > 0) {
                  // 提示信息
                 this.$message({
                   message: '该用户已经被注册',
@@ -190,8 +190,9 @@ export default {
               else{
                   api.AddUserInfo({ UserNumber, UserPwd, UserName})
                     .then(res => {
+                      console.log(res,'注册成功')
                       // 上传成功
-                      if(res.statusText == 'OK') {
+                      if(res.data == UserNumber) {
                         // 提示信息
                         this.$message({
                           message: '注册成功',

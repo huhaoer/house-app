@@ -126,7 +126,7 @@ body {
             }
             span:nth-of-type(2){
               font-size: 12px;
-              color: #ffa000;
+              color: rgba(240, 110, 94, 1);
               cursor: pointer;
               margin-left: 15px;
             }
@@ -138,7 +138,7 @@ body {
     .house-footer {
       width: 100%;
       height: 200px;
-      background-color: #41cbc0;
+      background-color: rgba(255, 150, 30, 1);
       position: relative;
       .footer-modal {
         width: 100%;

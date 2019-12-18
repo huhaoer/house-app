@@ -1,72 +1,249 @@
 <template>
   <div class="houseDetail">
     <div class="houseDetail-wrap">
+      <!-- 左侧图片 -->
       <div class="houseDetail-left">
-        <img src="./../assets/yezhu.jpg" alt="">
+        <img :src="houseData.BuildImage" alt />
       </div>
+      <!-- 右侧简介 -->
       <div class="houseDetail-right">
-        <p>自如整租·通惠家园·2室1厅</p>
-        <p>￥999 /月（季付价）</p>
-        <p><span>限时优惠</span> 领优惠签约减2222元</p>
-        <p><span>信用免押</span> 信用免押</p>
-        <p><span>海燕计划</span> 毕业生租房月付/0押金/送搬家券</p>
-        <p><span>惠蕾计划</span> 在校生专属，押金立减50%</p>
-        <p><span>入住礼包</span> 领千元礼包，助力新生活</p>
-        <p><span>位置</span> 小区距四惠东站步行约376米</p>
-        <p><span>楼层</span> 2/7</p>
-        <p><span>电梯</span> 无</p>
-        <p><span>年代</span> 2001年建成</p>
+        <p>{{ houseData.BuildName }}</p>
+        <p>￥{{ houseData.BuildPrice }} /月</p>
+        <p>
+          <span>位置:</span>
+          {{ houseData.BuildAddress }}
+        </p>
+        <p>
+          <span>上架时间:</span>
+          {{ houseData.BuildTime }}
+        </p>
+        <p>
+          <span>租房方式:</span>
+          {{ houseData.BuildType }}
+        </p>
+        <p>
+          <span>房屋面积:</span>
+          {{ houseData.BuildArea }}m²
+        </p>
+        <p>
+          <span>客厅数量:</span>
+          {{ houseData.BuildHall }}
+        </p>
+        <p>
+          <span>房间数量:</span>
+          {{ houseData.BuildRoom }}
+        </p>
+        <p>
+          <span>厨房数量:</span>
+          {{ houseData.BuildKitchen }}
+        </p>
+        <p>
+          <span>厕所数量:</span>
+          {{ houseData.BuildWc }}
+        </p>
+        <p>
+          <span>备注信息:</span>
+          {{ houseData.BuildRemake }}
+        </p>
+      </div>
+    </div>
+    <!-- 预约看房 -->
+    <div class="houseDetail-subscribe">
+      <!-- 左侧 -->
+      <div class="subscribe-left">
+        <!-- 每一项保障 -->
+        <div class="left-item">
+          <p>环保装修，密闭检测出租</p>
+          <p>仅友家整租房源</p>
+        </div>
+        <!-- 每一项保障 -->
+        <div class="left-item">
+          <p>签约三天不满意，无理由换租</p>
+          <p>转租、换租、续租、直租</p>
+        </div>
+        <!-- 每一项保障 -->
+        <div class="left-item">
+          <p>漏水保固，补偿日租金</p>
+          <p>仅适用于友家、整租、直租和精选房源</p>
+        </div>
+        <!-- 每一项保障 -->
+        <div class="left-item">
+          <p>退租费用，三个工作日到账</p>
+          <p>适用于所有房源</p>
+        </div>
+      </div>
+      <!-- 右侧 -->
+      <div class="subscribe-right">
+        <div class="right-book">预约看房</div>
+        <div class="right-save">
+          房源已被收藏
+          <span>{{ houseData.BuildCollect }}</span>次
+        </div>
+        <div class="right-butler">
+          <div class="butler-name">管家:{{ butlerData.ButlerName }}</div>
+          <div class="butler-phone">电话:{{ butlerData.ButlerNumber }}</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import api from "../api/index";
 export default {
+  data() {
+    return {
+      houseData: {}, //根据点击进来的id获取的房源详细信息
+      butlerData: {} //根据管家id获取管家的详细信息
+    };
+  },
 
-}
+  mounted() {
+    //保存当前房源的id到vuex中
+    this.$store.commit('setNowHouseId',this.$route.params.BuildId)
+
+    // 根据房源id查看房源具体信息
+    api.UserQueryDetails(this.$store.state.nowHouseId)
+      .then(res => {
+        this.houseData = res.data._Items[0]
+        const that = this
+        // 请求房源信息成功后  根据管家id查看管家具体信息
+        api.GetButlerInfo(that.houseData.ButlerId)
+          .then(res => {
+            that.butlerData = res.data
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+};
 </script>
 
 <style lang='less' scoped>
-.houseDetail{
+.houseDetail {
   width: 100%;
-  .houseDetail-wrap{
+  // 房源信息
+  .houseDetail-wrap {
     width: 80%;
-    // background-color: red;
     margin: 0 auto;
-    margin-top: 60px;
+    margin-top: 100px;
     display: flex;
     justify-content: space-between;
-    .houseDetail-left{
-      img{
+    .houseDetail-left {
+      img {
         width: 764px;
         height: 573px;
       }
     }
-    .houseDetail-right{
-      width: 300px;
-      // background-color: blue;
+    .houseDetail-right {
+      width: 267px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      p{
+      p {
         margin-bottom: 20px;
         font-size: 15px;
         color: rgba(0, 0, 0, 0.4);
-        &:nth-of-type(1){
+        &:nth-of-type(1) {
           font-size: 24px;
           color: #000;
           font-weight: bold;
           margin-top: 20px;
         }
-        &:nth-of-type(2){
+        &:nth-of-type(2) {
           font-size: 24px;
           color: #ff961e;
         }
-        span{
+        span {
           color: #000;
           font-size: 15px;
           margin-right: 20px;
+        }
+      }
+    }
+  }
+  // 预约看房
+  .houseDetail-subscribe {
+    width: 80%;
+    margin: 0 auto;
+    height: 300px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    .subscribe-left {
+      width: 764px;
+      height: 300px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: center;
+      .left-item {
+        width: 50%;
+        height: 25%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 30px;
+        p:nth-of-type(1) {
+          font-size: 16px;
+          color: #000;
+        }
+        p:nth-of-type(2) {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.4);
+          margin-top: 10px;
+        }
+      }
+    }
+    .subscribe-right {
+      width: 267px;
+      height: 300px;
+      border: 1px solid #ccc;
+      // 预定
+      .right-book {
+        width: 267px;
+        height: 46px;
+        background-color: #ff961e;
+        color: #fff;
+        font-size: 17px;
+        border-radius: 2px;
+        line-height: 46px;
+        text-align: center;
+        cursor: pointer;
+      }
+      // 收藏次数
+      .right-save {
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 13px;
+        text-align: center;
+        margin-top: 40px;
+        span {
+          color: #ff961e;
+        }
+      }
+      // 管家信息
+      .right-butler {
+        height: 80px;
+        margin-top: 40px;
+        .butler-name {
+          font-size: 18px;
+          color: rgba(0, 0, 0, 0.85);
+          text-align: center;
+          letter-spacing: 1px;
+        }
+        .butler-phone {
+          font-size: 15px;
+          color: rgba(0, 0, 0, 0.4);
+          text-align: center;
+          letter-spacing: 1px;
         }
       }
     }

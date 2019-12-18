@@ -134,8 +134,9 @@ export default {
           const UserNumber = this.ruleForm.account//保存用户输入的手机号码
           api.FindUserInfo({UserNumber})
             .then(res => {
+              console.log(res,'登录')
               // 没注册
-              if(res.data == null) {
+              if(res.data._Items.length < 0) {
                 // 提示信息
                 this.$message({
                   message: '该用户没有注册',
@@ -148,7 +149,7 @@ export default {
                 this.$router.push('/register')
               }else{//注册了
                 // 用户名和密码一致
-                if((res.data.UserNumber == this.ruleForm.account) && (res.data.UserPwd == this.ruleForm.pass)) {
+                if((res.data._Items[0].UserNumber == this.ruleForm.account) && (res.data._Items[0].UserPwd == this.ruleForm.pass)) {
                   // 提示信息
                   this.$message({
                     message: '登陆成功',
@@ -157,7 +158,7 @@ export default {
                     center: true,
                     offset: 60
                   })
-                  this.$store.commit('setCurrentLoginUser',res.data)//登录成功后将当前用户对象信息保存到state
+                  this.$store.commit('setCurrentLoginUser',res.data._Items[0])//登录成功后将当前用户对象信息保存到state
                   window.localStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
                   this.$router.push('/index/home')
                 }else{//用户名和密码不一致

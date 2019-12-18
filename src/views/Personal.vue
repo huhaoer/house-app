@@ -31,7 +31,7 @@ export default {
       // 清除已经登录的标识
       window.localStorage.removeItem('login')
       // 跳转到首页
-      this.$router.push('/index/home')
+      this.$router.push('/index')
     },
     // 点击logo跳转首页
     handToHome() {
@@ -72,7 +72,7 @@ export default {
       }
       span:nth-of-type(2){
         font-size: 14px;
-        color: #ffa000;
+        color: rgba(240, 110, 94, 1);
         cursor: pointer;
       }
     }
