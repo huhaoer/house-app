@@ -12,8 +12,9 @@
 </template>
 
 <script>
-import timeJs from '../utils/time'
+import timeJs from "../utils/time";
 export default {
+  name: "notFound",
   data() {
     return {
       time: "",
@@ -60,62 +61,61 @@ export default {
       }
       return (zero + num).slice(-digit);
     }
-  },
-
+  }
 };
-
 </script>
 
-<style>
+<style lang='less' scoped>
 html,
 body {
   height: 95%;
-}
-body {
+  width: 100%;
   background: #0f3854;
   background: -webkit-radial-gradient(center ellipse, #0a2e38 0%, #000000 70%);
   background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
-}
-p {
-  margin: 0;
-  padding: 0;
-}
-.backhome{
-  width: 100%;
-  height: 80px;
-  line-height: 80px;
-  font-size: 16px;
-  color: #fff;
-  font-weight: bold;
-}
-.backhome span{
-  cursor: pointer;
-}
-#clock {
-  font-family: "Share Tech Mono", monospace;
-  color: #ffffff;
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  color: #daf6ff;
-  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
-}
-#clock .time {
-  letter-spacing: 0.05em;
-  font-size: 60px;
-  padding: 5px 0;
-}
-#clock .date {
-  letter-spacing: 0.1em;
-  font-size: 25px;
-}
-#clock .text {
-  letter-spacing: 0.1em;
-  font-size: 12px;
-  padding: 20px 0 0;
+  .notFound {
+    .backhome {
+      width: 100%;
+      height: 80px;
+      line-height: 80px;
+      font-size: 16px;
+      color: #fff;
+      font-weight: bold;
+      span {
+        cursor: pointer;
+      }
+    }
+    #clock {
+      font-family: "Share Tech Mono", monospace;
+      color: #ffffff;
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      color: #daf6ff;
+      text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      .time {
+        letter-spacing: 0.05em;
+        font-size: 60px;
+        padding: 5px 0;
+      }
+      .date {
+        letter-spacing: 0.1em;
+        font-size: 25px;
+      }
+      .text {
+        letter-spacing: 0.1em;
+        font-size: 12px;
+        padding: 20px 0 0;
+      }
+    }
+  }
 }
 </style>

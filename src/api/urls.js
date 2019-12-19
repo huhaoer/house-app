@@ -19,6 +19,7 @@ export default {
   AddCollect: '/addCollect',//用户添加收藏
   IsCollect: '/isCollect',//判断是否被收藏
   DeleteCollect: '/deleteCollect',//取消收藏
+  GetCollectListByUserId: '/getCollectListByUserId',//根据用户id查询自己的收藏列表
 
   bookBaseURL: '/bookApi',//获取预约数据需要的基础URL
   AddBook: '/addBook',//添加预约

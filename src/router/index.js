@@ -63,7 +63,12 @@ const router = new VueRouter({
           path: 'myOrder',
           name: 'myOrder',
           component: () => import('../views/MyOrder.vue')
-        }
+        },
+        {
+          path: 'myCollect',
+          name: 'myCollect',
+          component: () => import('../views/MyCollect.vue')
+        },
       ]
     },
     {

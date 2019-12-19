@@ -177,7 +177,25 @@ export default {
             message: '请选择正确的日期'
           });
         } else{
-          
+          const UserId = this.$store.state.currentLoginUser.UserId
+          const BuildId = this.houseData.BuildId
+          const ButlerId = this.houseData.ButlerId
+          const BookTime = value
+          const BookState = '请求预约'
+          /**
+           * UserId
+           * BuildId
+           * ButlerId
+           * BookTime
+           * BoolState
+           */
+          api.AddBook({UserId,BuildId,ButlerId,BookTime,BookState})
+            .then(res => {
+              console.log(res,'预约信息')
+            })
+            .catch(err => {
+              console.log(err)
+            })
         }
       })
       .catch(() => {

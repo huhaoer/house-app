@@ -7,6 +7,7 @@
         <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
         <router-link tag="span" to="/personal/myAccount">我的合同</router-link>
         <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
+        <router-link tag="span" to="/personal/myCollect">我的收藏</router-link>
       </div>
       <p>Hi! <span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
     </div>
@@ -57,7 +58,7 @@ export default {
       height: 35px;
     }
     .header-title{
-      width: 300px;
+      width: 400px;
       display: flex;
       justify-content: space-between;
       color: #000;

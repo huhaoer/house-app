@@ -139,6 +139,13 @@ export default {
       }
     })
   },
+  GetCollectListByUserId(UserId) {
+    return collectAjax.get(URLS.GetCollectListByUserId,{
+      params: {
+        UserId
+      }
+    })
+  },
 
   /**
    * 关于预约的所有接口
