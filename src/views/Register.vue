@@ -35,6 +35,7 @@
             v-model.number="ruleForm.account"
             autocomplete="off"
             :required="true"
+            :maxlength="11"
             placeholder="请输入11位手机号码"
           ></el-input>
         </el-form-item>
@@ -152,7 +153,7 @@ export default {
       },
       // 校验规则
       rules: {
-        account: [{ required: true, validator: checkAccount, trigger: "blur" }],
+        account: [{ required: true, validator: checkAccount, trigger: "blur"},{ required: true, pattern: /^((13|14|15|16|17|18)[0-9]{1}\d{8})|((166|199|198)[0-9]{1}\d{7})$/, message: '请输入正确的电话号码', trigger: 'blur' }],
         pass: [{ required: true, validator: validatePass, trigger: "blur" }],
         checkPass: [
           { required: true, validator: validatePass2, trigger: "blur" }

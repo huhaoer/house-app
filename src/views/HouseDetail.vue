@@ -149,8 +149,40 @@ export default {
 
     // 2.点击预约
     handBook() {
-      console.log('预约')
+      this.$prompt('请选择日期', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'date',
+        inputErrorMessage: '日期错误,请重新填写',
+        closeOnClickModal: false,
+        inputErrorMessage: '邮箱格式不正确',
+      }).then(({ value }) => {
+        if(!value) {
+           this.$message({
+            type: 'error',
+            message: '请选择正确的日期'
+          });
+        }
+        const year = new Date().getFullYear()//年
+        const month = new Date().getMonth() + 1//月
+        const day = new Date().getDate()//日
+        const choiceYear = parseInt(value.split('-')[0])//用户选择年份
+        const choiceMonth = parseInt(value.split('-')[1])//用户选择月份
+        const choiceDay = parseInt(value.split('-')[2])//用户选择日
 
+        // 日期错误
+        if (!value || choiceYear < year || (choiceYear >= year && choiceMonth < month) || (choiceYear >= year && choiceMonth >= month && choiceDay < day)) {
+            this.$message({
+            type: 'error',
+            message: '请选择正确的日期'
+          });
+        } else{
+          
+        }
+      })
+      .catch(() => {
+        return
+      });
     }
   },
 

@@ -27,6 +27,7 @@ export default {
 </script>
 
 <style lang="less">
+
 .exactActive{
   color: rgba(240, 110, 94, 1);
 }
@@ -40,5 +41,6 @@ export default {
     width: 100%;
     height: 100%;
   }
+  body::-webkit-scrollbar { width: 0 !important }
 }
 </style>
