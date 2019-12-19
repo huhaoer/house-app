@@ -4,6 +4,10 @@
       <!-- 左侧图片 -->
       <div class="houseDetail-left">
         <img :src="houseData.BuildImage" alt />
+        <div class="left-menu">
+          <span>分享</span>
+          <span @click="handConnect">{{ isCollect ? '已收藏' : '收藏'  }}</span>
+        </div>
       </div>
       <!-- 右侧简介 -->
       <div class="houseDetail-right">
@@ -74,7 +78,7 @@
       </div>
       <!-- 右侧 -->
       <div class="subscribe-right">
-        <div class="right-book">预约看房</div>
+        <div class="right-book" @click="handBook">预约看房</div>
         <div class="right-save">
           房源已被收藏
           <span>{{ houseData.BuildCollect }}</span>次
@@ -94,16 +98,85 @@ export default {
   data() {
     return {
       houseData: {}, //根据点击进来的id获取的房源详细信息
-      butlerData: {} //根据管家id获取管家的详细信息
+      butlerData: {}, //根据管家id获取管家的详细信息
+      isCollect: false,//是否被收藏,默认为false
     };
   },
 
+  methods: {
+    // 1.点击收藏或者取消收藏
+    handConnect() {
+      const UserId = this.$store.state.currentLoginUser.UserId
+      const BuildId = this.houseData.BuildId
+        if(this.isCollect) {
+          // 已经是收藏状态 再次点击则取消收藏
+          api.DeleteCollect({UserId,BuildId})
+            .then(res => {
+              if (res.data == '取消成功') {
+                this.isCollect = false//已经被收藏,再次点击取消
+                this.$message({
+                    message: '取消收藏成功,欢迎下次查看',
+                    type: 'success',
+                    duration: '1500',
+                    center: true,
+                    offset: 60
+                  })
+              }              
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }else{
+          api.AddCollect({UserId,BuildId})
+            .then(res => {
+              if(res.data == '收藏成功') {
+                this.isCollect = true
+                this.$message({
+                    message: '收藏成功,可进入个人中心点击我的收藏查看',
+                    type: 'success',
+                    duration: '1500',
+                    center: true,
+                    offset: 60
+                  })
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
+        
+    },
+
+    // 2.点击预约
+    handBook() {
+      console.log('预约')
+
+    }
+  },
+
   mounted() {
+
     // 根据房源id查看房源具体信息  动态路由传递房源id
     api.UserQueryDetails(this.$route.params.id)
       .then(res => {
         this.houseData = res.data._Items[0]
         const that = this
+
+        // 请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
+        api.IsCollect({
+          UserId: that.$store.state.currentLoginUser.UserId,
+          BuildId: that.houseData.BuildId
+        })
+          .then(res => {
+            // 收藏过了
+            if (res.data === 'true') {
+              that.isCollect = true//标记已收藏
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+
         // 请求房源信息成功后  根据管家id查看管家具体信息
         api.GetButlerInfo(that.houseData.ButlerId)
           .then(res => {
@@ -131,9 +204,30 @@ export default {
     display: flex;
     justify-content: space-between;
     .houseDetail-left {
+      position: relative;
       img {
         width: 764px;
         height: 573px;
+      }
+      .left-menu{
+        position: absolute;
+        top: 30px;
+        right: 70px;
+        span{
+          user-select: none;
+          display: inline-block;
+          width: 70px;
+          height: 30px;
+          border: none;
+          color: #fff;
+          cursor: pointer;
+          background-color: rgba(0,0,0,.5);
+          text-align: center;
+          line-height: 30px;
+          &:nth-of-type(1){
+            margin-right: 20px;
+          }
+        }
       }
     }
     .houseDetail-right {
@@ -215,6 +309,10 @@ export default {
         line-height: 46px;
         text-align: center;
         cursor: pointer;
+        user-select: none;
+        &:hover{
+          background-color: rgba(255, 150, 35, .8);
+        }
       }
       // 收藏次数
       .right-save {

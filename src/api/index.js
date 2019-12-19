@@ -17,6 +17,14 @@ const orderAjax = Axios.create({
   baseURL: URLS.orderBaseURL,
   method: 'get'
 })
+const collectAjax = Axios.create({
+  baseURL: URLS.collectBaseURL,
+  method: 'get'
+})
+const bookAjax = Axios.create({
+  baseURL: URLS.bookBaseURL,
+  method: 'get'
+})
 
 export default {
   /**
@@ -59,13 +67,21 @@ export default {
     return houseAjax.get(URLS.UserQueryBuildList)
   },
 
-  // 根据房源id查看具体信息
+  // 2.根据房源id查看具体信息
   UserQueryDetails(id) {
     return houseAjax.get(URLS.UserQueryDetails, {
       params: {
         BuildId: id
       }
 
+    })
+  },
+  // 3.传递数据筛选房源
+  UserQueryBuildByParam(choice) {
+    return houseAjax.get(URLS.UserQueryBuildByParam,{
+      params: {
+        ...choice
+      }
     })
   },
 
@@ -94,5 +110,46 @@ export default {
       }
     })
   },
+
+  /**
+   * 关于用户收藏接口
+   */
+
+  //  1.用户添加收藏
+  AddCollect(Collect) {
+    return collectAjax.get(URLS.AddCollect, {
+      params: {
+        Collect,
+      }
+    })
+  },
+  // 2.判断是否被收藏
+  IsCollect(Collect) {
+    return collectAjax.get(URLS.IsCollect,{
+      params: {
+        Collect
+      }
+    })
+  },
+  // 3.取消收藏
+  DeleteCollect(Collect) {
+    return collectAjax.get(URLS.DeleteCollect,{
+      params: {
+        Collect
+      }
+    })
+  },
+
+  /**
+   * 关于预约的所有接口
+   */
+  AddBook(book) {
+    return bookAjax.get(URLS.AddBook,{
+      params: {
+        book
+      }
+    })
+  }
+  
 
 }

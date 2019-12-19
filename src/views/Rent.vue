@@ -11,40 +11,23 @@
       <div class="rent-search">
         <p class="area">
           <span>区域:</span>
-          <span class="active">全部</span>
-          <span>锦江区</span>
-          <span>青羊区</span>
+          <span v-for="(item,index) in area" :key="index" @click="handArea($event.target)" ref="area">{{ item }}</span>
         </p>
         <p class="money">
           <span>租金:</span>
-          <span class="active">全部</span>
-          <span>500-700</span>
-          <span>700-1000</span>
-          <span>1000-1500</span>
+          <span v-for="(item,index) in money" :key="index" @click="handMoney($event.target)" ref="money">{{ item }}</span>
         </p>
         <p class="mianji">
           <span>面积:</span>
-          <span class="active">全部</span>
-          <span>锦江区</span>
-          <span>青羊区</span>
+          <span v-for="(item,index) in mianji" :key="index" @click="handMianji($event.target)" ref="mianji">{{ item }}</span>
         </p>
         <p class="bedroom">
           <span>卧室:</span>
-          <span class="active">全部</span>
-          <span>锦江区</span>
-          <span>青羊区</span>
+          <span v-for="(item,index) in bedroom" :key="index" @click="handBedroom($event.target)" ref="bedroom">{{ item }}间</span>
         </p>
-        <p class="kitchen">
-          <span>厨房:</span>
-          <span class="active">全部</span>
-          <span>锦江区</span>
-          <span>青羊区</span>
-        </p>
-        <p class="wc">
-          <span>卫生间:</span>
-          <span class="active">全部</span>
-          <span>锦江区</span>
-          <span>青羊区</span>
+        <p class="houseType">
+          <span>房屋类型:</span>
+          <span v-for="(item,index) in houseType" :key="index" @click="handHouseType($event.target)" ref="houseType">{{ item }}</span>
         </p>
       </div>
     </div>
@@ -88,12 +71,27 @@ export default {
       nowHouse: [],
       totalCount: 0,//当前请求数据的总条数
       pageSize: 6,//每一页有多少条数据
+      area: ['全部','锦江区','青羊区','武侯区','金牛区','高新区','双流区','天府新区','成华区'],//查询区域列表
+      money: ['全部','1-500','500-1000','1000-1500','1500-2000','2000-2500','2500-3000'],//查询价格列表
+      mianji: ['全部','10-30','30-60','60-90','90-120','120-150','150-180','180-210'],//查询面积列表
+      bedroom: ['全部','1','2','3','4','5','6','7','8'],//查询房间数量列表
+      houseType: ['全部','整租','合租'],//查询租房方式列表
+      nowArea: 0,//当前点击的查询区域  为0默认查找所有
+      nowLowPrice: 0,//当前点击的价格的最低价
+      nowHighPrice: 0,//当前点击的价格的最高价
+      nowLowMianji: 0,//当前点击的最小面积
+      nowHighMianji: 0,//当前点击的最大面积
+      nowBedroom: 0,//当前点击的房间数量
+      nowHouseType: 0,//当前点击的租房方式
     }
   },
   mounted() {
+    // 初始化样式
+    this.initStyle()
+
+    // 获取房源信息
     api.UserQueryBuildList()
       .then(res => {
-        console.log(res,'房子')
         // 保存所有数据
         this.allHouse = res.data._Items
         this.totalCount = res.data._Items.length//总长度
@@ -109,12 +107,107 @@ export default {
   },
 
   methods: {
+    // 点击后筛选房源信息
+    searchHouse() {
+      api.UserQueryBuildByParam({
+        Buildlocation: this.nowArea == 0 ? '' : this.nowArea,
+        LowPrice: this.nowLowPrice == 0 ? '' : this.nowLowPrice,
+        HighPrice: this.nowHighPrice == 0 ? '' : this.nowHighPrice,
+        LowArea: this.nowLowMianji == 0 ? '' : this.nowLowMianji,
+        HighArea: this.nowHighMianji == 0 ? '' : this.nowHighMianji,
+        BuildRoom: this.nowBedroom == 0 ? '' : this.nowBedroom,
+        BuildType: this.nowHouseType == 0 ? '' : this.nowHouseType
+      })
+        .then(res => {
+          this.allHouse = res.data._Items
+          this.totalCount = res.data._Items.length//总长度
+          if (this.allHouse.length < this.pageSize) {
+            this.nowHouse = this.allHouse
+          }else{
+            this.nowHouse = this.allHouse.slice(0,this.pageSize)
+          }
+          })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 点击翻页
     change(page) {
       if(page == 1){
         this.nowHouse = this.allHouse.slice(0,this.pageSize)
       }else{
         this.nowHouse = this.allHouse.slice((page - 1) * this.pageSize,page * this.pageSize)
       }
+    },
+    // 初始化样式
+    initStyle() {
+      this.$refs.area[0].classList.add('active')
+      this.$refs.money[0].classList.add('active')
+      this.$refs.mianji[0].classList.add('active')
+      this.$refs.bedroom[0].innerText = '全部'
+      this.$refs.bedroom[0].classList.add('active')
+      this.$refs.houseType[0].classList.add('active')
+    },
+    clickStyle(allDom,nowDom) {
+      allDom.forEach(item => {
+        item.classList.remove('active')
+      })
+      nowDom.classList.add('active')
+    },
+    // 点击查询条件
+    handArea(val) {
+      this.clickStyle(this.$refs.area,val)
+      if (val.innerText == '全部') {
+        this.nowArea = 0
+      }else{
+        this.nowArea = val.innerText//当前点击的区域选保存在data
+      }
+      console.log(this.nowArea)
+      this.searchHouse()
+    },
+    handMoney(val) {
+      this.clickStyle(this.$refs.money,val)
+      if (val.innerText == '全部') {
+        this.nowLowPrice = 0
+        this.nowHighPrice = 0
+      }else{
+        this.nowLowPrice = val.innerText.split('-')[0]
+        this.nowHighPrice = val.innerText.split('-')[1]
+      }
+      console.log(this.nowLowPrice,'===',this.nowHighPrice)
+      this.searchHouse()
+    },
+    handMianji(val) {
+      this.clickStyle(this.$refs.mianji,val)
+      if (val.innerText == '全部') {
+        this.nowLowMianji = 0
+        this.nowHighMianji = 0
+      }else{
+        this.nowLowMianji = val.innerText.split('-')[0]
+        this.nowHighMianji = val.innerText.split('-')[1]
+      }
+      console.log(this.nowLowMianji,'===',this.nowHighMianji)
+      this.searchHouse()
+    },
+    handBedroom(val) {
+      this.clickStyle(this.$refs.bedroom,val)
+      if (val.innerText == '全部') {
+        this.nowBedroom = 0
+      }else{
+        this.nowBedroom = val.innerText[0]
+      }
+      console.log(this.nowBedroom)
+      this.searchHouse()
+    },
+    handHouseType(val) {
+      this.clickStyle(this.$refs.houseType,val)
+      if (val.innerText == '全部') {
+        this.nowHouseType = 0
+      }else{
+        this.nowHouseType = val.innerText
+      }
+      console.log(this.nowHouseType)
+      this.searchHouse()
     }
   }
 }
@@ -143,8 +236,7 @@ export default {
       .money,
       .mianji,
       .bedroom,
-      .kitchen,
-      .wc {
+      .houseType {
         margin-top: 15px;
         color: #555;
         span {

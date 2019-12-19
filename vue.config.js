@@ -23,7 +23,7 @@ module.exports = {
         }
       },
       "/orderApi": {
-        target: "http://192.168.3.27:8080/OrderInfoMgeSvr.assx/", // 房源 host
+        target: "http://192.168.3.27:8080/OrderInfoMgeSvr.assx/", // 订单 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/orderApi": "" // rewrite path
@@ -34,6 +34,20 @@ module.exports = {
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/butlerApi": "" // rewrite path
+        }
+      },
+      "/collectApi": {
+        target: "http://192.168.3.7:8080/CollectMgeSvr.assx/", // 收藏 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/collectApi": "" // rewrite path
+        }
+      },
+      "/bookApi": {
+        target: "http://192.168.3.29:8080/BookMgeSvr.assx/", // 预约 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/bookApi": "" // rewrite path
         }
       },
     }
