@@ -28,7 +28,8 @@ export default {
 
 <style lang="less">
 .exactActive{
-  color: rgba(240, 110, 94, 1);
+  // color: rgba(240, 110, 94, 1);
+  color: #F56C6C;
 }
 * {
   margin: 0;

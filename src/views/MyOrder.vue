@@ -87,6 +87,7 @@ export default {
         }
       }
       .item-center{
+        width: 300px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;

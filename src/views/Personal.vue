@@ -4,11 +4,10 @@
     <div class="personal-header">
       <img src="../assets/logo.png" alt="" @click="handToHome">
       <div class="header-title">
-        <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
-        <router-link tag="span" to="/personal/myAccount">我的合同</router-link>
-        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
         <router-link tag="span" to="/personal/myCollect">我的收藏</router-link>
+        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
         <router-link tag="span" to="/personal/myBook">我的预约</router-link>
+        <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
       </div>
       <p><i class="el-icon-user-solid"></i><span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
     </div>
@@ -78,7 +77,7 @@ export default {
       }
       span:nth-of-type(2){
         font-size: 14px;
-        color: rgba(240, 110, 94, 1);
+        color: #F56C6C;
         cursor: pointer;
       }
     }

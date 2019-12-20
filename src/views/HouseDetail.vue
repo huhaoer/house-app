@@ -78,7 +78,8 @@
       </div>
       <!-- 右侧 -->
       <div class="subscribe-right">
-        <div class="right-book" @click="handBook">预约看房</div>
+        <div class="right-book" @click="handBook" v-if="!isBook">预约看房</div>
+        <div class="right-book" v-else style="background: #ccc">预约看房</div>
         <div class="right-save">
           房源已被收藏
           <span>{{ houseData.BuildCollect }}</span>次
@@ -99,7 +100,8 @@ export default {
     return {
       houseData: {}, //根据点击进来的id获取的房源详细信息
       butlerData: {}, //根据管家id获取管家的详细信息
-      isCollect: false //是否被收藏,默认为false
+      isCollect: false, //是否被收藏,默认为false
+      isBook: false,//判断是否被预约过
     };
   },
 
@@ -152,101 +154,110 @@ export default {
       } else {
         //用户未登录
         this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(_ => {
+            this.$router.push("/login");
           })
-          .then( _ => {
-            this.$router.push('/login');
-          })
-          .catch( _ => {
-            return
+          .catch(_ => {
+            return;
           });
       }
     },
 
     // 2.点击预约
     handBook() {
-      if(this.$store.state.currentLoginUser.UserId){//用户已经登录
-        this.$prompt("请选择日期", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputType: "date",
-        inputErrorMessage: "日期错误,请重新填写",
-        closeOnClickModal: false,
-        inputErrorMessage: "邮箱格式不正确"
-      })
-        .then(({ value }) => {
-          if (!value) {
-            this.$message({
-              type: "error",
-              message: "请选择正确的日期"
-            });
-          }
-          const year = new Date().getFullYear(); //年
-          const month = new Date().getMonth() + 1; //月
-          const day = new Date().getDate(); //日
-          const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
-          const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
-          const choiceDay = parseInt(value.split("-")[2]); //用户选择日
-
-          // 日期错误
-          if (
-            !value ||
-            choiceYear < year ||
-            (choiceYear >= year && choiceMonth < month) ||
-            (choiceYear >= year && choiceMonth >= month && choiceDay < day)
-          ) {
-            this.$message({
-              type: "error",
-              message: "请选择正确的日期"
-            });
-          } else {
-            const UserId = this.$store.state.currentLoginUser.UserId;
-            const BuildId = this.houseData.BuildId;
-            const ButlerId = this.houseData.ButlerId;
-            const BookTime = value;
-            const BookState = "请求预约";
-            /**
-             * UserId
-             * BuildId
-             * ButlerId
-             * BookTime
-             * BoolState
-             */
-            api
-              .AddBook({ UserId, BuildId, ButlerId, BookTime, BookState })
-              .then(res => {
-                console.log(res, "预约信息");
-                if (res.data == '预约成功') {
-                  this.$message({
-                    message: "预约成功",
-                    type: "success",
-                    duration: "2000",
-                    center: true,
-                    offset: 60
-                  });
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          }
+      if (this.$store.state.currentLoginUser.UserId) {
+        //用户已经登录
+        if (!this.isBook) {
+          // 没有预约过才能进行下面操作
+          this.$prompt("请选择日期", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputType: "date",
+          inputErrorMessage: "日期错误,请重新填写",
+          closeOnClickModal: false,
+          inputErrorMessage: "邮箱格式不正确"
         })
-        .catch(() => {
-          return;
-        });
-      }else{//用户未登录
+          .then(({ value }) => {
+            if (!value) {
+              this.$message({
+                type: "error",
+                message: "请选择正确的日期"
+              });
+            }
+            const year = new Date().getFullYear(); //年
+            const month = new Date().getMonth() + 1; //月
+            const day = new Date().getDate(); //日
+            const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
+            const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
+            const choiceDay = parseInt(value.split("-")[2]); //用户选择日
+
+            // 日期错误
+            if (
+              !value ||
+              choiceYear < year ||
+              (choiceYear >= year && choiceMonth < month) ||
+              (choiceYear >= year && choiceMonth >= month && choiceDay < day)
+            ) {
+              this.$message({
+                type: "error",
+                message: "请选择正确的日期"
+              });
+            } else {
+              const UserId = this.$store.state.currentLoginUser.UserId;
+              const BuildId = this.houseData.BuildId;
+              const ButlerId = this.houseData.ButlerId;
+              const BookTime = value;
+              const BookState = "请求预约";
+              /**
+               * UserId
+               * BuildId
+               * ButlerId
+               * BookTime
+               * BoolState
+               */
+              api
+                .AddBook({ UserId, BuildId, ButlerId, BookTime, BookState })
+                .then(res => {
+                  console.log(res, "预约信息");
+                  if (res.data == "预约成功") {
+                    this.isBook = true;//按钮
+                    this.$message({
+                      message: "预约成功",
+                      type: "success",
+                      duration: "2000",
+                      center: true,
+                      offset: 60
+                    });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            }
+          })
+          .catch(() => {
+            return;
+          });
+        }else{
+          // 已经预约 直接返回
+          return
+        }
+      } else {
+        //用户未登录
         this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(_ => {
+            this.$router.push("/login");
           })
-          .then( _ => {
-            this.$router.push('/login');
-          })
-          .catch( _ => {
-            return
+          .catch(_ => {
+            return;
           });
       }
     }
@@ -257,10 +268,11 @@ export default {
     api
       .UserQueryDetails(this.$route.params.id)
       .then(res => {
+        console.log(res, "请求结果");
         this.houseData = res.data._Items[0];
         const that = this;
 
-        // 请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
+        // 1.请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
         api
           .IsCollect({
             UserId: that.$store.state.currentLoginUser.UserId,
@@ -276,11 +288,27 @@ export default {
             console.log(err);
           });
 
-        // 请求房源信息成功后  根据管家id查看管家具体信息
+        // 2.请求房源信息成功后  根据管家id查看管家具体信息
         api
           .GetButlerInfo(that.houseData.ButlerId)
           .then(res => {
             that.butlerData = res.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
+        // 3.判断是否预约看房
+        api
+          .IsBook({
+            UserId: that.$store.state.currentLoginUser.UserId,
+            BuildId: that.houseData.BuildId
+          })
+          .then(res => {
+            console.log(res,'是否预约')
+            if (res.data == 'true') {
+              that.isBook = true//已经预约过           
+            }
           })
           .catch(err => {
             console.log(err);

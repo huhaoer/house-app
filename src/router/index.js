@@ -45,7 +45,7 @@ const router = new VueRouter({
     {
       path: '/personal',
       name: 'personal',
-      redirect: '/personal/myInformation',
+      redirect: '/personal/myCollect',
       meta: {login: true},//路由元信息,必须登录才能访问
       component: () => import('../views/Personal.vue'),
       children: [
@@ -53,11 +53,6 @@ const router = new VueRouter({
           path: 'myInformation',
           name: 'myInformation',
           component: () => import('../views/MyInformation.vue')
-        },
-        {
-          path: 'myAccount',
-          name: 'myAccount',
-          component: () => import('../views/MyAccount.vue')
         },
         {
           path: 'myOrder',

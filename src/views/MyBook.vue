@@ -4,46 +4,42 @@
       <div class="order-header">预约列表</div>
       <div class="order-none" v-show="bookData.length == 0">暂无预约列表</div>
 
-      <router-link
-        tag="div"
-        :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+      <div
         class="order-item"
-        v-show="collectData.length != 0"
+        v-show="bookData.length != 0"
         v-for="(item,index) in bookData"
         :key="index"
       >
-        <div class="item-left">
+        <router-link
+          tag="div"
+          :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+          class="item-left"
+        >
           <img :src="item.BuildImage" alt />
-        </div>
+        </router-link>
         <div class="item-center">
           <p>
             房源名:
             <span>{{ item.BuildName }}</span>
           </p>
           <p>
-            房源地址:
-            <span>{{ item.BuildAddress }}</span>
-          </p>
-          <p>
-            房源区域:
-            <span>{{ item.BuildLocation }}</span>
-          </p>
-        </div>
-        <div class="item-right">
-          <p>
             房源价格:
             <span>{{ item.BuildPrice }}￥</span>
           </p>
           <p>
-            上架时间:
-            <span>{{ item.BuildTime }}</span>
+            预约状态:
+            <span style="color: red">{{ item.BookState }}</span>
           </p>
           <p>
-            房间数量:
-            <span>{{ item.BuildRoom }}</span>
+            预约时间:
+            <span style="color: red">{{ item.BookTime }}</span>
           </p>
         </div>
-      </router-link>
+        <div class="item-right" v-if="item.BookState == '已看房' ">
+          <el-button type="primary" plain >立即下单</el-button>
+        </div>
+        <div class="item-right" v-else></div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,21 +49,68 @@ import api from "../api/index";
 export default {
   data() {
     return {
-      bookData: [] //预约列表
+      bookData: [], //预约列表
+      showModal: false //是否展示选择月份提交的弹框
     };
   },
 
   mounted() {
-    // 传递当前用户的id获取当前用户的订单
+    // 根据用户id查看预约列表
     api
-      .GetCollectListByUserId(this.$store.state.currentLoginUser.UserId)
+      .FindBookListFull(this.$store.state.currentLoginUser.UserId)
       .then(res => {
-        this.collectData = res.data;
-        console.log(res, "收藏列表");
+        this.bookData = res.data._Items;
+        console.log(res, "预约列表");
+        return this.bookData
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .then(res => {
+        console.log(res,'返回预约列表数据')
+        
+      })
+      
+  },
+
+  methods: {
+    // 点击下单按钮进行创建订单
+    handNewOrder(item) {
+      this.showModal = true;
+      console.log(item, "当前下单");
+    },
+    // open() {
+    //   const BuildId = 
+    //   const UserId = 
+    //   const ButlerId = 
+    //   const PayRentTotal = 
+    //   const UserNumber = 
+    //   this.$prompt("请输入租房月数", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     inputType: 'number',
+    //     inputValue: 1,
+    //     inputValidator(val) {
+    //       if(val < 1 || val > 12) {
+    //         return '月份错误'
+    //       }
+    //     }
+    //   })
+    //     .then(({ value }) => {
+    //       api.AddOrder({
+
+    //       })
+    //       .then(res => {
+    //         console.log(res,'新建订单')
+    //       })
+    //       .catch(err => {
+    //         console.log(err)
+    //       })
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         type: "info",
+    //         message: "取消输入"
+    //       });
+    //     });
+    // }
   }
 };
 </script>
@@ -112,6 +155,7 @@ export default {
         }
       }
       .item-center {
+        width: 300px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -126,17 +170,14 @@ export default {
         }
       }
       .item-right {
+        width: 300px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        p {
-          font-size: 16px;
-          color: #353535;
-          span {
-            color: #000;
-            font-weight: bold;
-            margin-left: 10px;
-          }
+        align-items: center;
+        .el-button {
+          width: 32%;
+          margin: 0;
         }
       }
     }

@@ -14,6 +14,7 @@ export default {
 
   orderBaseURL: '/orderApi',//获取订单数据需要的基础URL
   UserQueryOrderList: '/userQueryOrderList',//根据用户id查询用户订单
+  AddOrder: '/addOrder',//用户下单
 
   collectBaseURL: '/collectApi',//获取收藏数据需要的基础URL
   AddCollect: '/addCollect',//用户添加收藏
@@ -23,4 +24,6 @@ export default {
 
   bookBaseURL: '/bookApi',//获取预约数据需要的基础URL
   AddBook: '/addBook',//添加预约
+  FindBookListFull: '/findBookListFull',//根据用户id查看已经预约的订单
+  IsBook: '/isBook',//判断是否被预约过看房
 }

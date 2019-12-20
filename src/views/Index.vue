@@ -148,7 +148,8 @@ body {
             }
             span:nth-of-type(2){
               font-size: 12px;
-              color: rgba(240, 110, 94, 1);
+              // color: rgba(240, 110, 94, 1);
+              color: #F56C6C;
               cursor: pointer;
               margin-left: 15px;
             }

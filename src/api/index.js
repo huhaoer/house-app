@@ -110,6 +110,14 @@ export default {
       }
     })
   },
+  // 2.用户下单
+  AddOrder(Order) {
+    return orderAjax.get(URLS.AddOrder, {
+      params: {
+        Order,
+      }
+    })
+  },
 
   /**
    * 关于用户收藏接口
@@ -139,6 +147,7 @@ export default {
       }
     })
   },
+  // 4.获取用户的收藏列表
   GetCollectListByUserId(UserId) {
     return collectAjax.get(URLS.GetCollectListByUserId,{
       params: {
@@ -148,12 +157,31 @@ export default {
   },
 
   /**
-   * 关于预约的所有接口
+   * 关于预约的所有接口 
    */
+  // 1.用户点击添加预约
   AddBook(book) {
     return bookAjax.get(URLS.AddBook,{
       params: {
         book
+      }
+    })
+  },
+  // 2.根据用户id获取预约订单
+  FindBookListFull(UserId) {
+    return bookAjax.get(URLS.FindBookListFull,{
+      params: {
+        book: {
+          UserId
+        }
+      }
+    })
+  },
+  // 3.根据用户id和房源id判断是否被预约看房过
+  IsBook(Book) {
+    return bookAjax.get(URLS.IsBook,{
+      params: {
+        Book
       }
     })
   }

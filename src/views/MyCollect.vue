@@ -4,15 +4,15 @@
       <div class="order-header">收藏列表</div>
       <div class="order-none" v-show="collectData.length == 0">暂无收藏列表</div>
 
-      <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+      <div
         class="order-item"
         v-show="collectData.length != 0"
         v-for="(item,index) in collectData"
         :key="index"
       >
-        <div class="item-left">
+        <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="item-left">
           <img :src="item.BuildImage" alt />
-        </div>
+        </router-link>
         <div class="item-center">
           <p>
             房源名:
@@ -41,7 +41,7 @@
             <span>{{ item.BuildRoom }}</span>
           </p>
         </div>
-      </router-link>
+      </div>
 
     </div>
   </div>
@@ -111,6 +111,7 @@ export default {
         }
       }
       .item-center {
+        width: 300px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
