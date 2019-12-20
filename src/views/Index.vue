@@ -16,7 +16,7 @@
           <router-link tag="span" to="/register">注册</router-link>
         </div>
         <div class="header-hi" v-else>
-          <p>Hi! <span @click="enterPersonal">{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
+          <p><i class="el-icon-user-solid"></i> <span @click="enterPersonal">{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
         </div>
       </div>
     </header>
@@ -63,6 +63,8 @@ export default {
       this.$store.commit('setCurrentLoginUser',{})
       // 清除已经登录的标识
       window.localStorage.removeItem('login')
+      // 跳转到首页
+      this.$router.push('/index')
     },
     // 点击姓名进入个人中心
     enterPersonal() {
@@ -86,7 +88,7 @@ body {
       left: 0px;
       width: 100%;
       height: 60px;
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgba(0, 0, 0, 0.5);
       z-index: 99;
       .header-wrap {
         width: 90%;
@@ -133,6 +135,9 @@ body {
         }
         .header-hi{
           color: #fff;
+          .el-icon-user-solid{
+            font-size: 20px;
+          }
           p{
             line-height: 60px;
             font-size: 16px;

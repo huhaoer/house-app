@@ -3,10 +3,10 @@
     <div class="houseDetail-wrap">
       <!-- 左侧图片 -->
       <div class="houseDetail-left">
-        <img :src="houseData.BuildImage" alt />
+        <img :src="houseData.BuildImage" alt="图片加载失败" />
         <div class="left-menu">
           <span>分享</span>
-          <span @click="handConnect">{{ isCollect ? '已收藏' : '收藏'  }}</span>
+          <span @click="handConnect">{{ isCollect ? '已收藏' : '收藏' }}</span>
         </div>
       </div>
       <!-- 右侧简介 -->
@@ -99,146 +99,196 @@ export default {
     return {
       houseData: {}, //根据点击进来的id获取的房源详细信息
       butlerData: {}, //根据管家id获取管家的详细信息
-      isCollect: false,//是否被收藏,默认为false
+      isCollect: false //是否被收藏,默认为false
     };
   },
 
   methods: {
     // 1.点击收藏或者取消收藏
     handConnect() {
-      const UserId = this.$store.state.currentLoginUser.UserId
-      const BuildId = this.houseData.BuildId
-        if(this.isCollect) {
+      const UserId = this.$store.state.currentLoginUser.UserId;
+      const BuildId = this.houseData.BuildId;
+
+      if (UserId) {
+        //用户已经登录
+        if (this.isCollect) {
           // 已经是收藏状态 再次点击则取消收藏
-          api.DeleteCollect({UserId,BuildId})
+          api
+            .DeleteCollect({ UserId, BuildId })
             .then(res => {
-              if (res.data == '取消成功') {
-                this.isCollect = false//已经被收藏,再次点击取消
+              if (res.data == "取消成功") {
+                this.isCollect = false; //已经被收藏,再次点击取消
                 this.$message({
-                    message: '取消收藏成功,欢迎下次查看',
-                    type: 'success',
-                    duration: '1500',
-                    center: true,
-                    offset: 60
-                  })
-              }              
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        }else{
-          api.AddCollect({UserId,BuildId})
-            .then(res => {
-              if(res.data == '收藏成功') {
-                this.isCollect = true
-                this.$message({
-                    message: '收藏成功,可进入个人中心点击我的收藏查看',
-                    type: 'success',
-                    duration: '1500',
-                    center: true,
-                    offset: 60
-                  })
+                  message: "取消收藏成功,欢迎下次查看",
+                  type: "success",
+                  duration: "1500",
+                  center: true,
+                  offset: 60
+                });
               }
             })
             .catch(err => {
-              console.log(err)
+              console.log(err);
+            });
+        } else {
+          api
+            .AddCollect({ UserId, BuildId })
+            .then(res => {
+              if (res.data == "收藏成功") {
+                this.isCollect = true;
+                this.$message({
+                  message: "收藏成功,可进入个人中心点击我的收藏查看",
+                  type: "success",
+                  duration: "1500",
+                  center: true,
+                  offset: 60
+                });
+              }
             })
+            .catch(err => {
+              console.log(err);
+            });
         }
-        
+      } else {
+        //用户未登录
+        this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+          .then( _ => {
+            this.$router.push('/login');
+          })
+          .catch( _ => {
+            return
+          });
+      }
     },
 
     // 2.点击预约
     handBook() {
-      this.$prompt('请选择日期', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputType: 'date',
-        inputErrorMessage: '日期错误,请重新填写',
+      if(this.$store.state.currentLoginUser.UserId){//用户已经登录
+        this.$prompt("请选择日期", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputType: "date",
+        inputErrorMessage: "日期错误,请重新填写",
         closeOnClickModal: false,
-        inputErrorMessage: '邮箱格式不正确',
-      }).then(({ value }) => {
-        if(!value) {
-           this.$message({
-            type: 'error',
-            message: '请选择正确的日期'
-          });
-        }
-        const year = new Date().getFullYear()//年
-        const month = new Date().getMonth() + 1//月
-        const day = new Date().getDate()//日
-        const choiceYear = parseInt(value.split('-')[0])//用户选择年份
-        const choiceMonth = parseInt(value.split('-')[1])//用户选择月份
-        const choiceDay = parseInt(value.split('-')[2])//用户选择日
-
-        // 日期错误
-        if (!value || choiceYear < year || (choiceYear >= year && choiceMonth < month) || (choiceYear >= year && choiceMonth >= month && choiceDay < day)) {
-            this.$message({
-            type: 'error',
-            message: '请选择正确的日期'
-          });
-        } else{
-          const UserId = this.$store.state.currentLoginUser.UserId
-          const BuildId = this.houseData.BuildId
-          const ButlerId = this.houseData.ButlerId
-          const BookTime = value
-          const BookState = '请求预约'
-          /**
-           * UserId
-           * BuildId
-           * ButlerId
-           * BookTime
-           * BoolState
-           */
-          api.AddBook({UserId,BuildId,ButlerId,BookTime,BookState})
-            .then(res => {
-              console.log(res,'预约信息')
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        }
+        inputErrorMessage: "邮箱格式不正确"
       })
-      .catch(() => {
-        return
-      });
+        .then(({ value }) => {
+          if (!value) {
+            this.$message({
+              type: "error",
+              message: "请选择正确的日期"
+            });
+          }
+          const year = new Date().getFullYear(); //年
+          const month = new Date().getMonth() + 1; //月
+          const day = new Date().getDate(); //日
+          const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
+          const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
+          const choiceDay = parseInt(value.split("-")[2]); //用户选择日
+
+          // 日期错误
+          if (
+            !value ||
+            choiceYear < year ||
+            (choiceYear >= year && choiceMonth < month) ||
+            (choiceYear >= year && choiceMonth >= month && choiceDay < day)
+          ) {
+            this.$message({
+              type: "error",
+              message: "请选择正确的日期"
+            });
+          } else {
+            const UserId = this.$store.state.currentLoginUser.UserId;
+            const BuildId = this.houseData.BuildId;
+            const ButlerId = this.houseData.ButlerId;
+            const BookTime = value;
+            const BookState = "请求预约";
+            /**
+             * UserId
+             * BuildId
+             * ButlerId
+             * BookTime
+             * BoolState
+             */
+            api
+              .AddBook({ UserId, BuildId, ButlerId, BookTime, BookState })
+              .then(res => {
+                console.log(res, "预约信息");
+                if (res.data == '预约成功') {
+                  this.$message({
+                    message: "预约成功",
+                    type: "success",
+                    duration: "2000",
+                    center: true,
+                    offset: 60
+                  });
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          }
+        })
+        .catch(() => {
+          return;
+        });
+      }else{//用户未登录
+        this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+          .then( _ => {
+            this.$router.push('/login');
+          })
+          .catch( _ => {
+            return
+          });
+      }
     }
   },
 
   mounted() {
-
     // 根据房源id查看房源具体信息  动态路由传递房源id
-    api.UserQueryDetails(this.$route.params.id)
+    api
+      .UserQueryDetails(this.$route.params.id)
       .then(res => {
-        this.houseData = res.data._Items[0]
-        const that = this
+        this.houseData = res.data._Items[0];
+        const that = this;
 
         // 请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
-        api.IsCollect({
-          UserId: that.$store.state.currentLoginUser.UserId,
-          BuildId: that.houseData.BuildId
-        })
+        api
+          .IsCollect({
+            UserId: that.$store.state.currentLoginUser.UserId,
+            BuildId: that.houseData.BuildId
+          })
           .then(res => {
             // 收藏过了
-            if (res.data === 'true') {
-              that.isCollect = true//标记已收藏
+            if (res.data === "true") {
+              that.isCollect = true; //标记已收藏
             }
           })
           .catch(err => {
-            console.log(err)
-          })
+            console.log(err);
+          });
 
         // 请求房源信息成功后  根据管家id查看管家具体信息
-        api.GetButlerInfo(that.houseData.ButlerId)
+        api
+          .GetButlerInfo(that.houseData.ButlerId)
           .then(res => {
-            that.butlerData = res.data
+            that.butlerData = res.data;
           })
           .catch(err => {
-            console.log(err)
-          })
+            console.log(err);
+          });
       })
       .catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 };
 </script>
@@ -254,16 +304,18 @@ export default {
     display: flex;
     justify-content: space-between;
     .houseDetail-left {
+      width: 764px;
+      height: 573px;
       position: relative;
       img {
         width: 764px;
         height: 573px;
       }
-      .left-menu{
+      .left-menu {
         position: absolute;
         top: 30px;
         right: 70px;
-        span{
+        span {
           user-select: none;
           display: inline-block;
           width: 70px;
@@ -271,10 +323,10 @@ export default {
           border: none;
           color: #fff;
           cursor: pointer;
-          background-color: rgba(0,0,0,.5);
+          background-color: rgba(0, 0, 0, 0.5);
           text-align: center;
           line-height: 30px;
-          &:nth-of-type(1){
+          &:nth-of-type(1) {
             margin-right: 20px;
           }
         }
@@ -360,8 +412,8 @@ export default {
         text-align: center;
         cursor: pointer;
         user-select: none;
-        &:hover{
-          background-color: rgba(255, 150, 35, .8);
+        &:hover {
+          background-color: rgba(255, 150, 35, 0.8);
         }
       }
       // 收藏次数

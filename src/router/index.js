@@ -69,6 +69,11 @@ const router = new VueRouter({
           name: 'myCollect',
           component: () => import('../views/MyCollect.vue')
         },
+        {
+          path: 'myBook',
+          name: 'myBook',
+          component: () => import('../views/MyBook.vue')
+        },
       ]
     },
     {

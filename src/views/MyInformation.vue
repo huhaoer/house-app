@@ -51,11 +51,11 @@
           </div>
           <div class="main-item">
             <label for="userEmail">邮箱</label>
-            <el-input v-model="userEmail" placeholder="请输入内容" id="userEmail" auto-complete="off"></el-input>
+            <el-input v-model="userEmail" placeholder="请输入内容" id="userEmail" auto-complete="off" type="email"></el-input>
           </div>
           <div class="main-item">
             <label for="userIdCard">身份证</label>
-            <el-input v-model="userIdCard" placeholder="请输入内容" id="userIdCard" auto-complete="off"></el-input>
+            <el-input v-model="userIdCard" placeholder="请输入内容" id="userIdCard" auto-complete="off" maxlength="18"></el-input>
           </div>
           <div class="main-item">
             <label for="userLike">爱好</label>

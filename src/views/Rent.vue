@@ -35,7 +35,7 @@
     <div class="rent-show">
 
       <!-- 点击当前房源查看详细信息 传递当前房源的id到详情页面 -->
-      <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="origin-item" v-for="(item,index) in nowHouse" :key="index">
+      <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="origin-item" v-for="(item,index) in nowHouse" :key="index" v-show="nowHouse.length > 0">
         <img
           :src="item.BuildImage"
           alt="加载失败"
@@ -46,6 +46,10 @@
           <span>￥{{ item.BuildPrice }}元/月</span>
         </div>
       </router-link>
+      <!-- 暂无房源时显示的提示 -->
+      <div class="no-house" v-show="nowHouse.length == 0">
+        房源正在筹备中,请等待...
+      </div>
 
     </div>
     <!-- 分页器 -->
@@ -310,6 +314,16 @@ export default {
           }
         }
       }
+    }
+    // 暂无房源样式
+    .no-house{
+      width: 100%;
+      height: 50px;
+      border: 1px solid #ccc;
+      font-size: 20px;
+      text-align: center;
+      line-height: 50px;
+      color: rgba(0, 0, 0, .5);
     }
   }
   // 分页器

@@ -14,7 +14,7 @@ export default {
   },
 
   mounted() {
-    //在页面刷新时将vuex里的信息保存到localStorage里
+    // 在页面刷新时将vuex里的信息保存到localStorage里
     window.addEventListener("beforeunload",()=>{
     localStorage.setItem("messageStore",JSON.stringify(this.$store.state))
     })
@@ -27,7 +27,6 @@ export default {
 </script>
 
 <style lang="less">
-
 .exactActive{
   color: rgba(240, 110, 94, 1);
 }

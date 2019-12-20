@@ -8,8 +8,9 @@
         <router-link tag="span" to="/personal/myAccount">我的合同</router-link>
         <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
         <router-link tag="span" to="/personal/myCollect">我的收藏</router-link>
+        <router-link tag="span" to="/personal/myBook">我的预约</router-link>
       </div>
-      <p>Hi! <span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
+      <p><i class="el-icon-user-solid"></i><span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
     </div>
 
     <!-- 路由出口 -->
@@ -58,7 +59,7 @@ export default {
       height: 35px;
     }
     .header-title{
-      width: 400px;
+      width: 500px;
       display: flex;
       justify-content: space-between;
       color: #000;
@@ -67,6 +68,10 @@ export default {
       }
     }
     p{
+      .el-icon-user-solid{
+        font-size: 20px;
+        margin-right: 10px;
+      }
       span:nth-of-type(1){
         font-size: 20px;
         font-weight: bold;
