@@ -56,7 +56,7 @@
     <div class="rent-pagination">
       <el-pagination
         background
-        :current-page="1"
+        :current-page="currentPage"
         :page-size="pageSize"
         @current-change="change"
         layout="prev, pager, next"
@@ -74,6 +74,7 @@ export default {
       allHouse: [],//保存所有的房源信息
       nowHouse: [],
       totalCount: 0,//当前请求数据的总条数
+      currentPage: 1,//当前展示的页数
       pageSize: 6,//每一页有多少条数据
       area: ['全部','锦江区','青羊区','武侯区','金牛区','高新区','双流区','天府新区','成华区'],//查询区域列表
       money: ['全部','1-500','500-1000','1000-1500','1500-2000','2000-2500','2500-3000'],//查询价格列表
@@ -130,6 +131,7 @@ export default {
           }else{
             this.nowHouse = this.allHouse.slice(0,this.pageSize)
           }
+          this.currentPage = 1;
           })
         .catch(err => {
           console.log(err)
@@ -137,6 +139,7 @@ export default {
     },
     // 点击翻页
     change(page) {
+      this.currentPage = page;
       if(page == 1){
         this.nowHouse = this.allHouse.slice(0,this.pageSize)
       }else{

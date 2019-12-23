@@ -36,7 +36,7 @@
           </p>
         </div>
         <div class="item-right" v-if="item.BookState == '已看房' ">
-          <el-button type="primary" plain >立即下单</el-button>
+          <el-button type="primary" plain @click="handNewOrder(item)" ref="orderBtn">立即下单</el-button>
         </div>
         <div class="item-right" v-else></div>
       </div>
@@ -49,8 +49,7 @@ import api from "../api/index";
 export default {
   data() {
     return {
-      bookData: [], //预约列表
-      showModal: false //是否展示选择月份提交的弹框
+      bookData: [] //预约列表
     };
   },
 
@@ -61,56 +60,70 @@ export default {
       .then(res => {
         this.bookData = res.data._Items;
         console.log(res, "预约列表");
-        return this.bookData
       })
-      .then(res => {
-        console.log(res,'返回预约列表数据')
-        
+      .catch(e => {
+        console.log(e)
       })
-      
   },
 
   methods: {
     // 点击下单按钮进行创建订单
     handNewOrder(item) {
-      this.showModal = true;
-      console.log(item, "当前下单");
-    },
-    // open() {
-    //   const BuildId = 
-    //   const UserId = 
-    //   const ButlerId = 
-    //   const PayRentTotal = 
-    //   const UserNumber = 
-    //   this.$prompt("请输入租房月数", "提示", {
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     inputType: 'number',
-    //     inputValue: 1,
-    //     inputValidator(val) {
-    //       if(val < 1 || val > 12) {
-    //         return '月份错误'
-    //       }
-    //     }
-    //   })
-    //     .then(({ value }) => {
-    //       api.AddOrder({
-
-    //       })
-    //       .then(res => {
-    //         console.log(res,'新建订单')
-    //       })
-    //       .catch(err => {
-    //         console.log(err)
-    //       })
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         type: "info",
-    //         message: "取消输入"
-    //       });
-    //     });
-    // }
+      this.$prompt("请输入租房月数", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputType: "number",
+        inputValue: 1,
+        closeOnClickModal: false,
+        inputValidator(val) {
+          if (val < 1) {
+            return "月份错误";
+          }
+        }
+      })
+        .then(({ value }) => {
+          const BuildId = item.BuildId;//房源id
+          const UserId = item.UserId;//用户id
+          const ButlerId = item.ButlerId;//管家id
+          const PayRentTotal = parseInt(item.BuildPrice) * parseInt(value);//支付总价
+          const UserNumber = item.UserNumber;//用户电话
+          const that = this;
+          api
+            .AddOrder({
+              BuildId,
+              UserId,
+              ButlerId,
+              PayRentTotal,
+              UserNumber
+            })
+            .then(res => {
+              // 重复下单
+              if (res.data == "订单已生成，请不要重复下单") {
+                 this.$message({
+                    type: "warning",
+                    message: res.data,
+                    duration: '2000',
+                    center: true,
+                })
+              }
+              // 下单成功
+              if (res.data == "订单生成,请尽快联系管家签约哦") {
+                 this.$message({
+                    type: "success",
+                    message: res.data,
+                    duration: '2000',
+                    center: true,
+                })
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(() => {
+          return
+        });
+    }
   }
 };
 </script>
@@ -170,13 +183,13 @@ export default {
         }
       }
       .item-right {
-        width: 300px;
+        width: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
         .el-button {
-          width: 32%;
+          width: 100%;
           margin: 0;
         }
       }

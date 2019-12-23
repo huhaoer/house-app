@@ -26,4 +26,7 @@ export default {
   AddBook: '/addBook',//添加预约
   FindBookListFull: '/findBookListFull',//根据用户id查看已经预约的订单
   IsBook: '/isBook',//判断是否被预约过看房
+
+  accountBaseURL: '/accountApi',//获取账单数据需要的基础URL
+  FindAccount: '/findAccount',//根据用户id查询用户的账单
 }

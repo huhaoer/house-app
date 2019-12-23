@@ -25,6 +25,10 @@ const bookAjax = Axios.create({
   baseURL: URLS.bookBaseURL,
   method: 'get'
 })
+const accountAjax = Axios.create({
+  baseURL: URLS.accountBaseURL,
+  method: 'get'
+})
 
 export default {
   /**
@@ -111,10 +115,10 @@ export default {
     })
   },
   // 2.用户下单
-  AddOrder(Order) {
+  AddOrder(orderInfo) {
     return orderAjax.get(URLS.AddOrder, {
       params: {
-        Order,
+        orderInfo,
       }
     })
   },
@@ -184,7 +188,18 @@ export default {
         Book
       }
     })
-  }
-  
+  },
 
+  /**
+   * 关于账单的所有接口 
+   */
+  // 1.根据用户id查询账单
+  FindAccount(accountInfo) {
+    return accountAjax.get(URLS.FindAccount,{
+      params: {
+        accountInfo
+      }
+    })
+  },
+  
 }

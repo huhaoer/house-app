@@ -78,7 +78,7 @@
       </div>
       <!-- 右侧 -->
       <div class="subscribe-right">
-        <div class="right-book" @click="handBook" v-if="!isBook">预约看房</div>
+        <div class="right-book" @click="handBook" v-if="!this.$store.state.currentLoginUser.UserId || !isBook">预约看房</div>
         <div class="right-book" v-else style="background: #ccc">预约看房</div>
         <div class="right-save">
           房源已被收藏
@@ -194,13 +194,15 @@ export default {
             const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
             const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
             const choiceDay = parseInt(value.split("-")[2]); //用户选择日
+            // console.log(year,month,day)
+            // console.log(choiceYear,choiceMonth,choiceDay)
 
             // 日期错误
             if (
               !value ||
               choiceYear < year ||
-              (choiceYear >= year && choiceMonth < month) ||
-              (choiceYear >= year && choiceMonth >= month && choiceDay < day)
+              (choiceYear == year && choiceMonth < month) ||
+              (choiceYear == year && choiceMonth == month && choiceDay < day)
             ) {
               this.$message({
                 type: "error",

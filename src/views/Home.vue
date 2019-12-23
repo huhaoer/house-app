@@ -49,19 +49,20 @@
     <div class="house-origin">
       <h1>今日精选房源</h1>
       <div class="origin-wrap">
-
-        <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="origin-item" v-for="(item,index) in homeHouse" :key="index">
-          <img
-            :src="item.BuildImage"
-            alt="加载图片失败"
-          />
+        <router-link
+          tag="div"
+          :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+          class="origin-item"
+          v-for="(item,index) in homeHouse"
+          :key="index"
+        >
+          <img :src="item.BuildImage" alt="加载图片失败" />
           <p>{{ item.BuildName }}</p>
           <div>
             <span>{{ item.BuildLocation }}</span>
             <span>￥{{ item.BuildPrice }}元/月</span>
           </div>
         </router-link>
-
       </div>
     </div>
     <!-- 选择我们理由部分 -->
@@ -77,38 +78,32 @@
 </template>
 
 <script>
-import api from '../api/index'
+import api from "../api/index";
 export default {
   data() {
     return {
-      homeHouse: [],
-    }
+      homeHouse: []
+    };
   },
 
   mounted() {
     // 发送请求,获取首页的6条数据
-    api.UserQueryBuildList()
+    api
+      .UserQueryBuildList()
       .then(res => {
-        this.homeHouse = res.data._Items.slice(0,6)//首页截取6条数据
+        this.homeHouse = res.data._Items.slice(0, 6); //首页截取6条数据
       })
       .catch(err => {
-        console.log(err)
-    })
+        console.log(err);
+      });
   }
-}
+};
 </script>
 
 <style lang='less' scoped>
 .home {
   // 中间背景图部分
   .house-bg {
-    // width: 100%;
-    // height: 500px;
-    // background-image: url('../assets/bg.jpg');
-    // background-repeat: no-repeat;
-    // background-position: -192px center;
-    // background-size:cover;
-
     .el-carousel__item:nth-of-type(1) {
       background-image: url("../assets/bg.jpg");
       background-repeat: no-repeat;
@@ -116,12 +111,12 @@ export default {
     }
 
     .el-carousel__item:nth-of-type(2) {
-      background-image: url("../assets/bg2.jpg");
+      background-image: url("../assets/bg3.jpg");
       background-repeat: no-repeat;
     }
 
     .el-carousel__item:nth-of-type(3) {
-      background-image: url("../assets/bg.jpg");
+      background-image: url("../assets/bg2.jpg");
       background-repeat: no-repeat;
       background-position: -240px 0px;
     }
