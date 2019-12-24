@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import api from "../api/index";
+import api from "../../api/index";
 export default {
   data() {
     return {

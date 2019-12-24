@@ -6,7 +6,7 @@
         <img :src="houseData.BuildImage" alt="图片加载失败" />
         <div class="left-menu">
           <span>分享</span>
-          <span @click="handConnect">{{ isCollect ? '已收藏' : '收藏' }}</span>
+          <span @click="handConnect">{{ isCollect && this.$store.state.currentLoginUser.UserId ? '已收藏' : '收藏' }}</span>
         </div>
       </div>
       <!-- 右侧简介 -->
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import api from "../api/index";
+import api from "../../api/index";
 export default {
   data() {
     return {

@@ -10,7 +10,7 @@
     <div class="house-main">
       <div class="order-house">
         <div class="order-top">
-          <img src="../assets/zufang.jpg" alt />
+          <img src="../../assets/zufang.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>租房</p>
@@ -19,7 +19,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="../assets/fuwu.jpg" alt />
+          <img src="../../assets/fuwu.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>服务</p>
@@ -28,7 +28,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="../assets/shenghuo.jpg" alt />
+          <img src="../../assets/shenghuo.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>生活</p>
@@ -37,7 +37,7 @@
       </div>
       <div class="order-house">
         <div class="order-top">
-          <img src="../assets/yezhu.jpg" alt />
+          <img src="../../assets/yezhu.jpg" alt />
         </div>
         <div class="order-bottom">
           <p>业主</p>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import api from "../api/index";
+import api from "../../api/index";
 export default {
   data() {
     return {
@@ -105,18 +105,18 @@ export default {
   // 中间背景图部分
   .house-bg {
     .el-carousel__item:nth-of-type(1) {
-      background-image: url("../assets/bg.jpg");
+      background-image: url("../../assets/bg.jpg");
       background-repeat: no-repeat;
       background-position: -240px 0px;
     }
 
     .el-carousel__item:nth-of-type(2) {
-      background-image: url("../assets/bg3.jpg");
+      background-image: url("../../assets/bg3.jpg");
       background-repeat: no-repeat;
     }
 
     .el-carousel__item:nth-of-type(3) {
-      background-image: url("../assets/bg2.jpg");
+      background-image: url("../../assets/bg2.jpg");
       background-repeat: no-repeat;
       background-position: -240px 0px;
     }
@@ -239,18 +239,18 @@ export default {
         background-repeat: no-repeat;
       }
       .top-one {
-        background-image: url("../assets/instr.png");
+        background-image: url("../../assets/instr.png");
       }
       .top-two {
-        background-image: url("../assets/instr.png");
+        background-image: url("../../assets/instr.png");
         background-position: 0px -60px;
       }
       .top-three {
-        background-image: url("../assets/instr.png");
+        background-image: url("../../assets/instr.png");
         background-position: 0px -120px;
       }
       .top-four {
-        background-image: url("../assets/instr.png");
+        background-image: url("../../assets/instr.png");
         background-position: 0px -180px;
       }
     }

@@ -16,7 +16,7 @@ module.exports = {
         }
       },
       "/houseApi": {
-        target: "http://192.168.3.29:8080/BuildInfoMgeSvr.assx/", // 房源 host
+        target: "http://192.168.3.27:8080/BuildInfoMgeSvr.assx/", // 房源 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/houseApi": "" // rewrite path
@@ -30,7 +30,7 @@ module.exports = {
         }
       },
       "/butlerApi": {
-        target: "http://192.168.3.27:8080/ButlerInfoMgeSvr.assx/", // 管家 host
+        target: "http://192.168.3.7:8080/ButlerInfoMgeSvr.assx/", // 管家 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/butlerApi": "" // rewrite path

@@ -18,17 +18,17 @@ const router = new VueRouter({
         {
           path: 'home',
           name: 'home',
-          component: () => import('../views/Home.vue')
+          component: () => import('../views/pageDefault/Home.vue')
         },
         {
           path: 'rent',
           name: 'rent',
-          component: () => import('../views/Rent.vue')
+          component: () => import('../views/pageDefault/Rent.vue')
         },
         {
           path: 'houseDetail:id',//动态路由
           name: 'houseDetail',
-          component: () => import('../views/HouseDetail.vue')
+          component: () => import('../views/pageDefault/HouseDetail.vue')
         }
       ]
     },
@@ -52,22 +52,22 @@ const router = new VueRouter({
         {
           path: 'myInformation',
           name: 'myInformation',
-          component: () => import('../views/MyInformation.vue')
+          component: () => import('../views/personal/MyInformation.vue')
         },
         {
           path: 'myOrder',
           name: 'myOrder',
-          component: () => import('../views/MyOrder.vue')
+          component: () => import('../views/personal/MyOrder.vue')
         },
         {
           path: 'myCollect',
           name: 'myCollect',
-          component: () => import('../views/MyCollect.vue')
+          component: () => import('../views/personal/MyCollect.vue')
         },
         {
           path: 'myBook',
           name: 'myBook',
-          component: () => import('../views/MyBook.vue')
+          component: () => import('../views/personal/MyBook.vue')
         },
       ]
     },

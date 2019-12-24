@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import api from '../api/index'
+import api from '../../api/index'
 export default {
   // to 去到的那个路径信息  from从哪个路径来  next是否跳转,执行就跳转,不执行就不跳转
   beforeRouteLeave(to, from, next) {

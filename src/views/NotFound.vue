@@ -70,11 +70,16 @@ html,
 body {
   height: 95%;
   width: 100%;
-  background: #0f3854;
-  background: -webkit-radial-gradient(center ellipse, #0a2e38 0%, #000000 70%);
-  background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
   background-size: 100%;
   .notFound {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0f3854;
+    background: -webkit-radial-gradient(center ellipse, #0a2e38 0%, #000000 70%);
+    background: radial-gradient(ellipse at center, #0a2e38 0%, #000000 70%);
     .backhome {
       width: 100%;
       height: 80px;
