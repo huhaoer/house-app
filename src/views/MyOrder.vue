@@ -37,13 +37,13 @@
           </p>
         </div>
         <div class="item-right" v-else>
-          <el-button type="primary" plain ref="orderBtn" @click="handPay">立即支付</el-button>
+          <el-button type="primary" plain ref="orderBtn" @click="handPay(item)">立即支付</el-button>
         </div>
       </div>
     </div>
 
-    <div class="order-modal" v-if="showModal">
-      <div class="modal-wrap">
+    <div :class="['order-modal',{hide: hideModal == true}]" @click="hideM">
+      <div class="modal-wrap" @click.stop="noHide">
         <div class="modal-head">
           <span>支付期数</span>
           <span>支付状态</span>
@@ -53,10 +53,17 @@
         </div>
         <div class="modal-item" v-for="(item,index) in modalData" :key="index">
           <span>{{ item.AccountDate }}</span>
-          <span>{{ item.AccountStatus }}</span>
+          <span style="color: red">{{ item.AccountStatus }}</span>
           <span>{{ item.AccountPayTime }}</span>
           <span>{{ item.AccountPay }}</span>
-          <span><el-button type="primary" plain>支付</el-button></span>
+          <span v-if="item.AccountStatus == '已支付'" class="btn-pay">
+            <el-button type="primary" plain disabled>线上支付</el-button>
+            <el-button type="danger" plain disabled>线下支付</el-button>
+          </span>
+          <span v-else class="btn-pay">
+            <el-button type="primary" plain @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)">线上支付</el-button>
+            <el-button type="danger" plain>线下支付</el-button>
+          </span>
         </div>
       </div>
     </div>
@@ -70,7 +77,7 @@ export default {
     return {
       orderData: [], //订单列表
       modalData: [],//弹框渲染的数据
-      showModal: false
+      hideModal: true,//默认隐藏弹框
     };
   },
 
@@ -79,7 +86,6 @@ export default {
     api
       .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
       .then(res => {
-        console.log(res, "合同");
         this.orderData = res.data._Items;
       })
       .catch(err => {
@@ -89,13 +95,16 @@ export default {
 
   methods: {
     // 点击立即支付 弹出弹框
-    handPay() {
+    handPay(item) {
       const UserId = this.$store.state.currentLoginUser.UserId;
-      this.showModal = true;
+      const ConId = item.ConId;
+      this.hideModal = false;
       api
-        .FindAccount({ UserId })
+        .FindAccountmore({ UserId,ConId })
         .then(res => {
+          console.log(res,'==============================')
           this.modalData = res.data._Items;
+
           console.log(res, "用户账单");
         })
         .catch(err => {
@@ -103,9 +112,20 @@ export default {
         });
     },
 
-    //
-    hideModal() {
-      this.showModal = false;
+    // 点击蒙层隐藏
+    hideM() {
+      this.hideModal = true;
+    },
+
+    // 点击非蒙层不隐藏 
+    noHide() {
+      this.hideModal = false;
+    },
+
+    // 点击线上支付跳转到支付宝页面
+    goToPay(AccountId,AccountPay,AccountDate) {
+      this.$router.push({name: 'alipay',params: {AccountId,AccountPay,AccountDate}})
+      // this.$router.push({ name: 'home', params: { userId: wise }})
     }
   }
 };
@@ -119,13 +139,17 @@ body {
 .order {
   width: 100%;
   .order-modal {
-    position: absolute;
+    &.hide{
+      display: none;
+    }
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.5);
     .modal-wrap {
+      overflow: scroll;
       background-color: #fff;
       position: absolute;
       width: 900px;
@@ -154,6 +178,15 @@ body {
         span {
           display: inline-block;
           width: 25%;
+          &.btn-pay{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .el-button{
+              width: 100px;
+              height: 40px;
+            }
+          }
         }
         display: flex;
         justify-content: space-around;

@@ -8,6 +8,7 @@ export default {
   UserQueryBuildList:'/userQueryBuildList', //获取房源信息
   UserQueryDetails: '/userQueryDetails',//根据房源id查看房源具体信息
   UserQueryBuildByParam: '/userQueryBuildByParam',//根据当前传递的数据筛选房源
+  GetBuildInfoByLike: '/getBuildInfoByLike',//根据导航栏的关键字模糊查询
 
   butlerBaseURL: '/butlerApi',//获取管家数据需要的基础URL
   GetButlerInfo: '/getButlerInfo',//根据管家id查询管家信息
@@ -28,5 +29,8 @@ export default {
   IsBook: '/isBook',//判断是否被预约过看房
 
   accountBaseURL: '/accountApi',//获取账单数据需要的基础URL
-  FindAccount: '/findAccount',//根据用户id查询用户的账单
+  FindAccountmore: '/findAccountmore',//根据用户id查询用户的账单
+
+  alipayBaseURL: '/alipayApi',//支付宝 支付接口
+  Alipay: '/pay',//支付
 }

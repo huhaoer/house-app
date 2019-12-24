@@ -7,8 +7,14 @@
           <img src="../assets/logo.png"/>
         </div>
         <div class="header-middle">
-          <router-link tag="span" to="/index/home">首页</router-link>
-          <router-link tag="span" to="/index/rent">我要租房</router-link>
+          <div>
+            <router-link tag="span" to="/index/home">首页</router-link>
+            <router-link tag="span" to="/index/rent">我要租房</router-link>
+          </div>
+          <div>
+            <el-input  placeholder="请输入查询内容" v-model="inpValue"></el-input>
+            <el-button :disabled="inpValue == ''" @click="handKeyword">查找</el-button>
+          </div>
         </div>
         <div class="header-right" v-if="!this.$store.state.currentLoginUser.UserName">
           <router-link tag="span" to="/login">登陆</router-link>
@@ -49,11 +55,13 @@
 </template>
 
 <script>
+import api from '../api/index'
 export default {
   name: "home",
   data() {
     return {
       erweima: '',//当前显示二维码的路径
+      inpValue: '',//输入框的输入内容
     };
   },
   methods: {
@@ -70,6 +78,31 @@ export default {
     enterPersonal() {
       this.$router.push('/personal')
     },
+
+    // 点击查询关键字
+    handKeyword() {
+      api.GetBuildInfoByLike({
+        str: this.inpValue,
+        BuildId: 12
+      })
+        .then(res => {
+          if(res.data._Items.length > 0) {//存在查询结果
+              this.$router.push({name: 'rent',params: {likeData: res.data._Items}})
+          }else{//没有数据
+           this.$message({
+                  message: '查询结果不存在',
+                  type: 'error',
+                  duration: '1500',
+                  center: true,
+                })
+          }
+          console.log(res,'模糊查询===')
+          this.inpValue = '';//置空查询关键字
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 };
 </script>
@@ -104,9 +137,18 @@ body {
           }
         }
         .header-middle {
+          display: flex;
+          justify-content: space-between;
           color: #fff;
           line-height: 60px;
           width: 800px;
+          .el-input{
+            width: 200px;
+          }
+          .el-button{
+            width: 65px;
+            margin-left: 5px;
+          }
           span:hover {
             cursor: pointer;
           }

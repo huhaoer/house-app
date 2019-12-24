@@ -86,6 +86,7 @@ export default {
           const UserId = item.UserId;//用户id
           const ButlerId = item.ButlerId;//管家id
           const PayRentTotal = parseInt(item.BuildPrice) * parseInt(value);//支付总价
+          console.log(PayRentTotal,'总价')
           const UserNumber = item.UserNumber;//用户电话
           const that = this;
           api
@@ -97,21 +98,22 @@ export default {
               UserNumber
             })
             .then(res => {
+              console.log(res,'下单情况')
               // 重复下单
               if (res.data == "订单已生成，请不要重复下单") {
                  this.$message({
                     type: "warning",
                     message: res.data,
-                    duration: '2000',
+                    duration: '1500',
                     center: true,
                 })
               }
               // 下单成功
-              if (res.data == "订单生成,请尽快联系管家签约哦") {
+              if (res.data == "订单生成，请尽快联系管家签约哦") {
                  this.$message({
                     type: "success",
                     message: res.data,
-                    duration: '2000',
+                    duration: '1500',
                     center: true,
                 })
               }

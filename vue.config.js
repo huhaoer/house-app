@@ -16,7 +16,7 @@ module.exports = {
         }
       },
       "/houseApi": {
-        target: "http://192.168.3.27:8080/BuildInfoMgeSvr.assx/", // 房源 host
+        target: "http://192.168.3.29:8080/BuildInfoMgeSvr.assx/", // 房源 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/houseApi": "" // rewrite path
@@ -44,17 +44,24 @@ module.exports = {
         }
       },
       "/bookApi": {
-        target: "http://192.168.3.7:8080/BookMgeSvr.assx/", // 预约 host
+        target: "http://192.168.3.27:8080/BookMgeSvr.assx/", // 预约 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/bookApi": "" // rewrite path
         }
       },
       "/accountApi": {
-        target: "http://192.168.3.29:8080/AccountMgeSvr.assx/", // 账单 host
+        target: "http://192.168.3.27:8080/AccountMgeSvr.assx/", // 账单 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/accountApi": "" // rewrite path
+        }
+      },
+      "/alipayApi": {
+        target: "http://88jxkv.natappfree.cc/", // 支付宝支付 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/alipayApi": "" // rewrite path
         }
       },
     }

@@ -29,8 +29,24 @@ const accountAjax = Axios.create({
   baseURL: URLS.accountBaseURL,
   method: 'get'
 })
+const alipayAjax = Axios.create({
+  baseURL: URLS.alipayBaseURL,
+  method: 'get'
+})
 
 export default {
+  /**
+   * 支付宝支付
+   */
+  // 1.支付宝支付
+  Alipay(payObj) {
+    return alipayAjax.get(URLS.Alipay, {
+      params: {
+        ...payObj
+      }
+    })
+  },
+
   /**
    *  关于用户查询的所有接口
    */
@@ -85,6 +101,14 @@ export default {
     return houseAjax.get(URLS.UserQueryBuildByParam,{
       params: {
         ...choice
+      }
+    })
+  },
+  // 4.根据导航栏关键字模糊查询
+  GetBuildInfoByLike(likeObj) {
+    return houseAjax.get(URLS.GetBuildInfoByLike,{
+      params: {
+        ...likeObj
       }
     })
   },
@@ -194,8 +218,8 @@ export default {
    * 关于账单的所有接口 
    */
   // 1.根据用户id查询账单
-  FindAccount(accountInfo) {
-    return accountAjax.get(URLS.FindAccount,{
+  FindAccountmore(accountInfo) {
+    return accountAjax.get(URLS.FindAccountmore,{
       params: {
         accountInfo
       }

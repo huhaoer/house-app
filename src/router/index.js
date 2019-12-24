@@ -78,6 +78,12 @@ const router = new VueRouter({
       
     },
     {
+      path : '/alipay',//支付宝支付页面
+      name: 'alipay',
+      component: () => import('../views/Alipay.vue')
+      
+    },
+    {
       path : '*',
       redirect (to) {
         if(to.path === '/'){
