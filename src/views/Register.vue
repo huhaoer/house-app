@@ -30,13 +30,21 @@
             placeholder="请输入真实姓名"
           ></el-input>
         </el-form-item>
-        <el-form-item label="账号" prop="account">
+        <el-form-item label="账号" prop="account" class="yzm">
           <el-input
             v-model.number="ruleForm.account"
             autocomplete="off"
             :required="true"
             :maxlength="11"
             placeholder="请输入11位手机号码"
+          ></el-input>
+          <el-button class="btn" type="primary" @click="getCCode">验证码</el-button>
+        </el-form-item>
+        <el-form-item label="验证码" prop="cCode" v-if="showCode">
+          <el-input
+            autocomplete="off"
+            :required="true"
+            placeholder="请输入验证码"
           ></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass">
@@ -69,7 +77,7 @@
 
 <script>
 import api from "../api/index";
-import { red } from 'color-name';
+import { red } from "color-name";
 export default {
   data() {
     // 1.校验用户手机账号
@@ -126,40 +134,50 @@ export default {
     };
     // 4.校验姓名
     var checkName = (rule, value, callback) => {
-    // 姓名不能为空
-    if (!value) {
-      return callback(new Error("姓名不能为空"));
-    }
-    setTimeout(() => {
-      // 用户名是非数字
-      if (Number.isInteger(value)) {
-        callback(new Error("请输入正确姓名"));
-      } else {
-        if (value.toString().length < 2 || value.toString().length > 4) {
+      // 姓名不能为空
+      if (!value) {
+        return callback(new Error("姓名不能为空"));
+      }
+      setTimeout(() => {
+        // 用户名是非数字
+        if (Number.isInteger(value)) {
           callback(new Error("请输入正确姓名"));
         } else {
-          callback();
+          if (value.toString().length < 2 || value.toString().length > 4) {
+            callback(new Error("请输入正确姓名"));
+          } else {
+            callback();
+          }
         }
-      }
-    }, 1000);
-  };
+      }, 1000);
+    };
     return {
       // 绑定input框信息
       ruleForm: {
-        name: '',//姓名
+        name: "", //姓名
         account: "", //账号
         pass: "", //第一次密码
-        checkPass: "" //第二次密码
+        checkPass: "", //第二次密码
       },
       // 校验规则
       rules: {
-        account: [{ required: true, validator: checkAccount, trigger: "blur"},{ required: true, pattern: /^((13|14|15|16|17|18)[0-9]{1}\d{8})|((166|199|198)[0-9]{1}\d{7})$/, message: '请输入正确的电话号码', trigger: 'blur' }],
+        account: [
+          { required: true, validator: checkAccount, trigger: "blur" },
+          {
+            required: true,
+            pattern: /^((13|14|15|16|17|18)[0-9]{1}\d{8})|((166|199|198)[0-9]{1}\d{7})$/,
+            message: "请输入正确的电话号码",
+            trigger: "blur"
+          }
+        ],
         pass: [{ required: true, validator: validatePass, trigger: "blur" }],
         checkPass: [
           { required: true, validator: validatePass2, trigger: "blur" }
         ],
-        name: [{ required: true, validator: checkName, trigger: "blur" }],
-      }
+        name: [{ required: true, validator: checkName, trigger: "blur" }]
+      },
+      
+      showCode: false,//是否展示验证码框
     };
   },
   methods: {
@@ -172,53 +190,60 @@ export default {
           const UserNumber = this.ruleForm.account; //手机号
           const UserPwd = this.ruleForm.pass; //密码
           const UserName = this.ruleForm.name; //姓名
-          const isRegister = false//标记是否被注册过
+          const isRegister = false; //标记是否被注册过
           // 判断电话是否被注册过
-          api.FindUserInfo({UserNumber})
+          api
+            .FindUserInfo({ UserNumber })
             .then(res => {
               // 电话已经存在
-              if(res.data._Items.length > 0) {
-                 // 提示信息
+              if (res.data._Items.length > 0) {
+                // 提示信息
                 this.$message({
-                  message: '该用户已经被注册',
-                  type: 'error',
-                  duration: '2000',
+                  message: "该用户已经被注册",
+                  type: "error",
+                  duration: "2000",
                   center: true,
                   offset: 60
-                })
-                return
-              }//电话不存在
-              else{
-                  api.AddUserInfo({ UserNumber, UserPwd, UserName})
-                    .then(res => {
-                      console.log(res,'注册成功')
-                      // 上传成功
-                      if(res.data == UserNumber) {
-                        // 提示信息
-                        this.$message({
-                          message: '注册成功',
-                          type: 'success',
-                          duration: '1500',
-                          center: true,
-                          offset: 60
-                        })
-                        this.$router.push('/login')//跳转到登录页面
-                      }
-                    })
-                    .catch(err => {
-                      console.log(err)
-                    })
+                });
+                return;
+              } //电话不存在
+              else {
+                api
+                  .AddUserInfo({ UserNumber, UserPwd, UserName })
+                  .then(res => {
+                    console.log(res, "注册成功");
+                    // 上传成功
+                    if (res.data == UserNumber) {
+                      // 提示信息
+                      this.$message({
+                        message: "注册成功",
+                        type: "success",
+                        duration: "1500",
+                        center: true,
+                        offset: 60
+                      });
+                      this.$router.push("/login"); //跳转到登录页面
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
               }
             })
             .catch(err => {
-              console.log(err)
-            })
+              console.log(err);
+            });
         }
       });
     },
     // 点击logo跳转首页
     handToHome() {
       this.$router.push("/index");
+    },
+
+    // 点击获取验证码
+    getCCode() {
+      this.showCode = true
     }
   }
 };
@@ -276,6 +301,15 @@ export default {
       margin-top: 50px;
       .el-form-item {
         margin-top: 30px;
+        &.yzm {
+          position: relative;
+          .btn {
+            width: 90px;
+            height: 40px;
+            position: absolute;
+            right: -110px;
+          }
+        }
       }
       .el-button {
         width: 312px;
