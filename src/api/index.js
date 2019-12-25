@@ -76,6 +76,14 @@ export default {
       }
     })
   },
+  // 4.获取短信验证码
+  Getcode(UserNumber) {
+    return userAjax.get(URLS.Getcode, {
+      params: {
+        UserNumber,
+      }
+    })
+  },
 
 
   /**

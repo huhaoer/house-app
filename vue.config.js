@@ -58,7 +58,7 @@ module.exports = {
         }
       },
       "/alipayApi": {
-        target: "http://gimxbq.natappfree.cc/", // 支付宝支付 host
+        target: "http://ubga35.natappfree.cc/", // 支付宝支付 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/alipayApi": "" // rewrite path

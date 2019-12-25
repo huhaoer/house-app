@@ -38,10 +38,11 @@
             :maxlength="11"
             placeholder="请输入11位手机号码"
           ></el-input>
-          <el-button class="btn" type="primary" @click="getCCode">验证码</el-button>
+          <el-button class="btn" type="primary" @click="getCode" :class="{isClick: isClick}" :disabled="isClick">验证码</el-button>
         </el-form-item>
-        <el-form-item label="验证码" prop="cCode" v-if="showCode">
+        <el-form-item label="验证码" prop="code" v-if="showCode">
           <el-input
+            v-model="ruleForm.code"
             autocomplete="off"
             :required="true"
             placeholder="请输入验证码"
@@ -151,6 +152,25 @@ export default {
         }
       }, 1000);
     };
+    // 4.校验验证码
+    var checkCode = (rule, value, callback) => {
+      // 姓名不能为空
+      if (!value) {
+        return callback(new Error("请填写验证码"));
+      }
+      setTimeout(() => {
+        // 用户名是非数字
+        if (Number.isInteger(value)) {
+          callback(new Error("请输入正确验证码"));
+        } else {
+          if (value.toString().length != 6) {
+            callback(new Error("请输入正确验证码"));
+          } else {
+            callback();
+          }
+        }
+      }, 1000);
+    };
     return {
       // 绑定input框信息
       ruleForm: {
@@ -158,6 +178,7 @@ export default {
         account: "", //账号
         pass: "", //第一次密码
         checkPass: "", //第二次密码
+        code: "" //短信验证码
       },
       // 校验规则
       rules: {
@@ -174,10 +195,13 @@ export default {
         checkPass: [
           { required: true, validator: validatePass2, trigger: "blur" }
         ],
-        name: [{ required: true, validator: checkName, trigger: "blur" }]
+        name: [{ required: true, validator: checkName, trigger: "blur" }],
+        code: [{ required: true, validator: checkCode, trigger: "blur" }]
       },
-      
-      showCode: false,//是否展示验证码框
+
+      showCode: false, //是否展示验证码框
+      nowCode: null, //当前验证码
+      isClick: false,//当前验证码按钮是否被点击
     };
   },
   methods: {
@@ -187,52 +211,76 @@ export default {
         if (!valid) {
           return;
         } else {
-          const UserNumber = this.ruleForm.account; //手机号
-          const UserPwd = this.ruleForm.pass; //密码
-          const UserName = this.ruleForm.name; //姓名
-          const isRegister = false; //标记是否被注册过
-          // 判断电话是否被注册过
-          api
-            .FindUserInfo({ UserNumber })
-            .then(res => {
-              // 电话已经存在
-              if (res.data._Items.length > 0) {
-                // 提示信息
-                this.$message({
-                  message: "该用户已经被注册",
-                  type: "error",
-                  duration: "2000",
-                  center: true,
-                  offset: 60
-                });
-                return;
-              } //电话不存在
-              else {
-                api
-                  .AddUserInfo({ UserNumber, UserPwd, UserName })
-                  .then(res => {
-                    console.log(res, "注册成功");
-                    // 上传成功
-                    if (res.data == UserNumber) {
-                      // 提示信息
-                      this.$message({
-                        message: "注册成功",
-                        type: "success",
-                        duration: "1500",
-                        center: true,
-                        offset: 60
-                      });
-                      this.$router.push("/login"); //跳转到登录页面
-                    }
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-              }
-            })
-            .catch(err => {
-              console.log(err);
+          console.log(this.nowCode == null, "当前验证码是否为空");
+          console.log(this.nowCode, "当前的验证码");
+          console.log(this.ruleForm.code, "表单的验证码");
+          if (this.nowCode == null) {
+            this.$message({
+              message: "请先获取验证码",
+              type: "warning",
+              duration: "1500",
+              center: true
             });
+            return;
+          } else {
+            const UserNumber = this.ruleForm.account; //手机号
+            const UserPwd = this.ruleForm.pass; //密码
+            const UserName = this.ruleForm.name; //姓名
+            const isRegister = false; //标记是否被注册过
+
+            if (parseInt(this.nowCode) == parseInt(this.ruleForm.code)) {
+              //验证码相同
+              // 判断电话是否被注册过
+              api
+                .FindUserInfo({ UserNumber })
+                .then(res => {
+                  // 电话已经存在
+                  if (res.data._Items.length > 0) {
+                    // 提示信息
+                    this.$message({
+                      message: "该用户已经被注册",
+                      type: "error",
+                      duration: "2000",
+                      center: true,
+                      offset: 60
+                    });
+                    return;
+                  } //电话不存在
+                  else {
+                    api
+                      .AddUserInfo({ UserNumber, UserPwd, UserName })
+                      .then(res => {
+                        console.log(res, "注册成功");
+                        // 上传成功
+                        if (res.data == UserNumber) {
+                          // 提示信息
+                          this.$message({
+                            message: "注册成功",
+                            type: "success",
+                            duration: "1500",
+                            center: true,
+                            offset: 60
+                          });
+                          this.$router.push("/login"); //跳转到登录页面
+                        }
+                      })
+                      .catch(err => {
+                        console.log(err);
+                      });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            } else {
+              this.$message({
+                message: "验证码错误",
+                type: "error",
+                duration: "1500",
+                center: true
+              });
+            }
+          }
         }
       });
     },
@@ -242,8 +290,20 @@ export default {
     },
 
     // 点击获取验证码
-    getCCode() {
-      this.showCode = true
+    getCode() {  
+      // 获取验证码
+      api
+        .Getcode(this.ruleForm.account)
+        .then(res => {
+          if (res.data) {
+            this.nowCode = res.data; //当前验证码赋值
+            this.isClick = true//设置已经获取了验证码
+            this.showCode = true;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -308,6 +368,9 @@ export default {
             height: 40px;
             position: absolute;
             right: -110px;
+            &.isClick {
+              background-color: #ccc;
+            }
           }
         }
       }

@@ -156,6 +156,7 @@ export default {
         .UserQueryBuildList()
         .then(res => {
           // 保存所有数据
+          console.log(res,'=======================================')
           this.allHouse = res.data._Items;
           this.totalCount = res.data._Items.length; //总长度
           this.dealData()
