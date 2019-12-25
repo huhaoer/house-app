@@ -51,7 +51,7 @@ module.exports = {
         }
       },
       "/accountApi": {
-        target: "http://192.168.3.27:8080/AccountMgeSvr.assx/", // 账单 host
+        target: "http://192.168.3.29:8080/AccountMgeSvr.assx/", // 账单 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/accountApi": "" // rewrite path

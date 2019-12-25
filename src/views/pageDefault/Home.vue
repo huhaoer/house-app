@@ -180,7 +180,7 @@ export default {
     .origin-wrap {
       display: flex;
       justify-content: space-between;
-      padding: 10px;
+      padding: 13px;
       box-sizing: border-box;
       flex-wrap: wrap;
       .origin-item {

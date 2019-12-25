@@ -56,12 +56,16 @@
           <span style="color: red">{{ item.AccountStatus }}</span>
           <span>{{ item.AccountPayTime }}</span>
           <span>{{ item.AccountPay }}</span>
-          <span v-if="item.AccountStatus == '已支付'" class="btn-pay">
+          <span v-if="item.AccountStatus != '未支付'" class="btn-pay">
             <el-button type="primary" plain disabled>线上支付</el-button>
             <el-button type="danger" plain disabled>线下支付</el-button>
           </span>
           <span v-else class="btn-pay">
-            <el-button type="primary" plain @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)">线上支付</el-button>
+            <el-button
+              type="primary"
+              plain
+              @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)"
+            >线上支付</el-button>
             <el-button type="danger" plain @click="goToPayOffline(item.AccountId)">线下支付</el-button>
           </span>
         </div>
@@ -76,8 +80,8 @@ export default {
   data() {
     return {
       orderData: [], //订单列表
-      modalData: [],//弹框渲染的数据
-      hideModal: true,//默认隐藏弹框
+      modalData: [], //弹框渲染的数据
+      hideModal: true //默认隐藏弹框
     };
   },
 
@@ -100,9 +104,9 @@ export default {
       const ConId = item.ConId;
       this.hideModal = false;
       api
-        .FindAccountmore({ UserId,ConId })
+        .FindAccountmore({ UserId, ConId })
         .then(res => {
-          console.log(res,'==============================')
+          console.log(res, "==============================");
           this.modalData = res.data._Items;
 
           console.log(res, "用户账单");
@@ -117,25 +121,37 @@ export default {
       this.hideModal = true;
     },
 
-    // 点击非蒙层不隐藏 
+    // 点击非蒙层不隐藏
     noHide() {
       this.hideModal = false;
     },
 
     // 点击线上支付跳转到支付宝页面
-    goToPay(AccountId,AccountPay,AccountDate) {
-      this.$router.push({name: 'alipay',params: {AccountId,AccountPay,AccountDate}})
+    goToPay(AccountId, AccountPay, AccountDate) {
+      this.$router.push({
+        name: "alipay",
+        params: { AccountId, AccountPay, AccountDate }
+      });
     },
 
     // 点击线下支付
     goToPayOffline(AccountId) {
-      api.OfflinePayment(AccountId)
+      api
+        .OfflinePayment(AccountId)
         .then(res => {
-          console.log(res,'线下支付')
+          console.log(res, "线下支付");
+          if (res.data == "请求管家确定") {
+            this.$message({
+              message: res.data,
+              type: "success",
+              duration: "2000",
+              center: true,
+            });
+          }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   }
 };
@@ -149,7 +165,7 @@ body {
 .order {
   width: 100%;
   .order-modal {
-    &.hide{
+    &.hide {
       display: none;
     }
     position: fixed;
@@ -188,11 +204,11 @@ body {
         span {
           display: inline-block;
           width: 25%;
-          &.btn-pay{
+          &.btn-pay {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            .el-button{
+            .el-button {
               width: 100px;
               height: 40px;
             }
