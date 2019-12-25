@@ -233,5 +233,13 @@ export default {
       }
     })
   },
+  // 2.用户线下支付接口
+  OfflinePayment(accountId) {
+    return accountAjax.get(URLS.OfflinePayment,{
+      params: {
+        accountId,
+      }
+    })
+  },
   
 }

@@ -59,7 +59,12 @@ export default {
       .FindBookListFull(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.bookData = res.data._Items;
-        console.log(res, "预约列表");
+        // console.log(res, "预约列表=========================");
+        // BuildId,
+        //       UserId,
+        //       ButlerId,
+        //       PayRentTotal,
+        //       UserNumber
       })
       .catch(e => {
         console.log(e)

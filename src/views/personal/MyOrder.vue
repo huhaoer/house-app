@@ -62,7 +62,7 @@
           </span>
           <span v-else class="btn-pay">
             <el-button type="primary" plain @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)">线上支付</el-button>
-            <el-button type="danger" plain>线下支付</el-button>
+            <el-button type="danger" plain @click="goToPayOffline(item.AccountId)">线下支付</el-button>
           </span>
         </div>
       </div>
@@ -125,7 +125,17 @@ export default {
     // 点击线上支付跳转到支付宝页面
     goToPay(AccountId,AccountPay,AccountDate) {
       this.$router.push({name: 'alipay',params: {AccountId,AccountPay,AccountDate}})
-      // this.$router.push({ name: 'home', params: { userId: wise }})
+    },
+
+    // 点击线下支付
+    goToPayOffline(AccountId) {
+      api.OfflinePayment(AccountId)
+        .then(res => {
+          console.log(res,'线下支付')
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 };

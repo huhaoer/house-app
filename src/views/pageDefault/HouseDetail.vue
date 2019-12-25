@@ -211,9 +211,12 @@ export default {
             } else {
               const UserId = this.$store.state.currentLoginUser.UserId;
               const BuildId = this.houseData.BuildId;
-              const ButlerId = this.houseData.ButlerId;
+              const ButlerId = this.butlerData.ButlerId;
               const BookTime = value;
               const BookState = "请求预约";
+              console.log(this.houseData,'houseData======================')
+              console.log(this.butlerData,'butlerData======================')
+              console.log(UserId,BuildId,ButlerId,BookTime,BookState,'======================')
               /**
                * UserId
                * BuildId
@@ -270,7 +273,7 @@ export default {
     api
       .UserQueryDetails(this.$route.params.id)
       .then(res => {
-        console.log(res, "请求结果");
+        console.log(res, "房源信息===========================");
         this.houseData = res.data._Items[0];
         const that = this;
 
@@ -294,6 +297,7 @@ export default {
         api
           .GetButlerInfo(that.houseData.ButlerId)
           .then(res => {
+            console.log(res,'管家====================')
             that.butlerData = res.data;
           })
           .catch(err => {

@@ -31,6 +31,7 @@ export default {
 
   accountBaseURL: '/accountApi',//获取账单数据需要的基础URL
   FindAccountmore: '/findAccountmore',//根据用户id查询用户的账单
+  OfflinePayment: '/offlinePayment',//线下支付接口
 
   alipayBaseURL: '/alipayApi',//支付宝 支付接口
   Alipay: '/pay',//支付
