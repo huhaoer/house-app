@@ -5,6 +5,8 @@ module.exports = {
   //配置输出的文件夹目录
   outputDir: './myDist',
 
+  
+
   // 配置获取用户信息代理
   devServer: {
     proxy: {
@@ -30,7 +32,7 @@ module.exports = {
         }
       },
       "/butlerApi": {
-        target: "http://192.168.3.7:8080/ButlerInfoMgeSvr.assx/", // 管家 host
+        target: "http://192.168.3.27:8080/ButlerInfoMgeSvr.assx/", // 管家 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/butlerApi": "" // rewrite path
@@ -58,7 +60,7 @@ module.exports = {
         }
       },
       "/alipayApi": {
-        target: "http://ubga35.natappfree.cc/", // 支付宝支付 host
+        target: "http://8fve5t.natappfree.cc/", // 支付宝支付 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/alipayApi": "" // rewrite path

@@ -49,20 +49,28 @@
     <div class="house-origin">
       <h1>今日精选房源</h1>
       <div class="origin-wrap">
-        <router-link
-          tag="div"
-          :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+        <div
           class="origin-item"
           v-for="(item,index) in homeHouse"
           :key="index"
+          v-loading="imgLoading"
+          element-loading-text="加载房源中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(255, 255, 255,0.7)"
         >
-          <img :src="item.BuildImage" alt="加载图片失败" />
+          <router-link
+            tag="div"
+            :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+            class="link-img"
+          >
+            <img :src="item.BuildImage" alt="加载图片失败" />
+          </router-link>
           <p>{{ item.BuildName }}</p>
           <div>
             <span>{{ item.BuildLocation }}</span>
             <span>￥{{ item.BuildPrice }}元/月</span>
           </div>
-        </router-link>
+        </div>
       </div>
     </div>
     <!-- 选择我们理由部分 -->
@@ -82,7 +90,8 @@ import api from "../../api/index";
 export default {
   data() {
     return {
-      homeHouse: []
+      homeHouse: [],
+      imgLoading: true
     };
   },
 
@@ -92,6 +101,7 @@ export default {
       .UserQueryBuildList()
       .then(res => {
         this.homeHouse = res.data._Items.slice(0, 6); //首页截取6条数据
+        this.imgLoading = false;
       })
       .catch(err => {
         console.log(err);
@@ -168,6 +178,8 @@ export default {
   }
   // 精选房源部分
   .house-origin {
+    box-sizing: border-box;
+    border: 1px solid #ccc;
     width: 90%;
     margin: 0 auto;
     background-color: #fff;
@@ -184,12 +196,20 @@ export default {
       box-sizing: border-box;
       flex-wrap: wrap;
       .origin-item {
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        width: 30%;
+        // height: 260px;
         display: flex;
         flex-direction: column;
+        justify-content: flex-start;
         margin-top: 30px;
-        img {
-          width: 318px;
-          height: 212px;
+        .link-img {
+          width: 100%;
+          img {
+            width: 100%;
+            height: 260px;
+          }
         }
         p {
           font-size: 16px;

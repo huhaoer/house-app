@@ -92,9 +92,7 @@ export default {
         if (!Number.isInteger(value)) {
           callback(new Error("请输入正确手机号"));
         } else {
-          if (value.toString().length < 11 || value.toString().length > 11) {
-            callback(new Error("请输入正确11位手机号"));
-          } else if (value.toString()[0] !== "1") {
+          if (value.toString().length < 11 || value.toString().length > 11 || !(/^1[3456789]\d{9}$/.test(value))) {
             callback(new Error("请输入正确11位手机号"));
           } else {
             callback();

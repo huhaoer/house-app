@@ -10,6 +10,7 @@ export default {
   UserQueryDetails: '/userQueryDetails',//根据房源id查看房源具体信息
   UserQueryBuildByParam: '/userQueryBuildByParam',//根据当前传递的数据筛选房源
   GetBuildInfoByLike: '/getBuildInfoByLike',//根据导航栏的关键字模糊查询
+  GetImg: 'getImg',//请求房源的多张图片
 
   butlerBaseURL: '/butlerApi',//获取管家数据需要的基础URL
   GetButlerInfo: '/getButlerInfo',//根据管家id查询管家信息

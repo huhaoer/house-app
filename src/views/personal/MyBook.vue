@@ -32,7 +32,7 @@
           </p>
           <p>
             预约时间:
-            <span style="color: red">{{ item.BookTime }}</span>
+            <span style="color: #409EFF">{{ item.BookTime }}</span>
           </p>
         </div>
         <div class="item-right" v-if="item.BookState == '已看房' ">
@@ -49,7 +49,7 @@ import api from "../../api/index";
 export default {
   data() {
     return {
-      bookData: [] //预约列表
+      bookData: [], //预约列表
     };
   },
 

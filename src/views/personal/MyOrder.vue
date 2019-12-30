@@ -57,16 +57,16 @@
           <span>{{ item.AccountPayTime }}</span>
           <span>{{ item.AccountPay }}</span>
           <span v-if="item.AccountStatus != '未支付'" class="btn-pay">
-            <el-button type="primary" plain disabled>线上支付</el-button>
-            <el-button type="danger" plain disabled>线下支付</el-button>
+            <el-button type="primary"  disabled>线上支付</el-button>
+            <el-button type="danger"  disabled>线下支付</el-button>
           </span>
           <span v-else class="btn-pay">
             <el-button
               type="primary"
-              plain
+              
               @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)"
             >线上支付</el-button>
-            <el-button type="danger" plain @click="goToPayOffline(item.AccountId)">线下支付</el-button>
+            <el-button type="danger"  @click="goToPayOffline(item.AccountId)">线下支付</el-button>
           </span>
         </div>
       </div>

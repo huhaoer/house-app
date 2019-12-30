@@ -120,6 +120,14 @@ export default {
       }
     })
   },
+  // 5.查询房源多张图片
+  GetImg(buildId) {
+    return houseAjax.get(URLS.GetImg,{
+      params: {
+        buildId,
+      }
+    })
+  },
 
   /**
    * 关于管家信息的所有接口

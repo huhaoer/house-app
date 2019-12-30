@@ -52,7 +52,7 @@ import api from "../../api/index";
 export default {
   data() {
     return {
-      collectData: [] //收藏列表
+      collectData: [], //收藏列表
     };
   },
 

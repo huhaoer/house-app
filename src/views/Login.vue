@@ -66,7 +66,7 @@ export default {
         if (!Number.isInteger(value)) {
           callback(new Error("请输入正确手机号"));
         } else {
-          if (value.toString().length < 11 || value.toString().length > 11) {
+          if (value.toString().length < 11 || value.toString().length > 11 || !(/^1[3456789]\d{9}$/.test(value))) {
             callback(new Error("请输入正确11位手机号"));
           } else if (value.toString()[0] !== "1") {
             callback(new Error("请输入正确11位手机号"));
@@ -132,11 +132,12 @@ export default {
           return;
         } else {
           const UserNumber = this.ruleForm.account//保存用户输入的手机号码
+          // console.log(this.ruleForm.account,'===============')
           api.FindUserInfo({UserNumber})
             .then(res => {
-              console.log(res,'登录')
+              // console.log(res,'登录=================')
               // 没注册
-              if(res.data._Items.length < 0) {
+              if(res.data._Items.length == 0) {
                 // 提示信息
                 this.$message({
                   message: '该用户没有注册',
@@ -159,7 +160,7 @@ export default {
                     offset: 60
                   })
                   this.$store.commit('setCurrentLoginUser',res.data._Items[0])//登录成功后将当前用户对象信息保存到state
-                  window.localStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
+                  window.sessionStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
                   this.$router.push('/index/home')
                 }else{//用户名和密码不一致
                   // 提示信息

@@ -102,6 +102,7 @@ export default {
       userLike: "", //用户爱好
       userId: "", //用户id
       isSave: false, //是否点击保存页面
+      isRight: false
     }
   },
 

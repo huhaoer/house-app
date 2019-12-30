@@ -13,7 +13,7 @@
           </div>
           <div>
             <el-input  placeholder="请输入查询内容" v-model="inpValue"></el-input>
-            <el-button :disabled="inpValue == ''" @click="handKeyword">查找</el-button>
+            <el-button :disabled="inpValue == ''" @click="handKeyword">找房</el-button>
           </div>
         </div>
         <div class="header-right" v-if="!this.$store.state.currentLoginUser.UserName">
@@ -70,7 +70,7 @@ export default {
       // 清空本地的用户信息
       this.$store.commit('setCurrentLoginUser',{})
       // 清除已经登录的标识
-      window.localStorage.removeItem('login')
+      window.sessionStorage.removeItem('login')
       // 跳转到首页
       this.$router.push('/index')
     },

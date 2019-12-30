@@ -59,21 +59,25 @@
     <!-- 查询房源信息展示 -->
     <div class="rent-show">
       <!-- 点击当前房源查看详细信息 传递当前房源的id到详情页面 -->
-      <router-link
-        tag="div"
-        :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+      <div
         class="origin-item"
         v-for="(item,index) in nowHouse"
         :key="index"
         v-show="nowHouse.length > 0"
+        v-loading="imgLoading"
+        element-loading-text="加载房源中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255, 255, 255,0.7)"
       >
-        <img :src="item.BuildImage" alt="加载失败" />
+        <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="link-img">
+          <img :src="item.BuildImage.split(',')[0]" alt="加载失败" />
+        </router-link>
         <p>{{ item.BuildName }}</p>
         <div>
           <span>{{ item.BuildLocation }}</span>
           <span>￥{{ item.BuildPrice }}元/月</span>
         </div>
-      </router-link>
+      </div>
       <!-- 暂无房源时显示的提示 -->
       <div class="no-house" v-show="nowHouse.length == 0">房源正在筹备中,请等待...</div>
     </div>
@@ -96,13 +100,15 @@ import api from "../../api/index";
 export default {
   data() {
     return {
+      imgLoading: true,
       allHouse: [], //保存所有的房源信息
       nowHouse: [],
       totalCount: 0, //当前请求数据的总条数
       currentPage: 1, //当前展示的页数
       pageSize: 6, //每一页有多少条数据
+      loading: true,
       area: [
-        "不限",
+        "全部",
         "锦江区",
         "青羊区",
         "武侯区",
@@ -113,7 +119,7 @@ export default {
         "成华区"
       ], //查询区域列表
       money: [
-        "不限",
+        "全部",
         "1-500",
         "500-1000",
         "1000-1500",
@@ -122,7 +128,7 @@ export default {
         "2500-3000"
       ], //查询价格列表
       mianji: [
-        "不限",
+        "全部",
         "10-30",
         "30-60",
         "60-90",
@@ -131,15 +137,16 @@ export default {
         "150-180",
         "180-210"
       ], //查询面积列表
-      bedroom: ["不限", "1", "2", "3", "4", "5", "6", "7", "8"], //查询房间数量列表
-      houseType: ["不限", "整租", "合租"], //查询租房方式列表
+      bedroom: ["全部", "1", "2", "3", "4", "5", "6", "7", "8"], //查询房间数量列表
+      houseType: ["全部", "整租", "合租"], //查询租房方式列表
       nowArea: 0, //当前点击的查询区域  为0默认查找所有
       nowLowPrice: 0, //当前点击的价格的最低价
       nowHighPrice: 0, //当前点击的价格的最高价
       nowLowMianji: 0, //当前点击的最小面积
       nowHighMianji: 0, //当前点击的最大面积
       nowBedroom: 0, //当前点击的房间数量
-      nowHouseType: 0 //当前点击的租房方式
+      nowHouseType: 0, //当前点击的租房方式
+
     };
   },
   mounted() {
@@ -159,6 +166,7 @@ export default {
           console.log(res,'=======================================')
           this.allHouse = res.data._Items;
           this.totalCount = res.data._Items.length; //总长度
+          this.imgLoading = false;
           this.dealData()
         })
         .catch(err => {
@@ -344,6 +352,7 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     .origin-item {
+      width: 30%;
       display: flex;
       flex-direction: column;
       margin-top: 30px;
@@ -353,9 +362,12 @@ export default {
       &:hover {
         border-bottom: 3px solid red;
       }
-      img {
-        width: 318px;
-        height: 212px;
+      .link-img{
+        width: 100%;
+        img {
+          width: 100%;
+          height: 212px;
+        }
       }
       p {
         font-size: 16px;

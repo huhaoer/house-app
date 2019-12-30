@@ -3,7 +3,12 @@
     <div class="houseDetail-wrap">
       <!-- 左侧图片 -->
       <div class="houseDetail-left">
-        <img :src="houseData.BuildImage" alt="图片加载失败" />
+        <!-- <img :src="houseData.BuildImage"  /> -->
+        <el-image 
+          :src="srcList[0]"
+          alt="图片加载失败"
+          :preview-src-list="srcList">
+        </el-image>
         <div class="left-menu">
           <span>分享</span>
           <span @click="handConnect">{{ isCollect && this.$store.state.currentLoginUser.UserId ? '已收藏' : '收藏' }}</span>
@@ -102,6 +107,7 @@ export default {
       butlerData: {}, //根据管家id获取管家的详细信息
       isCollect: false, //是否被收藏,默认为false
       isBook: false,//判断是否被预约过
+      srcList: [],//预览列表
     };
   },
 
@@ -270,10 +276,10 @@ export default {
 
   mounted() {
     // 根据房源id查看房源具体信息  动态路由传递房源id
+    const buildId = this.$route.params.id;
     api
-      .UserQueryDetails(this.$route.params.id)
+      .UserQueryDetails(buildId)
       .then(res => {
-        console.log(res, "房源信息===========================");
         this.houseData = res.data._Items[0];
         const that = this;
 
@@ -315,6 +321,16 @@ export default {
             if (res.data == 'true') {
               that.isBook = true//已经预约过           
             }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        // 4.查看多个图片
+        api
+          .GetImg(buildId)
+          .then(res => {
+            console.log(res,'多个图片===================')
+            that.srcList = res.data
           })
           .catch(err => {
             console.log(err);
