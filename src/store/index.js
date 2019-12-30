@@ -12,6 +12,7 @@ export default new Vuex.Store({
     setCurrentLoginUser(state,obj) {
       state.currentLoginUser = obj
     },
+
   },
   actions: {
   },

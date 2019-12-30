@@ -1,5 +1,37 @@
 <template>
   <div class="rent">
+    <!-- 对比房源 -->
+    <div class="rent-compare">
+      <div class="compare-wrap">
+        <el-button
+          @click="drawer = true"
+          type="primary"
+          style="margin-left: 16px;"
+          class="open-com"
+        >
+          <i class="el-icon-arrow-left"></i>
+          <p>点</p>
+          <p>击</p>
+          <p>展</p>
+          <p>开</p>
+        </el-button>
+        <el-drawer
+          class="compare-drawer"
+          title="房源信息对比"
+          :visible.sync="drawer"
+          direction="rtl"
+          :before-close="handleClose"
+        >
+          <div class="compare-item" v-for="(item,index) in compareList" :key="index">
+            <p>{{index + 1}}.</p>
+            <p>{{item.BuildName}},{{item.BuildArea}},￥{{item.BuildPrice}}元/月</p>
+            <i class="el-icon-circle-close" @click="delCom(index)"></i>
+          </div>
+          <el-button class="compare-btn">对比</el-button>
+          <el-button class="compare-btn">取消</el-button>
+        </el-drawer>
+      </div>
+    </div>
     <!-- 条件找房部分 -->
     <div class="rent-wrap">
       <!-- 面包屑 -->
@@ -69,10 +101,14 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255,0.7)"
       >
-        <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="link-img">
+        <router-link
+          tag="div"
+          :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+          class="link-img"
+        >
           <img :src="item.BuildImage.split(',')[0]" alt="加载失败" />
         </router-link>
-        <p>{{ item.BuildName }}</p>
+        <p class="p-com">{{ item.BuildName }}<span ref="spanBtn" @click="handCom($event.target,item)"><i class="el-icon-shopping-cart-2"></i>对比</span></p>
         <div>
           <span>{{ item.BuildLocation }}</span>
           <span>￥{{ item.BuildPrice }}元/月</span>
@@ -100,6 +136,9 @@ import api from "../../api/index";
 export default {
   data() {
     return {
+      compareList: [],
+      isCompare: false,//是否进行了对比
+      drawer: false,
       imgLoading: true,
       allHouse: [], //保存所有的房源信息
       nowHouse: [],
@@ -145,8 +184,7 @@ export default {
       nowLowMianji: 0, //当前点击的最小面积
       nowHighMianji: 0, //当前点击的最大面积
       nowBedroom: 0, //当前点击的房间数量
-      nowHouseType: 0, //当前点击的租房方式
-
+      nowHouseType: 0 //当前点击的租房方式
     };
   },
   mounted() {
@@ -154,20 +192,22 @@ export default {
     this.initStyle();
 
     // 获取房源信息
-    if (this.$route.params.likeData) {//经过模糊查询跳转的页面
-        this.allHouse = this.$route.params.likeData;
-        this.totalCount = this.$route.params.likeData.length; //总长度
-        this.dealData()
-    }else{//自己访问的页面
+    if (this.$route.params.likeData) {
+      //经过模糊查询跳转的页面
+      this.allHouse = this.$route.params.likeData;
+      this.totalCount = this.$route.params.likeData.length; //总长度
+      this.dealData();
+    } else {
+      //自己访问的页面
       api
         .UserQueryBuildList()
         .then(res => {
           // 保存所有数据
-          console.log(res,'=======================================')
+          console.log(res, "=======================================");
           this.allHouse = res.data._Items;
           this.totalCount = res.data._Items.length; //总长度
           this.imgLoading = false;
-          this.dealData()
+          this.dealData();
         })
         .catch(err => {
           console.log(err);
@@ -176,6 +216,32 @@ export default {
   },
 
   methods: {
+    // 删除对比
+    delCom(index) {
+      this.compareList.splice(index,1);
+    },
+    // 点击对比加入到右侧
+    handCom(dom,val) {
+      dom.classList.add('active-com')
+      this.compareList.push(val)
+    },
+    // 抽屉
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          console.log(this.$refs.spanBtn,'refs===============')
+          // 关闭之后清除已经对比的样式
+          var refArr = this.$refs.spanBtn;
+          refArr.forEach(item => {
+            item.classList.remove('active-com')
+          })
+          this.compareList = [];
+          done();
+        })
+        .catch(_ => {
+
+        });
+    },
     // 处理数据
     dealData() {
       if (this.allHouse.length < this.pageSize) {
@@ -301,6 +367,56 @@ export default {
   width: 100%;
   margin-top: 60px;
   background-color: rgb(233, 236, 243);
+  position: relative;
+  // 对比房源
+  .rent-compare {
+    width: 90%;
+    margin: 0 auto;
+    .compare-wrap {
+      // 点击按钮
+      .open-com {
+        position: fixed;
+        top: 100px;
+        right: 0px;
+        height: 150px;
+        width: 40px;
+        p {
+          text-align: center;
+        }
+      }
+      // 抽屉
+      .compare-drawer {
+        .compare-item {
+          height: 25px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          margin-bottom: 20px;
+          p {
+            &:nth-of-type(1){
+              width: 20px;
+            }
+            &:nth-of-type(2){
+              width: 270px;
+            }
+            font-size: 18px;
+            color: #555;
+          }
+          i {
+            font-size: 20px;
+            color: red;
+            cursor: pointer;
+          }
+        }
+        .compare-btn{
+          width: 50px;
+          height: 30px;
+          padding: 0;
+          margin-left: 90px;
+        }
+      }
+    }
+  }
   // 租房条件部分
   .rent-wrap {
     width: 90%;
@@ -359,10 +475,28 @@ export default {
       box-sizing: border-box;
       border-bottom: 3px solid #fff;
       transition: all 0.5s;
+      .p-com{
+        width: 100%;
+        span{
+          padding: 0;
+          display: inline-block;
+          width: 50px;
+          height: 20px;
+          border: 1px solid rgba(0, 0, 0, .5);
+          float: right;
+          color: #fff;
+          background-color: #ff5300;
+          cursor: pointer;
+          &.active-com{
+            background-color: rgba(0, 0, 0, .5);
+            color: #fff;
+          }
+        }
+      }
       &:hover {
         border-bottom: 3px solid red;
       }
-      .link-img{
+      .link-img {
         width: 100%;
         img {
           width: 100%;
