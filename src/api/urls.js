@@ -36,4 +36,7 @@ export default {
 
   alipayBaseURL: '/alipayApi',//支付宝 支付接口
   Alipay: '/pay',//支付
+
+  outrentBaseURL: '/outrentApi',//退租续租 支付接口
+  AddOutRent: '/addOutRent',//退租
 }

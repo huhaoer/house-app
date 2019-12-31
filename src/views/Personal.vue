@@ -5,8 +5,9 @@
       <img src="../assets/logo.png" alt="" @click="handToHome">
       <div class="header-title">
         <router-link tag="span" to="/personal/myCollect">我的收藏</router-link>
-        <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
+        <router-link tag="span" to="/personal/myOrder">我的合同</router-link>
         <router-link tag="span" to="/personal/myBook">我的预约</router-link>
+        <router-link tag="span" to="/personal/outRent">退租续租</router-link>
         <router-link tag="span" to="/personal/myInformation">我的资料</router-link>
       </div>
       <p><i class="el-icon-user-solid"></i><span>{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>

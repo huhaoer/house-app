@@ -74,6 +74,11 @@ const router = new VueRouter({
           name: 'myBook',
           component: () => import('../views/personal/MyBook.vue')
         },
+        {
+          path: 'outRent',
+          name: 'outRent',
+          component: () => import('../views/personal/OutRent.vue')
+        }
       ]
     },
     {

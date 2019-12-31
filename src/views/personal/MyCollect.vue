@@ -11,7 +11,7 @@
         :key="index"
       >
         <router-link tag="div" :to="{name: 'houseDetail',params:{id: item.BuildId}}" class="item-left">
-          <img :src="item.BuildImage" alt />
+          <img :src="item.BuildImage.split(',')[0]" alt />
         </router-link>
         <div class="item-center">
           <p>

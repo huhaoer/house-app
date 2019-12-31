@@ -10,7 +10,7 @@
         :key="index"
       >
         <div class="item-left">
-          <img :src="item.BuildImage" alt />
+          <img :src="item.BuildImage.split(',')[0]" alt />
         </div>
         <div class="item-center">
           <p>
@@ -91,6 +91,7 @@ export default {
       .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.orderData = res.data._Items;
+        console.log(this.orderData,'0000000000000000000000')
       })
       .catch(err => {
         console.log(err);

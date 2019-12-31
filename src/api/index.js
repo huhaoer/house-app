@@ -33,8 +33,23 @@ const alipayAjax = Axios.create({
   baseURL: URLS.alipayBaseURL,
   method: 'get'
 })
+const outrentAjax = Axios.create({
+  baseURL: URLS.outrentBaseURL,
+  method: 'get'
+})
 
 export default {
+  /**
+   * 退租续租
+   */
+  // 1.退租
+  AddOutRent(outRent) {//outRent={"ConId":1049,"UserId":2020}
+    return outrentAjax.get(URLS.AddOutRent, {
+      params: {
+        outRent,
+      }
+    })
+  },
   /**
    * 支付宝支付
    */
