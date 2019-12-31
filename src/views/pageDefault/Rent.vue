@@ -27,8 +27,7 @@
             <p>{{item.BuildName}},{{item.BuildArea}},￥{{item.BuildPrice}}元/月</p>
             <i class="el-icon-circle-close" @click="delCom(index)"></i>
           </div>
-          <el-button class="compare-btn">对比</el-button>
-          <el-button class="compare-btn">取消</el-button>
+          <el-button class="compare-btn" @click="duibi" type="primary">对比</el-button>
         </el-drawer>
       </div>
     </div>
@@ -216,6 +215,21 @@ export default {
   },
 
   methods: {
+    // 点击对比按钮
+    duibi() {
+      // 判断对比数量小于2 不跳转
+      if(this.compareList.length < 2) {
+        this.$message({
+            message: '请选择至少两个房源',
+            type: 'warning',
+            duration: '2000',
+            center: true,
+        })
+        return
+      }else{
+        this.$router.push({name: 'compare',params:{ComList: this.compareList}})
+      }
+    },
     // 删除对比
     delCom(index) {
       this.compareList.splice(index,1);
@@ -238,8 +252,8 @@ export default {
           this.compareList = [];
           done();
         })
-        .catch(_ => {
-
+        .catch( _ => {
+          
         });
     },
     // 处理数据
@@ -412,7 +426,7 @@ export default {
           width: 50px;
           height: 30px;
           padding: 0;
-          margin-left: 90px;
+          margin-left: 20px;
         }
       }
     }

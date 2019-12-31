@@ -29,7 +29,12 @@ const router = new VueRouter({
           path: 'houseDetail:id',//动态路由
           name: 'houseDetail',
           component: () => import('../views/pageDefault/HouseDetail.vue')
-        }
+        },
+        {
+          path: 'compare',//动态路由
+          name: 'compare',
+          component: () => import('../views/Compare.vue')
+        },
       ]
     },
     {
