@@ -8,6 +8,12 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+// 引入百度地图
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+  ak: 'v0cSysI4Ohgh1GGXsp4x8EhdEfASWd4i'
+})
+
 var that = new Vue()
 
 Vue.config.productionTip = false

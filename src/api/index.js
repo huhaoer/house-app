@@ -149,8 +149,8 @@ export default {
    */
 
   // 1.根据管家id查询管家信息
-  GetButlerInfo(ButlerId) {
-    return butlerAjax.get(URLS.GetButlerInfo, {
+  GetButlerInfoByButlerId(ButlerId) {
+    return butlerAjax.get(URLS.GetButlerInfoByButlerId, {
       params: {
         ButlerId,
       }

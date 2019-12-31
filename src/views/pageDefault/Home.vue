@@ -101,7 +101,6 @@ export default {
       .UserQueryBuildList()
       .then(res => {
         this.homeHouse = res.data._Items.slice(0, 6); //首页截取6条数据
-        console.log(this.homeHouse,'====================图片')
         this.imgLoading = false;
       })
       .catch(err => {

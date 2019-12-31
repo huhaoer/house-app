@@ -202,7 +202,6 @@ export default {
         .UserQueryBuildList()
         .then(res => {
           // 保存所有数据
-          console.log(res, "=======================================");
           this.allHouse = res.data._Items;
           this.totalCount = res.data._Items.length; //总长度
           this.imgLoading = false;
@@ -243,7 +242,6 @@ export default {
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
-          console.log(this.$refs.spanBtn,'refs===============')
           // 关闭之后清除已经对比的样式
           var refArr = this.$refs.spanBtn;
           refArr.forEach(item => {
@@ -349,7 +347,6 @@ export default {
         this.nowLowMianji = val.innerText.split("-")[0];
         this.nowHighMianji = val.innerText.split("-")[1];
       }
-      console.log(this.nowLowMianji, "===", this.nowHighMianji);
       this.searchHouse();
     },
     handBedroom(val) {

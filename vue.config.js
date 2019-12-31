@@ -39,7 +39,7 @@ module.exports = {
         }
       },
       "/collectApi": {
-        target: "http://192.168.3.7:8080/CollectMgeSvr.assx/", // 收藏 host
+        target: "http://192.168.3.27:8080/CollectMgeSvr.assx/", // 收藏 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/collectApi": "" // rewrite path
@@ -53,7 +53,7 @@ module.exports = {
         }
       },
       "/accountApi": {
-        target: "http://192.168.3.29:8080/AccountMgeSvr.assx/", // 账单 host
+        target: "http://192.168.3.27:8080/AccountMgeSvr.assx/", // 账单 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/accountApi": "" // rewrite path
@@ -67,7 +67,7 @@ module.exports = {
         }
       },
       "/outrentApi": {
-        target: "http://192.168.3.29:8080/OutRentMgeSvr.assx/", // 退租续租 host
+        target: "http://192.168.3.27:8080/OutRentMgeSvr.assx/", // 退租续租 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/outrentApi": "" // rewrite path

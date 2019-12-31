@@ -3,15 +3,12 @@
     <div class="houseDetail-wrap">
       <!-- 左侧图片 -->
       <div class="houseDetail-left">
-        <!-- <img :src="houseData.BuildImage"  /> -->
-        <el-image 
-          :src="srcList[0]"
-          alt="图片加载失败"
-          :preview-src-list="srcList">
-        </el-image>
+        <el-image :src="srcList[0]" alt="图片加载失败" :preview-src-list="srcList"></el-image>
         <div class="left-menu">
           <span>分享</span>
-          <span @click="handConnect">{{ isCollect && this.$store.state.currentLoginUser.UserId ? '已收藏' : '收藏' }}</span>
+          <span
+            @click="handConnect"
+          >{{ isCollect && this.$store.state.currentLoginUser.UserId ? '已收藏' : '收藏' }}</span>
         </div>
       </div>
       <!-- 右侧简介 -->
@@ -83,7 +80,11 @@
       </div>
       <!-- 右侧 -->
       <div class="subscribe-right">
-        <div class="right-book" @click="handBook" v-if="!this.$store.state.currentLoginUser.UserId || !isBook">预约看房</div>
+        <div
+          class="right-book"
+          @click="handBook"
+          v-if="!this.$store.state.currentLoginUser.UserId || !isBook"
+        >预约看房</div>
         <div class="right-book" v-else style="background: #ccc">预约看房</div>
         <div class="right-save">
           房源已被收藏
@@ -94,6 +95,34 @@
           <div class="butler-phone">电话:{{ butlerData.ButlerNumber }}</div>
         </div>
       </div>
+    </div>
+    <!-- 地图界面 -->
+    <div class="houseDetail-map">
+      <el-input v-model="addressKeyword" placeholder="请输入地址来直接查找相关位置"></el-input>
+      <!-- 给地图加点击事件getLocationPoint，点击地图获取位置相关的信息，经纬度啥的 -->
+      <!-- scroll-wheel-zoom：是否可以用鼠标滚轮控制地图缩放，zoom是视图比例 -->
+      <baidu-map
+        class="bmView"
+        :scroll-wheel-zoom="true"
+        :center="center"
+        :zoom="zoom"
+        :dragging="true"
+        @click="getLocationPoint"
+        @ready="handler"
+      >
+        <bm-view style="width: 100%; height:500px; flex: 1"></bm-view>
+
+        <!-- 地理位置的搜索功能 -->
+        <bm-local-search
+          :keyword="addressKeyword"
+          :auto-viewport="true"
+          style="display: none"
+          :location="location"
+        ></bm-local-search>
+
+        <!-- 添加一个小红点的，并将当前的经纬度写入数据中 -->
+        <bm-marker :position="{lng:center.lng, lat: center.lat}"></bm-marker>
+      </baidu-map>
     </div>
   </div>
 </template>
@@ -106,8 +135,14 @@ export default {
       houseData: {}, //根据点击进来的id获取的房源详细信息
       butlerData: {}, //根据管家id获取管家的详细信息
       isCollect: false, //是否被收藏,默认为false
-      isBook: false,//判断是否被预约过
-      srcList: [],//预览列表
+      isBook: false, //判断是否被预约过
+      srcList: [], //预览列表
+      // 地图相关数据
+      center: { lng: 104.07, lat: 30.67 },
+      location: "成都市",
+      zoom: 16,
+      addressKeyword: "",
+      baidumapSwitch: false
     };
   },
 
@@ -180,82 +215,78 @@ export default {
         if (!this.isBook) {
           // 没有预约过才能进行下面操作
           this.$prompt("请选择日期", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          inputType: "date",
-          inputErrorMessage: "日期错误,请重新填写",
-          closeOnClickModal: false,
-          inputErrorMessage: "邮箱格式不正确"
-        })
-          .then(({ value }) => {
-            if (!value) {
-              this.$message({
-                type: "error",
-                message: "请选择正确的日期"
-              });
-            }
-            const year = new Date().getFullYear(); //年
-            const month = new Date().getMonth() + 1; //月
-            const day = new Date().getDate(); //日
-            const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
-            const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
-            const choiceDay = parseInt(value.split("-")[2]); //用户选择日
-            // console.log(year,month,day)
-            // console.log(choiceYear,choiceMonth,choiceDay)
-
-            // 日期错误
-            if (
-              !value ||
-              choiceYear < year ||
-              (choiceYear == year && choiceMonth < month) ||
-              (choiceYear == year && choiceMonth == month && choiceDay < day)
-            ) {
-              this.$message({
-                type: "error",
-                message: "请选择正确的日期"
-              });
-            } else {
-              const UserId = this.$store.state.currentLoginUser.UserId;
-              const BuildId = this.houseData.BuildId;
-              const ButlerId = this.butlerData.ButlerId;
-              const BookTime = value;
-              const BookState = "请求预约";
-              console.log(this.houseData,'houseData======================')
-              console.log(this.butlerData,'butlerData======================')
-              console.log(UserId,BuildId,ButlerId,BookTime,BookState,'======================')
-              /**
-               * UserId
-               * BuildId
-               * ButlerId
-               * BookTime
-               * BoolState
-               */
-              api
-                .AddBook({ UserId, BuildId, ButlerId, BookTime, BookState })
-                .then(res => {
-                  console.log(res, "预约信息");
-                  if (res.data == "预约成功") {
-                    this.isBook = true;//按钮
-                    this.$message({
-                      message: "预约成功",
-                      type: "success",
-                      duration: "2000",
-                      center: true,
-                      offset: 60
-                    });
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-            }
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            inputType: "date",
+            inputErrorMessage: "日期错误,请重新填写",
+            closeOnClickModal: false,
+            inputErrorMessage: "邮箱格式不正确"
           })
-          .catch(() => {
-            return;
-          });
-        }else{
+            .then(({ value }) => {
+              if (!value) {
+                this.$message({
+                  type: "error",
+                  message: "请选择正确的日期"
+                });
+              }
+              const year = new Date().getFullYear(); //年
+              const month = new Date().getMonth() + 1; //月
+              const day = new Date().getDate(); //日
+              const choiceYear = parseInt(value.split("-")[0]); //用户选择年份
+              const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
+              const choiceDay = parseInt(value.split("-")[2]); //用户选择日
+
+
+              // 日期错误
+              if (
+                !value ||
+                choiceYear < year ||
+                (choiceYear == year && choiceMonth < month) ||
+                (choiceYear == year && choiceMonth == month && choiceDay < day)
+              ) {
+                this.$message({
+                  type: "error",
+                  message: "请选择正确的日期"
+                });
+              } else {
+                const UserId = this.$store.state.currentLoginUser.UserId;
+                const BuildId = this.houseData.BuildId;
+                const ButlerId = this.butlerData.ButlerId;
+                const BookTime = value;
+                const BookState = "请求预约";
+                /**
+                 * UserId
+                 * BuildId
+                 * ButlerId
+                 * BookTime
+                 * BoolState
+                 */
+                api
+                  .AddBook({ UserId, BuildId, ButlerId, BookTime, BookState })
+                  .then(res => {
+                    console.log(res, "预约信息");
+                    if (res.data == "预约成功") {
+                      this.isBook = true; //按钮
+                      this.$message({
+                        message: "预约成功",
+                        type: "success",
+                        duration: "2000",
+                        center: true,
+                        offset: 60
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              }
+            })
+            .catch(() => {
+              return;
+            });
+        } else {
           // 已经预约 直接返回
-          return
+          return;
         }
       } else {
         //用户未登录
@@ -271,70 +302,80 @@ export default {
             return;
           });
       }
-    }
+    },
+
+    //   3.点击获取经纬度
+    getLocationPoint(e) {
+      this.lng = e.point.lng; //经度
+      this.lat = e.point.lat; //纬度
+      /* 创建地址解析器的实例 */
+      let geoCoder = new BMap.Geocoder();
+      /* 获取位置对应的坐标 */
+      geoCoder.getPoint(this.addressKeyword, point => {
+        this.selectedLng = point.lng;
+        this.selectedLat = point.lat;
+      });
+      /* 利用坐标获取地址的详细信息 */
+      geocoder.getLocation(e.point, res => {
+        console.log(res);
+      });
+    },
+    //百度地图初始化（这个一定要！否则地图回加载不出来）
+    handler({ BMap, map }) {}
   },
 
   mounted() {
     // 根据房源id查看房源具体信息  动态路由传递房源id
     const buildId = this.$route.params.id;
+    const that = this;
+    //请求详细数据
     api
       .UserQueryDetails(buildId)
       .then(res => {
         this.houseData = res.data._Items[0];
-        const that = this;
+        // console.log(this.houseData,'+++++++++++++++++++++++++++++')
+        if (this.houseData.BuildRemake == null) {
+          
+        } else {
+          // 填写经纬度
+          this.center.lng = this.houseData.BuildRemake.split(",")[0];
+          this.center.lat = this.houseData.BuildRemake.split(",")[1];
+        }
+        // promise.all数组
+        const proArr = [
+          api.IsCollect({
+            UserId: this.$store.state.currentLoginUser.UserId,
+            BuildId: this.houseData.BuildId
+          }),
+          api.GetButlerInfoByButlerId(this.houseData.ButlerId),
+          api.IsBook({
+            UserId: this.$store.state.currentLoginUser.UserId,
+            BuildId: this.houseData.BuildId
+          }),
+          api.GetImg(buildId)
+        ];
 
-        // 1.请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
-        api
-          .IsCollect({
-            UserId: that.$store.state.currentLoginUser.UserId,
-            BuildId: that.houseData.BuildId
-          })
-          .then(res => {
-            // 收藏过了
-            if (res.data === "true") {
-              that.isCollect = true; //标记已收藏
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        Promise.all(proArr).then(res => {
+          // 1.请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
+          if(res[0].data === 'true') {
+            that.isCollect = true; //标记已收藏
+          }
 
-        // 2.请求房源信息成功后  根据管家id查看管家具体信息
-        api
-          .GetButlerInfo(that.houseData.ButlerId)
-          .then(res => {
-            console.log(res,'管家====================')
-            that.butlerData = res.data;
-          })
-          .catch(err => {
-            console.log(err);
-          });
+          // 2.请求房源信息成功后  根据管家id查看管家具体信息
+            that.butlerData = res[1].data;
 
-        // 3.判断是否预约看房
-        api
-          .IsBook({
-            UserId: that.$store.state.currentLoginUser.UserId,
-            BuildId: that.houseData.BuildId
-          })
-          .then(res => {
-            console.log(res,'是否预约')
-            if (res.data == 'true') {
-              that.isBook = true//已经预约过           
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        // 4.查看多个图片
-        api
-          .GetImg(buildId)
-          .then(res => {
-            console.log(res,'多个图片===================')
-            that.srcList = res.data
-          })
-          .catch(err => {
-            console.log(err);
-          });
+          // 3.判断是否预约看房
+          if (res[2].data == "true") {
+            that.isBook = true; //已经预约过
+          }
+
+          // 4.请求多个图片
+          that.srcList = res[3].data;
+          that.loadImg = false;
+        })
+        .catch(err => {
+          console.log(err)
+        })
       })
       .catch(err => {
         console.log(err);
@@ -494,6 +535,11 @@ export default {
         }
       }
     }
+  }
+  // 地图
+  .houseDetail-map {
+    width: 80%;
+    margin: 0 auto;
   }
 }
 </style>
