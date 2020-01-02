@@ -36,8 +36,9 @@
 
         <el-table-column label="房源操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">退租</el-button>
+            <el-button size="mini" type="primary" :disabled="scope.row.ConStatus != '已签约'" @click="handleEdit(scope.$index, scope.row)">退租</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">续租</el-button>
+            <el-button size="mini" @click="handlePrint(scope.$index, scope.row)">打印合同</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,6 +48,7 @@
 
 <script>
 import api from "../../api/index";
+import { async } from 'q';
 export default {
   data() {
     return {
@@ -54,6 +56,7 @@ export default {
     };
   },
   methods: {
+    // 点击退租
     handleEdit(index, row) {
       console.log(index, row);
       const outRent = {
@@ -62,14 +65,30 @@ export default {
       }
       api.AddOutRent(outRent)
         .then(res => {
-          console.log(res,'退房==================')
+          row.ConStatus = '已退房'
         })
         .catch(err => {
           console.log(err)
         })
     },
+
+    // 点击续租
     handleDelete(index, row) {
       console.log(index, row);
+    },
+
+    // 点击打印合同
+    handlePrint(index,row) {
+      const ConId = row.ConId//合同id
+      async function printHT()  {
+        try {
+          const res =  await api.FindPhotoUrl(ConId)
+          console.log(res,'合同=======================')
+        }catch(err) {
+          console.log(err)
+        }
+      }
+      printHT();
     }
   },
   mounted() {

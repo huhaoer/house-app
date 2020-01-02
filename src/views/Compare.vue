@@ -1,6 +1,6 @@
 <template>
   <div class="compare">
-    <div class="compare-house">房源对比</div>
+    <div class="compare-house"><span @click="backCom">&lt;&lt;</span>  房源对比</div>
     <table class="com-table">
         <tbody class="one-body">
             <tr>
@@ -79,7 +79,11 @@ export default {
     },
     mounted() {
         this.comList = this.$route.params.ComList
-        console.log(this.comList,'对比的数据=======================')
+    },
+    methods: {
+        backCom() {
+            this.$router.go(-1);
+        }
     }
 }   
 </script>

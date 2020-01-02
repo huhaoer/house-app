@@ -67,10 +67,17 @@ module.exports = {
         }
       },
       "/outrentApi": {
-        target: "http://192.168.3.27:8080/OutRentMgeSvr.assx/", // 退租续租 host
+        target: "http://192.168.3.29:8080/OutRentMgeSvr.assx/", // 退租续租 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/outrentApi": "" // rewrite path
+        }
+      },
+      "/contractApi": {
+        target: "http://192.168.3.29:8080/ContractMgeSvr.assx/", // 退租续租 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/contractApi": "" // rewrite path
         }
       },
     }

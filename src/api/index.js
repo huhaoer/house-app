@@ -37,8 +37,24 @@ const outrentAjax = Axios.create({
   baseURL: URLS.outrentBaseURL,
   method: 'get'
 })
+const contractAjax = Axios.create({
+  baseURL: URLS.contracBaseURL,
+  method: 'get'
+})
 
 export default {
+  /**
+   * 打印合同模板
+   */
+  // 1.合同模板
+  FindPhotoUrl(ConId) {
+    return contractAjax.get(URLS.FindPhotoUrl, {
+      params: {
+        ConId,
+      }
+    })
+  },
+
   /**
    * 退租续租
    */
@@ -50,6 +66,7 @@ export default {
       }
     })
   },
+
   /**
    * 支付宝支付
    */
