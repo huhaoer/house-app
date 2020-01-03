@@ -54,6 +54,14 @@ export default {
       }
     })
   },
+  // 2.续租
+  GoingContract(ConId) {
+    return contractAjax.get(URLS.GoingContract, {
+      params: {
+        ConId,
+      }
+    })
+  },
 
   /**
    * 退租续租
@@ -66,6 +74,15 @@ export default {
       }
     })
   },
+  // 2.查看退租列表
+  FindOutRentList(outRent) {
+    return outrentAjax.get(URLS.FindOutRentList, {
+      params: {
+        outRent,
+      }
+    })
+  },
+
 
   /**
    * 支付宝支付

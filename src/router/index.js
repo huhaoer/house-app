@@ -78,7 +78,17 @@ const router = new VueRouter({
           path: 'outRent',
           name: 'outRent',
           component: () => import('../views/personal/OutRent.vue')
-        }
+        },
+        {//退租列表
+          path: 'outRentList',
+          name: 'outRentList',
+          component: () => import('../views/personal/OutRentList.vue')
+        },
+        {//续租列表
+          path: 'goingRent',
+          name: 'goingRent',
+          component: () => import('../views/personal/GoingRent.vue')
+        },
       ]
     },
     {
@@ -91,6 +101,12 @@ const router = new VueRouter({
       path : '/alipay',//支付宝支付页面
       name: 'alipay',
       component: () => import('../views/Alipay.vue')
+      
+    },
+    {
+      path : '/chat',//聊天页面
+      name: 'chat',
+      component: () => import('../views/Chat.vue')
       
     },
     {

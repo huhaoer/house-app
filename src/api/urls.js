@@ -39,7 +39,9 @@ export default {
 
   outrentBaseURL: '/outrentApi',//退租续租 接口
   AddOutRent: '/addOutRent',//退租
+  FindOutRentList: '/findOutRentList',//查看退租的列表
 
   contracBaseURL: '/contractApi',//获取合同模板需要的基础URL
   FindPhotoUrl: '/findPhotoUrl',//根据合同id获取模板
+  GoingContract: '/goingContract',//续租
 }

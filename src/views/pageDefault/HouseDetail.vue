@@ -91,7 +91,7 @@
           <span>{{ houseData.BuildCollect }}</span>次
         </div>
         <div class="right-butler">
-          <div class="butler-name">管家:{{ butlerData.ButlerName }}</div>
+          <div class="butler-name"><i class="el-icon-chat-dot-round" @click="chatToBulter(butlerData.ButlerNumber)"></i>管家:{{ butlerData.ButlerName }}</div>
           <div class="butler-phone">电话:{{ butlerData.ButlerNumber }}</div>
         </div>
       </div>
@@ -321,7 +321,12 @@ export default {
       });
     },
     //百度地图初始化（这个一定要！否则地图回加载不出来）
-    handler({ BMap, map }) {}
+    handler({ BMap, map }) {},
+
+    // 4.点击和管家聊天
+    chatToBulter(number) {
+      this.$router.push({name: 'chat',params: {number:number}})
+    }
   },
 
   mounted() {
@@ -526,6 +531,11 @@ export default {
           color: rgba(0, 0, 0, 0.85);
           text-align: center;
           letter-spacing: 1px;
+          margin-bottom: 10px;
+          .el-icon-chat-dot-round{
+            margin-right: 15px;
+            cursor: pointer;
+          }
         }
         .butler-phone {
           font-size: 15px;

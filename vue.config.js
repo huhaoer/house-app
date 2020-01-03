@@ -60,7 +60,7 @@ module.exports = {
         }
       },
       "/alipayApi": {
-        target: "http://8fve5t.natappfree.cc/", // 支付宝支付 host
+        target: "http://3zft26.natappfree.cc", // 支付宝支付 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/alipayApi": "" // rewrite path

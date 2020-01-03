@@ -36,8 +36,8 @@
 
         <el-table-column label="房源操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" :disabled="scope.row.ConStatus != '已签约'" @click="handleEdit(scope.$index, scope.row)">退租</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">续租</el-button>
+            <el-button size="mini" type="primary" :disabled="scope.row.ConStatus == '已退租'" @click="handleEdit(scope.$index, scope.row)">退租</el-button>
+            <el-button size="mini" type="danger" :disabled="scope.row.ConStatus == '已续租'" @click="handleDelete(scope.$index, scope.row)">续租</el-button>
             <el-button size="mini" @click="handlePrint(scope.$index, scope.row)">打印合同</el-button>
           </template>
         </el-table-column>
@@ -58,23 +58,29 @@ export default {
   methods: {
     // 点击退租
     handleEdit(index, row) {
-      console.log(index, row);
+      console.log(row)
       const outRent = {
         ConId: row.ConId,
         UserId: row.UserId
       }
-      api.AddOutRent(outRent)
-        .then(res => {
-          row.ConStatus = '已退房'
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      async function tuizu() {
+        let addOutRent = await api.AddOutRent(outRent);
+        console.log(addOutRent,'请求退租')
+        row.ConStatus = "已退租";
+      }
+      tuizu();
+      
     },
 
     // 点击续租
     handleDelete(index, row) {
-      console.log(index, row);
+
+      async function getGoingRent() {
+        let goingResult = await api.GoingContract(row.ConId)
+        console.log(goingResult,'续租详情')
+        row.ConStatus = "已续租";
+      }
+      getGoingRent();
     },
 
     // 点击打印合同
@@ -83,7 +89,6 @@ export default {
       async function printHT()  {
         try {
           const res =  await api.FindPhotoUrl(ConId)
-          console.log(res,'合同=======================')
         }catch(err) {
           console.log(err)
         }
@@ -97,7 +102,6 @@ export default {
       .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.data = res.data._Items;
-        console.log(this.data, "0000000000000000000000");
       })
       .catch(err => {
         console.log(err);
