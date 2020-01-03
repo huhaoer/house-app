@@ -84,11 +84,6 @@ const router = new VueRouter({
           name: 'outRentList',
           component: () => import('../views/personal/OutRentList.vue')
         },
-        {//续租列表
-          path: 'goingRent',
-          name: 'goingRent',
-          component: () => import('../views/personal/GoingRent.vue')
-        },
       ]
     },
     {

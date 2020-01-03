@@ -36,8 +36,18 @@
 
         <el-table-column label="房源操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" :disabled="scope.row.ConStatus == '已退租'" @click="handleEdit(scope.$index, scope.row)">退租</el-button>
-            <el-button size="mini" type="danger" :disabled="scope.row.ConStatus == '已续租'" @click="handleDelete(scope.$index, scope.row)">续租</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              :disabled="scope.row.ConStatus == '请求退租'"
+              @click="handleEdit(scope.$index, scope.row)"
+            >退租</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              :disabled="scope.row.ConStatus == '已续租'"
+              @click="handleDelete(scope.$index, scope.row)"
+            >续租</el-button>
             <el-button size="mini" @click="handlePrint(scope.$index, scope.row)">打印合同</el-button>
           </template>
         </el-table-column>
@@ -48,7 +58,7 @@
 
 <script>
 import api from "../../api/index";
-import { async } from 'q';
+import { async } from "q";
 export default {
   data() {
     return {
@@ -58,39 +68,43 @@ export default {
   methods: {
     // 点击退租
     handleEdit(index, row) {
-      console.log(row)
       const outRent = {
         ConId: row.ConId,
         UserId: row.UserId
-      }
+      };
+      const that = this;
       async function tuizu() {
         let addOutRent = await api.AddOutRent(outRent);
-        console.log(addOutRent,'请求退租')
-        row.ConStatus = "已退租";
+        console.log(addOutRent)
+        that.$message({
+          message: addOutRent.data,
+          type: "success",
+          duration: "1500",
+          center: true,
+        });
+        // row.ConStatus = "请求退租";
       }
       tuizu();
-      
     },
 
     // 点击续租
     handleDelete(index, row) {
-
       async function getGoingRent() {
-        let goingResult = await api.GoingContract(row.ConId)
-        console.log(goingResult,'续租详情')
+        let goingResult = await api.GoingContract(row.ConId);
+        console.log(goingResult, "续租详情");
         row.ConStatus = "已续租";
       }
       getGoingRent();
     },
 
     // 点击打印合同
-    handlePrint(index,row) {
-      const ConId = row.ConId//合同id
-      async function printHT()  {
+    handlePrint(index, row) {
+      const ConId = row.ConId; //合同id
+      async function printHT() {
         try {
-          const res =  await api.FindPhotoUrl(ConId)
-        }catch(err) {
-          console.log(err)
+          const res = await api.FindPhotoUrl(ConId);
+        } catch (err) {
+          console.log(err);
         }
       }
       printHT();
@@ -102,6 +116,7 @@ export default {
       .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.data = res.data._Items;
+        console.log(this.data, "--");
       })
       .catch(err => {
         console.log(err);

@@ -325,7 +325,22 @@ export default {
 
     // 4.点击和管家聊天
     chatToBulter(number) {
-      this.$router.push({name: 'chat',params: {number:number}})
+      if(this.$store.state.currentLoginUser.UserId) {//登录状态
+        this.$router.push({name: 'chat',params: {number:number}})
+      }else{
+        this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(_ => {
+            this.$router.push("/login");
+          })
+          .catch(_ => {
+            return;
+          });
+      }
+      
     }
   },
 

@@ -4,10 +4,11 @@
       <i class="el-icon-arrow-left" @click="backPage"></i>返回房屋详情
     </div>
     <div id="console-container">
-      <div id="console"></div>
-      <p class="inp">
-        <el-input v-model="input" placeholder="请输入内容" class="inp-chat" id="chat"></el-input>
-      </p>
+      <div id="console">
+        <p class="inp">
+          <el-input v-model="input" placeholder="请输入内容,按回车键发送" class="inp-chat" id="chat"></el-input>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +18,7 @@ export default {
   data() {
     return {
       input: "", //输入框内容
-      number: "", //管家电话
+      number: 18282290361, //管家电话
       Console: {
         log: this.log
       },
@@ -59,6 +60,7 @@ export default {
       }
 
       console.appendChild(p);
+      console.scrollTop = console.scrollHeight;
     },
 
     connect(host) {
@@ -87,23 +89,25 @@ export default {
       };
 
       this.Chat.socket.onmessage = function(message) {
+        console.log(message);
         that.Console.log(message.data);
       };
     },
 
     initialize() {
       this.senderId = this.$store.state.currentLoginUser.UserNumber;
-      console.log(this.senderId)
-      this.number = this.$route.params.number;
+      // this.number = this.$route.params.number;
       this.Chat.connect("ws://192.168.3.27:8044/webSocket/" + this.senderId);
     },
 
     sendMessage() {
-      var message = document.getElementById("chat").value;
+      var message = this.input;
 
-      var receiverIds = this.number;
+      var receiverIds = this.number + "";
 
-      this.userList = receiverIds;
+      // var receiverIds=prompt("请输入接收者账号用逗号分隔");
+
+      this.userList = receiverIds.split(",");
 
       this.mess.userList = this.userList;
 
@@ -114,7 +118,7 @@ export default {
       if (message != "") {
         //发送
         this.Chat.socket.send(strmee);
-        console.log(strmee)
+        console.log(strmee);
         //清空输入框
         document.getElementById("chat").value = "";
       }
@@ -126,7 +130,7 @@ export default {
 };
 </script>
 
-<style lang="less"> 
+<style lang="less">
 .chat {
   .back {
     font-size: 18px;
@@ -142,6 +146,14 @@ export default {
   #console-container {
     width: 100%;
     position: relative;
+    .inp {
+      .inp-chat {
+        position: absolute;
+        width: 400px;
+        bottom: 10px;
+        left: calc(50% - 200px);
+      }
+    }
     #console {
       overflow: scroll;
       border: 1px solid #cccccc;
@@ -151,15 +163,6 @@ export default {
       height: 500px;
       padding: 5px;
       width: 100%;
-      .inp {
-        border: 1px solid red;
-        .inp-chat{
-          position: absolute;
-          width: 400px;
-          bottom: 0px;
-          left: calc(50% - 200px);
-        }
-      }
       p.self {
         // border: 1px solid blue;
         padding: 5px 0;
