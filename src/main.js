@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
   const needLogin = to.matched.some(item => item.meta && item.meta.login)//判断是否需要登录
   if (needLogin) {
     // 校验 判断路由元信息是否需要登陆标识
-    const isLogin = window.sessionStorage.getItem('login') == 'true';//判断缓存中是否已经登陆
+    const isLogin = window.localStorage.getItem('login') == 'true';//判断缓存中是否已经登陆
     if (isLogin) {
       // 缓存中有login信息 已经登陆,直接next执行显示页面
       next();

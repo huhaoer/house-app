@@ -23,10 +23,14 @@
           </p>
           <p>
             支付状态:
-            <span style="color: red">{{ item.ConId == 0 ? '暂未签约' : '已签约' }}</span>
+            <span style="color: red">{{ item.ConStatus }}</span>
           </p>
         </div>
-        <div class="item-right" v-if="item.ConId == 0">
+        <div class="item-right" v-show="item.ConStatus == '已签约'">
+          <el-button type="primary" plain ref="orderBtn" @click="handPay(item)">立即支付</el-button>
+          <el-button type="primary" plain ref="repairBtn" @click="handRepair(item)">申请报修</el-button>
+        </div>
+        <div class="item-right" v-show="item.ConStatus !== '已签约'">
           <p>
             支付时间:
             <span>{{ item.PayRentTime ? item.PayRentTime : '暂未支付' }}</span>
@@ -36,9 +40,36 @@
             <span>￥{{ item.PayRentTotal }}</span>
           </p>
         </div>
-        <div class="item-right" v-else>
-          <el-button type="primary" plain ref="orderBtn" @click="handPay(item)">立即支付</el-button>
-        </div>
+        <!-- 弹框 -->
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
+          <!-- 文本框 -->
+          <span class="repair-span">请输入报修原因:</span>
+          <el-input type="textarea" :rows="2" placeholder="请输入报修原因" v-model="textarea"></el-input>
+          <!-- 图片 -->
+          <span class="repair-span">请上传文件:</span>
+          <el-upload
+            class="upload-demo"
+            drag
+            action="https://jsonplaceholder.typicode.com/posts/"
+            multiple
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
+          </el-upload>
+          <!-- 价格 -->
+          <span class="repair-span">请输入报修价格:</span>
+          <el-input v-model="inpPrice" placeholder="请输入报修价格"></el-input>
+          <!-- 状态 -->
+          <span class="repair-span">请输入报修状态:</span>
+          <el-input v-model="inpStatus" placeholder="请输入报修状态"></el-input>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
     </div>
 
@@ -57,16 +88,15 @@
           <span>{{ item.AccountPayTime }}</span>
           <span>{{ item.AccountPay }}</span>
           <span v-if="item.AccountStatus != '未支付'" class="btn-pay">
-            <el-button type="primary"  disabled>线上支付</el-button>
-            <el-button type="danger"  disabled>线下支付</el-button>
+            <el-button type="primary" disabled>线上支付</el-button>
+            <el-button type="danger" disabled>线下支付</el-button>
           </span>
           <span v-else class="btn-pay">
             <el-button
               type="primary"
-              
               @click="goToPay(item.AccountId,item.AccountPay,item.AccountDate)"
             >线上支付</el-button>
-            <el-button type="danger"  @click="goToPayOffline(item.AccountId)">线下支付</el-button>
+            <el-button type="danger" @click="goToPayOffline(item.AccountId)">线下支付</el-button>
           </span>
         </div>
       </div>
@@ -76,12 +106,17 @@
 
 <script>
 import api from "../../api/index";
+import { async } from "q";
 export default {
   data() {
     return {
       orderData: [], //订单列表
       modalData: [], //弹框渲染的数据
-      hideModal: true //默认隐藏弹框
+      hideModal: true, //默认隐藏弹框
+      dialogVisible: false, //是否展示弹出框
+      textarea: "", //文本框默认内容
+      inpPrice: '',//价格
+      inpStatus: '',//状态  
     };
   },
 
@@ -91,7 +126,7 @@ export default {
       .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.orderData = res.data._Items;
-        console.log(this.orderData,'0000000000000000000000')
+        console.log(this.orderData, "0000000000000000000000");
       })
       .catch(err => {
         console.log(err);
@@ -99,6 +134,15 @@ export default {
   },
 
   methods: {
+    // 点击取消弹框
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+
     // 点击立即支付 弹出弹框
     handPay(item) {
       const UserId = this.$store.state.currentLoginUser.UserId;
@@ -107,7 +151,6 @@ export default {
       api
         .FindAccountmore({ UserId, ConId })
         .then(res => {
-          console.log(res, "==============================");
           this.modalData = res.data._Items;
 
           console.log(res, "用户账单");
@@ -115,6 +158,34 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    // 点击报修
+    handRepair(item) {
+      const repairInfo = {
+        BuildId: item.BuildId,
+        UserId: item.UserId,
+        ButlerId: item.ButlerId,
+        RepairReason: "不想住了",
+        RepairImg:
+          "https://img.meituan.net/phoenix/e1c387e281a771b911bf821e422843a8756788.jpg",
+        RepairMoney: 1000,
+        RepairStatus: "success"
+      };
+      this.dialogVisible = true;
+      /**
+       * BuildId
+       * UserId
+       * RepairReason
+       * repairImg
+       * RepairMoney
+       * ButlerId
+       * RepairStatus
+       */
+      // let repairFunc = async () => {
+      //   let repairRes = await api.AddRepair(repairInfo)
+      //   console.log(repairRes,'维修结果')
+      // }
+      // repairFunc();
     },
 
     // 点击蒙层隐藏
@@ -146,7 +217,7 @@ export default {
               message: res.data,
               type: "success",
               duration: "2000",
-              center: true,
+              center: true
             });
           }
         })
@@ -281,6 +352,9 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        .el-button {
+          margin: 0;
+        }
         p {
           font-size: 16px;
           color: #353535;
@@ -289,6 +363,13 @@ body {
             font-weight: bold;
             margin-left: 10px;
           }
+        }
+      }
+      .el-dialog{
+        span.repair-span{
+          display: inline-block;
+          margin: 15px 0;
+          font-size: 16px;
         }
       }
     }

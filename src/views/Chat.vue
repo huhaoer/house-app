@@ -120,7 +120,8 @@ export default {
         this.Chat.socket.send(strmee);
         console.log(strmee);
         //清空输入框
-        document.getElementById("chat").value = "";
+        // document.getElementById("chat").value = "";
+        this.input = ''
       }
     }
   },

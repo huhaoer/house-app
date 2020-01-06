@@ -11,7 +11,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/userApi": {
-        target: "http://192.168.3.27:8080/UserMgeSvr.assx/", // 用户 host
+        target: "http://192.168.3.29:8080/UserMgeSvr.assx/", // 用户 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/userApi": "" // rewrite path
@@ -39,7 +39,7 @@ module.exports = {
         }
       },
       "/collectApi": {
-        target: "http://192.168.3.27:8080/CollectMgeSvr.assx/", // 收藏 host
+        target: "http://192.168.3.29:8080/CollectMgeSvr.assx/", // 收藏 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/collectApi": "" // rewrite path
@@ -53,21 +53,21 @@ module.exports = {
         }
       },
       "/accountApi": {
-        target: "http://192.168.3.27:8080/AccountMgeSvr.assx/", // 账单 host
+        target: "http://192.168.3.29:8080/AccountMgeSvr.assx/", // 账单 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/accountApi": "" // rewrite path
         }
       },
       "/alipayApi": {
-        target: "http://3zft26.natappfree.cc", // 支付宝支付 host
+        target: "http://6cg34z.natappfree.cc", // 支付宝支付 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/alipayApi": "" // rewrite path
         }
       },
       "/outrentApi": {
-        target: "http://192.168.3.29:8080/OutRentMgeSvr.assx/", // 退租续租 host
+        target: "http://192.168.3.27:8080/OutRentMgeSvr.assx/", // 退租续租 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/outrentApi": "" // rewrite path
@@ -78,6 +78,13 @@ module.exports = {
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/contractApi": "" // rewrite path
+        }
+      },
+      "/repairApi": {
+        target: "http://192.168.3.7:8081/RepairInfoMgeSvr.assx/", // 保修 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/repairApi": "" // rewrite path
         }
       },
     }

@@ -160,7 +160,7 @@ export default {
                     offset: 60
                   })
                   this.$store.commit('setCurrentLoginUser',res.data._Items[0])//登录成功后将当前用户对象信息保存到state
-                  window.sessionStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
+                  window.localStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
                   this.$router.push('/index/home')
                 }else{//用户名和密码不一致
                   // 提示信息

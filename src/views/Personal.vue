@@ -13,7 +13,7 @@
           <router-link tag="span" to="/personal/myCollect">我的收藏</router-link>
         </el-menu-item>
         <el-menu-item index="2">
-          <router-link tag="span" to="/personal/myOrder">我的合同</router-link>
+          <router-link tag="span" to="/personal/myOrder">我的订单</router-link>
         </el-menu-item>
         <el-menu-item index="3">
           <router-link tag="span" to="/personal/myBook">我的预约</router-link>
@@ -56,7 +56,7 @@ export default {
       // 清除用户信息
       this.$store.commit("setCurrentLoginUser", {});
       // 清除已经登录的标识
-      window.sessionStorage.removeItem("login");
+      window.localStorage.removeItem("login");
       // 跳转到首页
       this.$router.push("/index");
     },

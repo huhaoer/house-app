@@ -16,11 +16,11 @@ export default {
   mounted() {
     // 在页面刷新时将vuex里的信息保存到localStorage里
     window.addEventListener("beforeunload",()=>{
-    sessionStorage.setItem("messageStore",JSON.stringify(this.$store.state))
+    localStorage.setItem("messageStore",JSON.stringify(this.$store.state))
     })
     
     //在页面加载时读取localStorage里的状态信息
-    sessionStorage.getItem("messageStore") && this.$store.replaceState(Object.assign({},this.$store.state,JSON.parse(sessionStorage.getItem("messageStore"))))
+    localStorage.getItem("messageStore") && this.$store.replaceState(Object.assign({},this.$store.state,JSON.parse(localStorage.getItem("messageStore"))))
 
   }
 };

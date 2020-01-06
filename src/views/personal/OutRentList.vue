@@ -4,7 +4,7 @@
       <el-table-column prop="OutRentTime" label="退租日期" width="180"></el-table-column>
       <el-table-column prop="OutRentStatus" label="退租状态" width="180"></el-table-column>
       <el-table-column prop="OutRentMoney" label="退租金额" width="180"></el-table-column>
-      <el-table-column prop="OutRentMonth" label="退租月数" width="180"></el-table-column>
+      <el-table-column prop="OutRentMonth" label="剩余月数" width="180"></el-table-column>
       <el-table-column prop="OutRentPay" label="已付金额" width="180"></el-table-column>
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">

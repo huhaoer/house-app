@@ -18,6 +18,7 @@ export default {
   orderBaseURL: '/orderApi',//获取订单数据需要的基础URL
   UserQueryOrderList: '/userQueryOrderList',//根据用户id查询用户订单
   AddOrder: '/addOrder',//用户下单
+  UpdateOrderStatus: '/updateOrderStatus',//更新订单状态
 
   collectBaseURL: '/collectApi',//获取收藏数据需要的基础URL
   AddCollect: '/addCollect',//用户添加收藏
@@ -44,4 +45,7 @@ export default {
   contracBaseURL: '/contractApi',//获取合同模板需要的基础URL
   FindPhotoUrl: '/findPhotoUrl',//根据合同id获取模板
   GoingContract: '/goingContract',//续租
+
+  repairBaseURL: '/repairApi',//报修的基础URL
+  AddRepair: '/addRepair',//添加报修
 }

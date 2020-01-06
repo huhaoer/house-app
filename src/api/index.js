@@ -41,8 +41,23 @@ const contractAjax = Axios.create({
   baseURL: URLS.contracBaseURL,
   method: 'get'
 })
+const repairAjax = Axios.create({
+  baseURL: URLS.repairBaseURL,
+  method: 'get'
+})
 
 export default {
+  /**
+   * 报修
+   */
+  // 1.添加报修
+  AddRepair(repairInfo) {
+    return repairAjax.get(URLS.AddRepair, {
+      params: {
+        repairInfo,
+      }
+    })
+  },
   /**
    * 打印合同模板
    */
@@ -208,6 +223,14 @@ export default {
     return orderAjax.get(URLS.AddOrder, {
       params: {
         orderInfo,
+      }
+    })
+  },
+  // 2.退租后更新订单状态
+  UpdateOrderStatus(info) {
+    return orderAjax.get(URLS.UpdateOrderStatus, {
+      params: {
+        ...info
       }
     })
   },

@@ -70,7 +70,7 @@ export default {
       // 清空本地的用户信息
       this.$store.commit('setCurrentLoginUser',{})
       // 清除已经登录的标识
-      window.sessionStorage.removeItem('login')
+      window.localStorage.removeItem('login')
       // 跳转到首页
       this.$router.push('/index')
     },
