@@ -23,12 +23,20 @@
           </p>
           <p>
             支付状态:
+            {{item.IsRepair}}
             <span style="color: red">{{ item.ConStatus }}</span>
+            <!-- {{item.isRepair == 'true'}} -->
           </p>
         </div>
         <div class="item-right" v-show="item.ConStatus == '已签约'">
           <el-button type="primary" plain ref="orderBtn" @click="handPay(item)">立即支付</el-button>
-          <el-button type="primary" plain ref="repairBtn" @click="handRepair(item)">申请报修</el-button>
+          <el-button
+            type="primary"
+            :disabled="isRepair"
+            plain
+            ref="repairBtn"
+            @click="handRepair(item)"
+          >申请报修</el-button>
         </div>
         <div class="item-right" v-show="item.ConStatus !== '已签约'">
           <p>
@@ -41,7 +49,13 @@
           </p>
         </div>
         <!-- 弹框 -->
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
+        <el-dialog
+          title="提示"
+          :visible.sync="dialogVisible"
+          width="60%"
+          :before-close="handleClose"
+          :close-on-click-modal="false"
+        >
           <!-- 文本框 -->
           <span class="repair-span">请输入报修原因:</span>
           <el-input type="textarea" :rows="2" placeholder="请输入报修原因" v-model="textarea"></el-input>
@@ -50,8 +64,10 @@
           <el-upload
             class="upload-demo"
             drag
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://192.168.3.7:8081/upImg/upload"
             multiple
+            :before-upload="beforeUpload"
+            name="file"
           >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">
@@ -59,15 +75,10 @@
               <em>点击上传</em>
             </div>
           </el-upload>
-          <!-- 价格 -->
-          <span class="repair-span">请输入报修价格:</span>
-          <el-input v-model="inpPrice" placeholder="请输入报修价格"></el-input>
-          <!-- 状态 -->
-          <span class="repair-span">请输入报修状态:</span>
-          <el-input v-model="inpStatus" placeholder="请输入报修状态"></el-input>
+
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button @click="cancleRepair">取 消</el-button>
+            <el-button type="primary" @click="handleRepair">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -106,7 +117,7 @@
 
 <script>
 import api from "../../api/index";
-import { async } from "q";
+import Axios from "axios";
 export default {
   data() {
     return {
@@ -115,25 +126,43 @@ export default {
       hideModal: true, //默认隐藏弹框
       dialogVisible: false, //是否展示弹出框
       textarea: "", //文本框默认内容
-      inpPrice: '',//价格
-      inpStatus: '',//状态  
+      repairInfo: {}, //报修传递的参数
+      files: "", //上传的文件
+      isRepair: false,//是否已经报修
     };
   },
 
-  mounted() {
+  created() {
     // 传递当前用户的id获取当前用户的订单
-    api
-      .UserQueryOrderList(this.$store.state.currentLoginUser.UserId)
-      .then(res => {
-        this.orderData = res.data._Items;
-        console.log(this.orderData, "0000000000000000000000");
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    let queryOrderList = async () => {
+      let queryListRes = await api.UserQueryOrderList(
+        this.$store.state.currentLoginUser.UserId
+      );
+      this.orderData = queryListRes.data._Items;
+
+    };
+    queryOrderList();
+    
   },
 
   methods: {
+    // judgeRepair() {
+    //   const newArr = [];
+    //   this.orderData.forEach(item => {
+    //     //是否维修
+    //     let isRepairFunc = async () => {
+    //       let isRepairRes = await api.IsRepair(item.BuildId);
+    //       if (isRepairRes.data == "true") {
+    //           newArr.push(true)
+    //       }else{
+    //           newArr.push(false)
+    //       }
+    //     }
+    //     isRepairFunc()
+    //   });
+    //   return newArr;
+    // },
+
     // 点击取消弹框
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -159,33 +188,43 @@ export default {
           console.log(err);
         });
     },
-    // 点击报修
+    // 点击报修出现弹框
     handRepair(item) {
-      const repairInfo = {
+      this.repairInfo = {
         BuildId: item.BuildId,
         UserId: item.UserId,
-        ButlerId: item.ButlerId,
-        RepairReason: "不想住了",
-        RepairImg:
-          "https://img.meituan.net/phoenix/e1c387e281a771b911bf821e422843a8756788.jpg",
-        RepairMoney: 1000,
-        RepairStatus: "success"
+        ButlerId: item.ButlerId
       };
       this.dialogVisible = true;
-      /**
-       * BuildId
-       * UserId
-       * RepairReason
-       * repairImg
-       * RepairMoney
-       * ButlerId
-       * RepairStatus
-       */
-      // let repairFunc = async () => {
-      //   let repairRes = await api.AddRepair(repairInfo)
-      //   console.log(repairRes,'维修结果')
-      // }
-      // repairFunc();
+    },
+    // 确定报修
+    handleRepair() {
+      const RepairReason = this.textarea;
+      const repairInfo = {
+        ...this.repairInfo,
+        RepairReason
+      };
+
+      // 上传其余信息
+      let repairFunc = async () => {
+        let repairRes = await api.AddRepair(repairInfo);
+        console.log(repairRes, "维修结果");
+        if (repairRes.data == "报修成功") {
+          this.dialogVisible = false;
+          this.isRepair = true
+        }
+      };
+      repairFunc();
+    },
+    //上传文件之前
+    beforeUpload(file) {
+      this.files = file;
+      return true;
+    },
+
+    // 取消报修
+    cancleRepair() {
+      this.dialogVisible = false;
     },
 
     // 点击蒙层隐藏
@@ -365,8 +404,8 @@ body {
           }
         }
       }
-      .el-dialog{
-        span.repair-span{
+      .el-dialog {
+        span.repair-span {
           display: inline-block;
           margin: 15px 0;
           font-size: 16px;

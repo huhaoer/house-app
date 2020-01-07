@@ -72,7 +72,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputType: "number",
-        inputValue: 1,
+        inputValue: 12,
         closeOnClickModal: false,
         inputValidator(val) {
           if (val < 1) {

@@ -45,8 +45,19 @@ const repairAjax = Axios.create({
   baseURL: URLS.repairBaseURL,
   method: 'get'
 })
+const imgUploadAjax = Axios.create({
+  baseURL: URLS.imgUploadBaseURL,
+  method: 'post'
+})
 
 export default {
+  /**
+   * 报修图片
+   */
+  // 1.添加报修图片
+  Upload(file) {
+    return imgUploadAjax.post(URLS.Upload)
+  },
   /**
    * 报修
    */
@@ -58,6 +69,15 @@ export default {
       }
     })
   },
+  // 2.查询是否已经报修
+  IsRepair(buildId) {
+    return repairAjax.get(URLS.IsRepair, {
+      params: {
+        buildId,
+      }
+    })
+  },
+
   /**
    * 打印合同模板
    */
@@ -82,7 +102,7 @@ export default {
    * 退租续租
    */
   // 1.退租
-  AddOutRent(outRent) {//outRent={"ConId":1049,"UserId":2020}
+  AddOutRent(outRent) {
     return outrentAjax.get(URLS.AddOutRent, {
       params: {
         outRent,
@@ -94,6 +114,14 @@ export default {
     return outrentAjax.get(URLS.FindOutRentList, {
       params: {
         outRent,
+      }
+    })
+  },
+  // 2.查看退租列表
+  FindBuildByOutRentId(OutRentId) {
+    return outrentAjax.get(URLS.FindBuildByOutRentId, {
+      params: {
+        OutRentId,
       }
     })
   },

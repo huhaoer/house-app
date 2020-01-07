@@ -83,7 +83,6 @@
               >
                 <el-image :src="src" class="modal-img"></el-image>
                 <span slot="footer" class="dialog-footer">
-                  <el-button @click.stop="hetongDialog = false">取 消</el-button>
                   <el-button type="primary" @click.stop="hetongDialog = false">确 定</el-button>
                 </span>
               </el-dialog>打印合同
@@ -120,7 +119,6 @@ export default {
       let getGoingRent = async () => {
         // 点击续租 重新生成订单
         let addOrder = await api.AddOrder(this.info);
-        console.log(addOrder, "xxxxxxxxxxxxxxxxxxxzzzzzzzzzzzzzzzzzzzz");
         if (addOrder.data == "订单生成，请尽快联系管家签约哦") {
           //成功下单
           this.$message({
@@ -148,7 +146,6 @@ export default {
     handleEdit(index, row) {
       const outRent = {
         ConId: row.ConId,
-        UserId: row.UserId
       };
       const that = this;
 
@@ -175,7 +172,7 @@ export default {
     // 点击续租
     handleDelete(index, row) {
       const that = this;
-      console.log(row,';;;;;;;;;;;;;;;;;;;;;;;;;;;;')
+      console.log(row, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
       that.xuzugDialog = true;
       this.info = {
         BuildId: row.BuildId,
@@ -195,16 +192,12 @@ export default {
       async function printHT() {
         try {
           const res = await api.FindPhotoUrl(ConId);
-          if (res.data == null) {
-            that.src = "";
-            return;
-          } 
-          if (res.data) {
-            if (res.data.indexOf("pdf") != -1) {
-              window.open(res.data, "_blank");
-            } else {
-              that.src = res.data;
-            }
+
+          if (res.data.indexOf("pdf") != -1) {
+            window.open(res.data, "_blank");
+            that.hetongDialog = false;
+          } else {
+            that.src = res.data;
           }
         } catch (err) {
           console.log(err);

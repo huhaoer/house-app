@@ -41,6 +41,7 @@ export default {
   outrentBaseURL: '/outrentApi',//退租续租 接口
   AddOutRent: '/addOutRent',//退租
   FindOutRentList: '/findOutRentList',//查看退租的列表
+  FindBuildByOutRentId: '/findBuildByOutRentId',//根据退租id查看退租房源信息
 
   contracBaseURL: '/contractApi',//获取合同模板需要的基础URL
   FindPhotoUrl: '/findPhotoUrl',//根据合同id获取模板
@@ -48,4 +49,8 @@ export default {
 
   repairBaseURL: '/repairApi',//报修的基础URL
   AddRepair: '/addRepair',//添加报修
+  IsRepair: '/isRepair',//是否已经报修过
+
+  imgUploadBaseURL: '/imgUploadApi',//报修图片基础URL
+  Upload: '/upload',//添加报修图片
 }

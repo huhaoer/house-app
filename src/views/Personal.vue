@@ -66,7 +66,7 @@ export default {
     },
     // 点击切换下拉框触发事件
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     }
   }
 };

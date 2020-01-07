@@ -1,6 +1,6 @@
 <template>
   <div class="outrentlist">
-    <el-table :data="tableData" border style="width: 100%" stripe highlight-current-row>
+    <el-table :data="rentListTableData" border style="width: 100%" stripe highlight-current-row>
       <el-table-column prop="OutRentTime" label="退租日期" width="180"></el-table-column>
       <el-table-column prop="OutRentStatus" label="退租状态" width="180"></el-table-column>
       <el-table-column prop="OutRentMoney" label="退租金额" width="180"></el-table-column>
@@ -13,11 +13,14 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog title="退租详情" :visible.sync="dialogTableVisible">
-      <el-table :data="tableData2">
-        <el-table-column property="OutRentTime" label="日期" width="150"></el-table-column>
-        <el-table-column property="OutRentStatus" label="姓名" width="200"></el-table-column>
-        <el-table-column property="OutRentMoney" label="地址"></el-table-column>
+    <el-dialog title="退租房源详情" :visible.sync="dialogTableVisible" width="65%">
+      <el-table :data="rentListTableDetail" stripe border highlight-current-row>
+        <el-table-column label="房源图片" width="250">
+          <el-image style="width: 250px;" :src="nowImage" ></el-image>
+        </el-table-column>
+        <el-table-column property="BuildName" label="房源名称" width="150" align="center"></el-table-column>
+        <el-table-column property="BuildAddress" label="房源地址" width="150"></el-table-column>
+        <el-table-column property="BuildLocation" label="房源区域" width="150"></el-table-column>
       </el-table>
     </el-dialog>
   </div>
@@ -28,30 +31,26 @@ import api from "../../api/index";
 export default {
   methods: {
     handleClick(row) {
-      console.log(row);
-      const conId = row.ConId;//点击当前的合同Id 
-      const UserId = this.$store.state.currentLoginUser.UserId;//用户id
-
-      async function getDetail() {
-        let addOutRent = await api.AddOutRent({conId,UserId});
-        console.log(addOutRent,'添加+++++++++++++++++++++')
-      }
-      getDetail();
       this.dialogTableVisible = true;
+      const OutRentId = row.OutRentId; //点击当前退租的合同Id
+
+      // 查看退房详情
+      let getDetail = async () => {
+        let addOutRent = await api.FindBuildByOutRentId(OutRentId);
+        console.log(addOutRent,',,,,,,,,,,,,')
+        this.rentListTableDetail = addOutRent.data; //退租详情列表
+        this.nowImage = this.rentListTableDetail[0].BuildImage
+      };
+      getDetail();
     }
   },
 
   data() {
     return {
-      tableData: [],
+      rentListTableData: [], //退租列表
       dialogTableVisible: false,
-      tableData2: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        }
-      ]
+      rentListTableDetail: [], //退租列表详情
+      nowImage: '',//当前查看退租房源的图片
     };
   },
   mounted() {
@@ -60,11 +59,10 @@ export default {
       UserId
     };
     const that = this;
+    // 查看退房列表
     async function getRentList() {
       let rentList = await api.FindOutRentList(outRentListParams);
-      that.tableData = rentList.data._Items; //数据保存到data
-      
-      console.log(rentList, "退租列表");
+      that.rentListTableData = rentList.data._Items; //数据保存到data
     }
     getRentList();
   }

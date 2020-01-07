@@ -60,7 +60,7 @@ module.exports = {
         }
       },
       "/alipayApi": {
-        target: "http://6cg34z.natappfree.cc", // 支付宝支付 host
+        target: "http://hgnrrr.natappfree.cc", // 支付宝支付 host
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/alipayApi": "" // rewrite path
@@ -85,6 +85,13 @@ module.exports = {
         changeOrigin: true, // needed for virtual hosted sites
         pathRewrite: {
           "^/repairApi": "" // rewrite path
+        }
+      },
+      "/imgUploadApi": {
+        target: "http://192.168.3.7:8081/upImg/", // 保修 host
+        changeOrigin: true, // needed for virtual hosted sites
+        pathRewrite: {
+          "^/imgUploadApi": "" // rewrite path
         }
       },
     }
