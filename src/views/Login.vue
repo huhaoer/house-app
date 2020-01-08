@@ -53,6 +53,7 @@
 
 <script>
 import api from '../api/index'
+import { async } from 'q';
 export default {
   data() {
     // 1.校验用户手机账号
@@ -161,7 +162,17 @@ export default {
                   })
                   this.$store.commit('setCurrentLoginUser',res.data._Items[0])//登录成功后将当前用户对象信息保存到state
                   window.localStorage.setItem('login',true);//登录成功后 将已登录状态保存到缓存,在全局路由守卫判断是否已经登录
-                  this.$router.push('/index/home')
+                  
+
+                  let needPay = async () => {
+                    let needPayRes = await api.NeedPayAccount(this.$store.state.currentLoginUser.UserId);
+                    // console.log(needPayRes,'都会塞大神哦')
+                    this.$router.push({name: 'home'})//跳转首页
+                    this.$store.commit('setNeedPay',needPayRes.data)//设置要到期的账单
+                  }
+                  needPay()
+
+                  
                 }else{//用户名和密码不一致
                   // 提示信息
                   this.$message({

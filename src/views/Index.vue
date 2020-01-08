@@ -4,7 +4,7 @@
     <header class="house-header">
       <div class="header-wrap">
         <div class="header-left">
-          <img src="../assets/logo.png"/>
+          <img src="../assets/logo.png" />
         </div>
         <div class="header-middle">
           <div>
@@ -12,7 +12,7 @@
             <router-link tag="span" to="/index/rent">我要租房</router-link>
           </div>
           <div>
-            <el-input  placeholder="请输入查询内容" v-model="inpValue"></el-input>
+            <el-input placeholder="请输入查询内容" v-model="inpValue"></el-input>
             <el-button :disabled="inpValue == ''" @click="handKeyword">找房</el-button>
           </div>
         </div>
@@ -22,7 +22,22 @@
           <router-link tag="span" to="/register">注册</router-link>
         </div>
         <div class="header-hi" v-else>
-          <p><i class="el-icon-user-solid"></i> <span @click="enterPersonal">{{ this.$store.state.currentLoginUser.UserName }}</span> <span @click="loginOut">退出</span></p>
+          <p v-show="this.$store.state.needPay.length == 0">
+            <i class="el-icon-user-solid"></i>
+            <span @click="enterPersonal">{{ this.$store.state.currentLoginUser.UserName }}</span>
+            <span @click="loginOut">退出</span>
+          </p>
+          
+          <p v-show="this.$store.state.needPay.length != 0">
+            <i class="el-icon-user-solid"></i>
+            <el-badge :value="this.$store.state.needPay.length" class="item">
+              <span
+                @click="enterPersonal"
+                class="tips_span"
+              >{{ this.$store.state.currentLoginUser.UserName }}</span>
+            </el-badge>
+            <span @click="loginOut">退出</span>
+          </p>
         </div>
       </div>
     </header>
@@ -45,7 +60,7 @@
         <div class="qq"></div>
         <!-- <div class="logo-show">
           <img src="../assets/qq.png" alt="">
-        </div> -->
+        </div>-->
       </div>
       <div class="footer-modal">
         <p>Copyright © 2012-2018 zufang.com. All Rights Reserved</p>
@@ -55,53 +70,58 @@
 </template>
 
 <script>
-import api from '../api/index'
+import api from "../api/index";
 export default {
   name: "home",
   data() {
     return {
-      erweima: '',//当前显示二维码的路径
-      inpValue: '',//输入框的输入内容
+      erweima: "", //当前显示二维码的路径
+      inpValue: "" //输入框的输入内容
     };
   },
   methods: {
     // 退出登录
     loginOut() {
       // 清空本地的用户信息
-      this.$store.commit('setCurrentLoginUser',{})
+      this.$store.commit("setCurrentLoginUser", {});
       // 清除已经登录的标识
-      window.localStorage.removeItem('login')
+      window.localStorage.removeItem("login");
       // 跳转到首页
-      this.$router.push('/index')
+      this.$router.push("/index");
     },
     // 点击姓名进入个人中心
     enterPersonal() {
-      this.$router.push('/personal')
+      this.$router.push("/personal");
     },
 
     // 点击查询关键字
     handKeyword() {
-      api.GetBuildInfoByLike({
-        str: this.inpValue,
-        BuildId: 12
-      })
+      api
+        .GetBuildInfoByLike({
+          str: this.inpValue,
+          BuildId: 12
+        })
         .then(res => {
-          if(res.data._Items.length > 0) {//存在查询结果
-              this.$router.push({name: 'rent',params: {likeData: res.data._Items}})
-          }else{//没有数据
-           this.$message({
-                  message: '查询结果不存在',
-                  type: 'error',
-                  duration: '1500',
-                  center: true,
-                })
+          if (res.data._Items.length > 0) {
+            //存在查询结果
+            this.$router.push({
+              name: "rent",
+              params: { likeData: res.data._Items }
+            });
+          } else {
+            //没有数据
+            this.$message({
+              message: "查询结果不存在",
+              type: "error",
+              duration: "1500",
+              center: true
+            });
           }
-          console.log(res,'模糊查询===')
-          this.inpValue = '';//置空查询关键字
+          this.inpValue = ""; //置空查询关键字
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   }
 };
@@ -141,11 +161,11 @@ body {
           justify-content: space-between;
           color: #fff;
           line-height: 60px;
-          width: 800px;
-          .el-input{
+          width: 750px;
+          .el-input {
             width: 200px;
           }
-          .el-button{
+          .el-button {
             width: 65px;
             margin-left: 5px;
           }
@@ -175,23 +195,39 @@ body {
             }
           }
         }
-        .header-hi{
+        .header-hi {
           color: #fff;
-          .el-icon-user-solid{
+          .el-icon-user-solid {
             font-size: 20px;
           }
-          p{
-            line-height: 60px;
+          p {
+            line-height: 50px;
             font-size: 16px;
-            span:nth-of-type(1){
+            display: flex;
+            box-sizing: border-box;
+            justify-content: space-between;
+            align-items: center;
+            .item {
+              margin-top: 10px;
+              margin-right: 15px;
+              .el-badge__content.is-fixed {
+                position: absolute;
+                top: 7px !important;
+                right: 10px;
+              }
+              .tips_span{
+                margin-bottom: 10px;
+              }
+            }
+            span:nth-of-type(1) {
               font-size: 20px;
               font-weight: bold;
               cursor: pointer;
             }
-            span:nth-of-type(2){
+            span:nth-of-type(2) {
               font-size: 12px;
               // color: rgba(240, 110, 94, 1);
-              color: #F56C6C;
+              color: #f56c6c;
               cursor: pointer;
               margin-left: 15px;
             }
@@ -208,53 +244,53 @@ body {
       // background-color: #f06e5e;
       margin-top: 50px;
       position: relative;
-      .footer-title{
+      .footer-title {
         height: 100px;
         display: flex;
         justify-content: space-around;
         line-height: 100px;
         border-bottom: 1px solid #fff;
-        .title-item{
+        .title-item {
           font-size: 16px;
           color: #fff;
           cursor: pointer;
         }
       }
-      .footer-logo{
+      .footer-logo {
         position: relative;
         width: 200px;
         margin: 0 auto;
         height: 50px;
         display: flex;
         justify-content: space-around;
-        div{
+        div {
           width: 40px;
           height: 40px;
           margin-top: 5px;
         }
-        .weixin{
-          background: url('../assets/f_logo.png');
+        .weixin {
+          background: url("../assets/f_logo.png");
           background-repeat: no-repeat;
           background-position: 0px 0px;
           background-size: 120px 40px;
         }
-        .weibo{
-          background: url('../assets/f_logo.png');
+        .weibo {
+          background: url("../assets/f_logo.png");
           background-repeat: no-repeat;
           background-position: -40px 0px;
           background-size: 120px 40px;
         }
-        .qq{
-          background: url('../assets/f_logo.png');
+        .qq {
+          background: url("../assets/f_logo.png");
           background-repeat: no-repeat;
           background-position: -80px 0px;
           background-size: 120px 40px;
         }
-        .logo-show{
+        .logo-show {
           position: absolute;
           top: -90px;
           left: 60px;
-          img{
+          img {
             width: 80px;
             height: 80px;
           }

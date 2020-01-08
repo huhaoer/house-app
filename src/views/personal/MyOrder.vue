@@ -13,20 +13,35 @@
           <img :src="item.BuildImage.split(',')[0]" alt />
         </div>
         <div class="item-center">
-          <p>
-            房间名:
-            <span>{{ item.BuildName }}</span>
-          </p>
-          <p>
-            管家名:
-            <span>{{ item.ButlerName }}</span>
-          </p>
-          <p>
-            支付状态:
-            {{item.IsRepair}}
-            <span style="color: red">{{ item.ConStatus }}</span>
-            <!-- {{item.isRepair == 'true'}} -->
-          </p>
+          <div class="center-house">
+            <p>
+              房间名:
+              <span>{{ item.BuildName }}</span>
+            </p>
+            <p>
+              管家名:
+              <span>{{ item.ButlerName }}</span>
+            </p>
+            <p>
+              支付状态:
+              <span style="color: red">{{ item.ConStatus }}</span>
+            </p>
+          </div>
+          <div
+            class="center-tips"
+            v-show="$store.state.needPay.some(obj => obj.ConId == item.ConId)"
+          >
+            <el-popover
+              placement="top-start"
+              title="账单提醒"
+              width="200"
+              trigger="hover"
+              content="本期账单即将到期,请及时支付。"
+            >
+              <i class="el-icon-warning-outline" slot="reference">温馨提示</i>
+            </el-popover>
+          </div>
+          <div class="center-tips"></div>
         </div>
         <div class="item-right" v-show="item.ConStatus == '已签约'">
           <el-button type="primary" plain ref="orderBtn" @click="handPay(item)">立即支付</el-button>
@@ -128,7 +143,7 @@ export default {
       textarea: "", //文本框默认内容
       repairInfo: {}, //报修传递的参数
       files: "", //上传的文件
-      isRepair: false,//是否已经报修
+      isRepair: false //是否已经报修
     };
   },
 
@@ -139,30 +154,12 @@ export default {
         this.$store.state.currentLoginUser.UserId
       );
       this.orderData = queryListRes.data._Items;
-
+      // console.log(this.orderData, "ppppppppppppppppppp");
     };
     queryOrderList();
-    
   },
 
   methods: {
-    // judgeRepair() {
-    //   const newArr = [];
-    //   this.orderData.forEach(item => {
-    //     //是否维修
-    //     let isRepairFunc = async () => {
-    //       let isRepairRes = await api.IsRepair(item.BuildId);
-    //       if (isRepairRes.data == "true") {
-    //           newArr.push(true)
-    //       }else{
-    //           newArr.push(false)
-    //       }
-    //     }
-    //     isRepairFunc()
-    //   });
-    //   return newArr;
-    // },
-
     // 点击取消弹框
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -211,7 +208,7 @@ export default {
         console.log(repairRes, "维修结果");
         if (repairRes.data == "报修成功") {
           this.dialogVisible = false;
-          this.isRepair = true
+          this.isRepair = true;
         }
       };
       repairFunc();
@@ -243,6 +240,7 @@ export default {
         name: "alipay",
         params: { AccountId, AccountPay, AccountDate }
       });
+      this.willDated()
     },
 
     // 点击线下支付
@@ -250,7 +248,6 @@ export default {
       api
         .OfflinePayment(AccountId)
         .then(res => {
-          console.log(res, "线下支付");
           if (res.data == "请求管家确定") {
             this.$message({
               message: res.data,
@@ -258,11 +255,25 @@ export default {
               duration: "2000",
               center: true
             });
+            this.willDated();
           }
         })
         .catch(err => {
           console.log(err);
         });
+        
+    },
+
+    // 查看是否已经到期
+    willDated() {
+      let needPay = async () => {
+        let needPayRes = await api.NeedPayAccount(
+          this.$store.state.currentLoginUser.UserId
+        );
+        console.log(needPayRes, "都会塞大神哦");
+        this.$store.commit("setNeedPay", needPayRes.data); //设置要到期的账单
+      };
+      needPay();
     }
   }
 };
@@ -372,17 +383,33 @@ body {
         }
       }
       .item-center {
-        width: 300px;
+        width: 350px;
         display: flex;
-        flex-direction: column;
+        flex-direction: center;
         justify-content: space-around;
-        p {
-          font-size: 16px;
-          color: #353535;
-          span {
-            color: #000;
+        .center-house {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          p {
+            font-size: 16px;
+            color: #353535;
+            span {
+              color: #000;
+              font-weight: bold;
+              margin-left: 10px;
+            }
+          }
+        }
+        .center-tips {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          color: red;
+          font-size: 20px;
+          .el-icon-warning-outline {
             font-weight: bold;
-            margin-left: 10px;
+            font-style: italic;
           }
         }
       }

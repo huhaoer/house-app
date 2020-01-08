@@ -117,7 +117,7 @@ export default {
       }
     })
   },
-  // 2.查看退租列表
+  // 3.根据退租id查看退租房源信息
   FindBuildByOutRentId(OutRentId) {
     return outrentAjax.get(URLS.FindBuildByOutRentId, {
       params: {
@@ -346,6 +346,14 @@ export default {
     return accountAjax.get(URLS.OfflinePayment,{
       params: {
         accountId,
+      }
+    })
+  },
+  //3.用户查看哪些东单要到期了
+  NeedPayAccount(UserId) {
+    return accountAjax.get(URLS.NeedPayAccount,{
+      params: {
+        UserId,
       }
     })
   },

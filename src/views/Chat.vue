@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       input: "", //输入框内容
-      number: 18282290361, //管家电话
+      number: 18782290361, //管家电话
       Console: {
         log: this.log
       },
@@ -75,7 +75,7 @@ export default {
       }
 
       this.Chat.socket.onopen = function() {
-        that.Console.log("连接成功");
+        that.Console.log("连接对话");
         document.getElementById("chat").onkeydown = function(event) {
           if (event.keyCode == 13) {
             that.Chat.sendMessage();
@@ -85,11 +85,10 @@ export default {
 
       this.Chat.socket.onclose = function() {
         document.getElementById("chat").onkeydown = null;
-        that.Console.log("连接关闭");
+        that.Console.log("关闭对话");
       };
 
       this.Chat.socket.onmessage = function(message) {
-        console.log(message);
         that.Console.log(message.data);
       };
     },
@@ -210,8 +209,8 @@ export default {
           border-radius: 7px;
           font-size: 18px;
           color: #000;
-          background-color: rgb(135, 239, 84);
-          border: 1px solid #ccc;
+          background-color: #fff;
+          border: 1px solid #000;
         }
       }
     }
