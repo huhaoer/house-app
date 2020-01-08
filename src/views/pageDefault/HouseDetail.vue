@@ -156,11 +156,50 @@
         </el-card>
       </div>
       <div class="alike-house-no" v-else>
-        <div class="no-title">
-          暂无房源,敬请期待...
-        </div>
+        <div class="no-title">暂无房源,敬请期待...</div>
         <div class="no-img">
-          <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578483929608&di=6e797a3d1bff63fc0402cf1d5c6fa083&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190531%2F11602021802f40abae765b090b0a0397.gif" alt="">
+          <img
+            src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578483929608&di=6e797a3d1bff63fc0402cf1d5c6fa083&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190531%2F11602021802f40abae765b090b0a0397.gif"
+            alt
+          />
+        </div>
+      </div>
+    </div>
+    <!-- 附近房源 -->
+    <div class="houseDetail-recently">
+      <div class="recently-title">查看附近相似房源~</div>
+      <div class="recently-house" v-if="recentlyData.length > 0">
+        <el-card
+          :body-style="{ padding: '0px' }"
+          v-for="(item,index) in recentlyData"
+          :key="index"
+        >
+          <router-link
+            tag="div"
+            :to="{name: 'houseDetail',params:{id: item.BuildId}}"
+            class="link-img"
+          >
+            <img :src="item.BuildImage.split(',')[0]" class="image" />
+          </router-link>
+          <div style="padding: 14px;" class="mes-box">
+            <div class="bottom clearfix">
+              <span>{{item.BuildName}}</span>
+              <span>{{item.BuildLocation ? item.BuildLocation : "未定义" }}</span>
+            </div>
+            <div class="bottom clearfix">
+              <span class="name">{{item.BuildAddress ? item.BuildAddress : "未定义"}}</span>
+              <span class="price">{{item.BuildPrice}}￥</span>
+            </div>
+          </div>
+        </el-card>
+      </div>
+      <div class="recently-house-no" v-else>
+        <div class="no-title">暂无房源,敬请期待...</div>
+        <div class="no-img">
+          <img
+            src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578483929608&di=6e797a3d1bff63fc0402cf1d5c6fa083&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190531%2F11602021802f40abae765b090b0a0397.gif"
+            alt
+          />
         </div>
       </div>
     </div>
@@ -179,7 +218,8 @@ export default {
       isBook: false, //判断是否被预约过
       srcList: [], //预览列表
       alikeDetailData: [], //相似房源的详细信息
-      showDetailData: [], //展示信息
+      showDetailData: [], //相似房源展示信息
+      recentlyData: [], //附近房源列表
       // 地图相关数据
       center: { lng: 104.07, lat: 30.67 },
       location: "成都市",
@@ -189,9 +229,9 @@ export default {
     };
   },
   // 监听路由变化
-  beforeRouteUpdate (to, from, next){
-    let params = to.params.id;//参数
-    let hf = 'http://192.168.3.31:8080/index/houseDetail/'
+  beforeRouteUpdate(to, from, next) {
+    let params = to.params.id; //参数
+    let hf = "http://192.168.3.31:8080/index/houseDetail/";
 
     location.href = hf + params;
   },
@@ -395,6 +435,21 @@ export default {
       }
     }
   },
+  computed: {
+    getRecent() {
+      const that = this;
+      return function (zuobiao) {
+        api.BuildNearby(zuobiao)
+          .then(res => {
+            console.log(res,'坐标++++++++++++')
+            that.recentlyData = res.data;//附近房源列表
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  },
 
   mounted() {
     // 根据房源id查看房源具体信息  动态路由传递房源id
@@ -405,6 +460,8 @@ export default {
       .UserQueryDetails(buildId)
       .then(res => {
         this.houseData = res.data._Items[0];
+        // 根据请求回来的坐标查询附近的房源
+        this.houseData.BuildRemake && this.getRecent(this.houseData.BuildRemake)
 
         if (this.houseData.BuildRemake == null) {
         } else {
@@ -472,6 +529,8 @@ export default {
       .catch(err => {
         console.log(err);
       });
+
+
   }
 };
 </script>
@@ -639,11 +698,11 @@ export default {
     margin: 0 auto;
   }
   // 相似房源
-  .houseDetail-alike {
+  .houseDetail-alike,.houseDetail-recently {
     width: 80%;
     margin: 0 auto;
     margin-top: 20px;
-    .alike-title {
+    .alike-title,.recently-title {
       width: 100%;
       height: 40px;
       // background-color: #91d9ef;
@@ -652,7 +711,7 @@ export default {
       font-size: 18px;
       font-weight: 700;
     }
-    .alike-house {
+    .alike-house,.recently-house {
       border: 1px solid #ccc;
       margin-top: 15px;
       display: flex;
@@ -690,21 +749,21 @@ export default {
         }
       }
     }
-    .alike-house-no{
+    .alike-house-no,.recently-house-no {
       border: 1px solid #ccc;
       width: 100%;
       height: 300px;
       // background-color: red;
       display: flex;
       justify-content: space-around;
-      .no-title{
+      .no-title {
         display: flex;
         align-items: center;
         font-size: 20px;
         font-weight: 600;
       }
-      .no-img{
-        img{
+      .no-img {
+        img {
           height: 100%;
         }
       }

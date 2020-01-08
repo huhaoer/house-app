@@ -228,6 +228,14 @@ export default {
       }
     })
   },
+  // 7.查看附近
+  BuildNearby(buildRemake) {//坐标
+    return houseAjax.get(URLS.BuildNearby,{
+      params: {
+        buildRemake,
+      }
+    })
+  },
 
   /**
    * 关于管家信息的所有接口

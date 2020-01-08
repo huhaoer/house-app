@@ -12,6 +12,7 @@ export default {
   GetBuildInfoByLike: '/getBuildInfoByLike',//根据导航栏的关键字模糊查询
   GetImg: '/getImg',//请求房源的多张图片
   RecommendAlike: '/recommendAlike',//查看相似房源
+  BuildNearby: '/buildNearby',//查看附近房源
 
   butlerBaseURL: '/butlerApi',//获取管家数据需要的基础URL
   GetButlerInfoByButlerId: '/getButlerInfoByButlerId',//根据管家id查询管家信息
