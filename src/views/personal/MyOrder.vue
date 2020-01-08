@@ -266,12 +266,14 @@ export default {
 
     // 查看是否已经到期
     willDated() {
+      const that = this;
       let needPay = async () => {
         let needPayRes = await api.NeedPayAccount(
-          this.$store.state.currentLoginUser.UserId
+          that.$store.state.currentLoginUser.UserId
         );
+        window.localStorage.removeItem('needPay');
         console.log(needPayRes, "都会塞大神哦");
-        this.$store.commit("setNeedPay", needPayRes.data); //设置要到期的账单
+        that.$store.commit("setNeedPay", []); //设置要到期的账单
       };
       needPay();
     }

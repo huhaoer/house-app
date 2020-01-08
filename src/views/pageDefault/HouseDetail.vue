@@ -91,7 +91,10 @@
           <span>{{ houseData.BuildCollect }}</span>次
         </div>
         <div class="right-butler">
-          <div class="butler-name"><i class="el-icon-chat-dot-round" @click="chatToBulter(butlerData.ButlerNumber)"></i>管家:{{ butlerData.ButlerName }}</div>
+          <div class="butler-name">
+            <i class="el-icon-chat-dot-round" @click="chatToBulter(butlerData.ButlerNumber)"></i>
+            管家:{{ butlerData.ButlerName }}
+          </div>
           <div class="butler-phone">电话:{{ butlerData.ButlerNumber }}</div>
         </div>
       </div>
@@ -124,11 +127,49 @@
         <bm-marker :position="{lng:center.lng, lat: center.lat}"></bm-marker>
       </baidu-map>
     </div>
+    <!-- 相似房源 -->
+    <div class="houseDetail-alike">
+      <div class="alike-title">联系过本房的人都在看~</div>
+      <div class="alike-house" v-if="showDetailData.length > 0">
+        <el-card
+          :body-style="{ padding: '0px' }"
+          v-for="(item,index) in showDetailData"
+          :key="index"
+        >
+          <router-link
+            tag="div"
+            :to="{name: 'houseDetail',params:{id: item.data._Items[0].BuildId}}"
+            class="link-img"
+          >
+            <img :src="item.data._Items[0].BuildImage" class="image" />
+          </router-link>
+          <div style="padding: 14px;" class="mes-box">
+            <div class="bottom clearfix">
+              <span>{{item.data._Items[0].BuildName}}</span>
+              <span>{{item.data._Items[0].BuildLocation}}</span>
+            </div>
+            <div class="bottom clearfix">
+              <span class="name">{{item.data._Items[0].BuildAddress}}</span>
+              <span class="price">{{item.data._Items[0].BuildPrice}}￥</span>
+            </div>
+          </div>
+        </el-card>
+      </div>
+      <div class="alike-house-no" v-else>
+        <div class="no-title">
+          暂无房源,敬请期待...
+        </div>
+        <div class="no-img">
+          <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578483929608&di=6e797a3d1bff63fc0402cf1d5c6fa083&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190531%2F11602021802f40abae765b090b0a0397.gif" alt="">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import api from "../../api/index";
+import { async } from "q";
 export default {
   data() {
     return {
@@ -137,6 +178,8 @@ export default {
       isCollect: false, //是否被收藏,默认为false
       isBook: false, //判断是否被预约过
       srcList: [], //预览列表
+      alikeDetailData: [], //相似房源的详细信息
+      showDetailData: [], //展示信息
       // 地图相关数据
       center: { lng: 104.07, lat: 30.67 },
       location: "成都市",
@@ -145,8 +188,18 @@ export default {
       baidumapSwitch: false
     };
   },
+  // 监听路由变化
+  beforeRouteUpdate (to, from, next){
+    let params = to.params.id;//参数
+    let hf = 'http://192.168.3.31:8080/index/houseDetail/'
 
+    location.href = hf + params;
+  },
   methods: {
+    //  beforeRouteLeave(to, from, next) {
+    //    console.log(to,'来自于')
+    //    ntxt()
+    //  },
     // 1.点击收藏或者取消收藏
     handConnect() {
       const UserId = this.$store.state.currentLoginUser.UserId;
@@ -236,7 +289,6 @@ export default {
               const choiceMonth = parseInt(value.split("-")[1]); //用户选择月份
               const choiceDay = parseInt(value.split("-")[2]); //用户选择日
 
-
               // 日期错误
               if (
                 !value ||
@@ -325,9 +377,10 @@ export default {
 
     // 4.点击和管家聊天
     chatToBulter(number) {
-      if(this.$store.state.currentLoginUser.UserId) {//登录状态
-        this.$router.push({name: 'chat',params: {number:number}})
-      }else{
+      if (this.$store.state.currentLoginUser.UserId) {
+        //登录状态
+        this.$router.push({ name: "chat", params: { number: number } });
+      } else {
         this.$confirm("还未登录,是否跳转到登录页面?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -340,7 +393,6 @@ export default {
             return;
           });
       }
-      
     }
   },
 
@@ -353,9 +405,8 @@ export default {
       .UserQueryDetails(buildId)
       .then(res => {
         this.houseData = res.data._Items[0];
-        // console.log(this.houseData,'+++++++++++++++++++++++++++++')
+
         if (this.houseData.BuildRemake == null) {
-          
         } else {
           // 填写经纬度
           this.center.lng = this.houseData.BuildRemake.split(",")[0];
@@ -372,30 +423,51 @@ export default {
             UserId: this.$store.state.currentLoginUser.UserId,
             BuildId: this.houseData.BuildId
           }),
-          api.GetImg(buildId)
+          api.GetImg(buildId),
+          api.RecommendAlike(buildId)
         ];
 
-        Promise.all(proArr).then(res => {
-          // 1.请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
-          if(res[0].data === 'true') {
-            that.isCollect = true; //标记已收藏
-          }
+        Promise.all(proArr)
+          .then(res => {
+            // 1.请求房源信息成功后  根据用户id和房源id查看房源是否被收藏
+            if (res[0].data === "true") {
+              that.isCollect = true; //标记已收藏
+            }
 
-          // 2.请求房源信息成功后  根据管家id查看管家具体信息
+            // 2.请求房源信息成功后  根据管家id查看管家具体信息
             that.butlerData = res[1].data;
 
-          // 3.判断是否预约看房
-          if (res[2].data == "true") {
-            that.isBook = true; //已经预约过
-          }
+            // 3.判断是否预约看房
+            if (res[2].data == "true") {
+              that.isBook = true; //已经预约过
+            }
 
-          // 4.请求多个图片
-          that.srcList = res[3].data;
-          that.loadImg = false;
-        })
-        .catch(err => {
-          console.log(err)
-        })
+            // 4.请求多个图片
+            that.srcList = res[3].data;
+            that.loadImg = false;
+
+            // 5.查看相似房源
+            that.alikeDetailData = res[4].data; //相似房源的id数组
+            return that.alikeDetailData;
+          })
+          .then(res => {
+            const detailArr = [];
+            if (res.length > 0) {
+              for (let i = 0; i < res.length; i++) {
+                detailArr.push(api.UserQueryDetails(res[i]));
+              }
+              return detailArr;
+            }
+          })
+          .then(res => {
+            res.length > 0 &&
+              Promise.all(res).then(res => {
+                that.showDetailData = res.splice(0, 4); //每一个房源的详细信息
+              });
+          })
+          .catch(err => {
+            console.log(err);
+          });
       })
       .catch(err => {
         console.log(err);
@@ -547,7 +619,7 @@ export default {
           text-align: center;
           letter-spacing: 1px;
           margin-bottom: 10px;
-          .el-icon-chat-dot-round{
+          .el-icon-chat-dot-round {
             margin-right: 15px;
             cursor: pointer;
           }
@@ -565,6 +637,78 @@ export default {
   .houseDetail-map {
     width: 80%;
     margin: 0 auto;
+  }
+  // 相似房源
+  .houseDetail-alike {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    .alike-title {
+      width: 100%;
+      height: 40px;
+      // background-color: #91d9ef;
+      color: #666;
+      line-height: 40px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .alike-house {
+      border: 1px solid #ccc;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .el-card {
+        width: 240px;
+        height: 290px;
+        .image {
+          width: 100%;
+          height: 160px;
+        }
+        .mes-box {
+          display: flex;
+          flex-direction: column;
+          .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            span {
+              color: #ccc;
+              font-size: 13px;
+              &.name {
+                display: inline-block;
+                width: 100px;
+              }
+              &.price {
+                color: #ff961e;
+                font-weight: 600;
+                font-style: italic;
+              }
+            }
+          }
+        }
+      }
+    }
+    .alike-house-no{
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 300px;
+      // background-color: red;
+      display: flex;
+      justify-content: space-around;
+      .no-title{
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .no-img{
+        img{
+          height: 100%;
+        }
+      }
+    }
   }
 }
 </style>

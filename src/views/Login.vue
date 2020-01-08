@@ -166,7 +166,7 @@ export default {
 
                   let needPay = async () => {
                     let needPayRes = await api.NeedPayAccount(this.$store.state.currentLoginUser.UserId);
-                    // console.log(needPayRes,'都会塞大神哦')
+                    console.log(needPayRes,'都会塞大神哦')
                     this.$router.push({name: 'home'})//跳转首页
                     this.$store.commit('setNeedPay',needPayRes.data)//设置要到期的账单
                   }

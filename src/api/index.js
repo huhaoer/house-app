@@ -220,6 +220,14 @@ export default {
       }
     })
   },
+  // 6.查看相似房源
+  RecommendAlike(buildId) {
+    return houseAjax.get(URLS.RecommendAlike,{
+      params: {
+        buildId,
+      }
+    })
+  },
 
   /**
    * 关于管家信息的所有接口
