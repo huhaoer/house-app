@@ -106,7 +106,9 @@ export default {
       src: "", //合同图片路径
       inpValue: 12, //输入框默认选择租房月数
       info: {}, //当前请求续租的参数对象
-      loading: true
+      loading: true,
+      flagArr: [], //记录是否未付款
+      flag: false
     };
   },
   methods: {
@@ -146,7 +148,7 @@ export default {
     // 点击退租
     handleEdit(index, row) {
       const outRent = {
-        ConId: row.ConId,
+        ConId: row.ConId
       };
       const that = this;
 
@@ -160,6 +162,7 @@ export default {
 
         // 添加退租
         let addOutRent = await api.AddOutRent(outRent);
+        console.log(addOutRent,'llllllllllllll')
         that.$message({
           message: addOutRent.data,
           type: "success",
@@ -173,7 +176,7 @@ export default {
     // 点击续租
     handleDelete(index, row) {
       const that = this;
-      console.log(this.inpValue)
+      console.log(this.inpValue);
       // console.log(row, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
       that.xuzugDialog = true;
       this.info = {
@@ -184,7 +187,7 @@ export default {
         UserNumber: row.UserNumber,
         ConStatus: "请求续租"
       };
-      console.log(this.info)
+      console.log(this.info);
     },
 
     // 点击打印合同

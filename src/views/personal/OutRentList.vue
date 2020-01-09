@@ -66,6 +66,7 @@ export default {
     async function getRentList() {
       let rentList = await api.FindOutRentList(outRentListParams);
       that.rentListTableData = rentList.data._Items; //数据保存到data
+      console.log(that.rentListTableData,'退租列表++++++++++++')
       that.loading = false;
     }
     getRentList();
