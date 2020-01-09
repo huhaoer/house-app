@@ -1,5 +1,7 @@
 <template>
-  <div class="outrentlist">
+  <div class="outrentlist" 
+      v-loading="loading"
+    element-loading-text="加载数据中...">
     <el-table :data="rentListTableData" border style="width: 100%" stripe highlight-current-row>
       <el-table-column prop="OutRentTime" label="退租日期" width="180"></el-table-column>
       <el-table-column prop="OutRentStatus" label="退租状态" width="180"></el-table-column>
@@ -39,7 +41,7 @@ export default {
         let addOutRent = await api.FindBuildByOutRentId(OutRentId);
         console.log(addOutRent,',,,,,,,,,,,,')
         this.rentListTableDetail = addOutRent.data; //退租详情列表
-        this.nowImage = this.rentListTableDetail[0].BuildImage
+        this.nowImage = this.rentListTableDetail[0].BuildImage.split(',')[0]
       };
       getDetail();
     }
@@ -51,6 +53,7 @@ export default {
       dialogTableVisible: false,
       rentListTableDetail: [], //退租列表详情
       nowImage: '',//当前查看退租房源的图片
+      loading: true,//加载中
     };
   },
   mounted() {
@@ -63,6 +66,7 @@ export default {
     async function getRentList() {
       let rentList = await api.FindOutRentList(outRentListParams);
       that.rentListTableData = rentList.data._Items; //数据保存到data
+      that.loading = false;
     }
     getRentList();
   }

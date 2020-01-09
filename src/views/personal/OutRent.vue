@@ -1,7 +1,7 @@
 <template>
   <div class="outrent">
     <div class="outrent-title">退租续租</div>
-    <div class="outrent-wrap">
+    <div class="outrent-wrap" v-loading="loading" element-loading-text="加载数据中...">
       <el-table :data="data" style="width: 100%" stripe>
         <el-table-column label="签约日期" width="180">
           <template slot-scope="scope">
@@ -104,8 +104,9 @@ export default {
       hetongDialog: false, //打印合同展示弹框
       xuzugDialog: false, //续租展示弹框
       src: "", //合同图片路径
-      inpValue: null, //输入框默认选择租房月数
-      info: {} //当前请求续租的参数对象
+      inpValue: 12, //输入框默认选择租房月数
+      info: {}, //当前请求续租的参数对象
+      loading: true
     };
   },
   methods: {
@@ -172,7 +173,8 @@ export default {
     // 点击续租
     handleDelete(index, row) {
       const that = this;
-      console.log(row, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+      console.log(this.inpValue)
+      // console.log(row, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;");
       that.xuzugDialog = true;
       this.info = {
         BuildId: row.BuildId,
@@ -182,6 +184,7 @@ export default {
         UserNumber: row.UserNumber,
         ConStatus: "请求续租"
       };
+      console.log(this.info)
     },
 
     // 点击打印合同
@@ -215,7 +218,7 @@ export default {
           return item.ConStatus !== "未签约";
         });
         this.data = result;
-        console.log(this.data);
+        this.loading = false;
       })
       .catch(err => {
         console.log(err);

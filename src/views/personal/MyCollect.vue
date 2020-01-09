@@ -1,6 +1,10 @@
 <template>
   <div class="order">
-    <div class="order-wrap">
+    <div 
+    class="order-wrap" 
+    v-loading="loading"
+    element-loading-text="加载数据中..."
+    >
       <div class="order-header">收藏列表</div>
       <div class="order-none" v-show="collectData.length == 0">暂无收藏列表</div>
 
@@ -53,6 +57,7 @@ export default {
   data() {
     return {
       collectData: [], //收藏列表
+      loading: true
     };
   },
 
@@ -63,6 +68,7 @@ export default {
       .then(res => {
         this.collectData = res.data;
         console.log(res, "收藏列表");
+        this.loading = false;
       })
       .catch(err => {
         console.log(err);

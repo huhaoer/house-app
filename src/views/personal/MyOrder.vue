@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    <div class="order-wrap">
+    <div class="order-wrap" v-loading="loading" element-loading-text="加载数据中...">
       <div class="order-header">订单详情</div>
       <div class="order-none" v-show="orderData.length == 0">暂无订单详情</div>
       <div
@@ -143,7 +143,8 @@ export default {
       textarea: "", //文本框默认内容
       repairInfo: {}, //报修传递的参数
       files: "", //上传的文件
-      isRepair: false //是否已经报修
+      isRepair: false, //是否已经报修
+      loading: true,//加载中
     };
   },
 
@@ -154,6 +155,7 @@ export default {
         this.$store.state.currentLoginUser.UserId
       );
       this.orderData = queryListRes.data._Items;
+      this.loading = false;
       // console.log(this.orderData, "ppppppppppppppppppp");
     };
     queryOrderList();

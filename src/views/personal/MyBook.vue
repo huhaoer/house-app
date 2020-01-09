@@ -1,6 +1,6 @@
 <template>
   <div class="order">
-    <div class="order-wrap">
+    <div class="order-wrap" v-loading="loading" element-loading-text="加载数据中...">
       <div class="order-header">预约列表</div>
       <div class="order-none" v-show="bookData.length == 0">暂无预约列表</div>
 
@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       bookData: [], //预约列表
+      loading: true,//加载中
     };
   },
 
@@ -59,6 +60,7 @@ export default {
       .FindBookListFull(this.$store.state.currentLoginUser.UserId)
       .then(res => {
         this.bookData = res.data._Items;
+        this.loading = false;
       })
       .catch(e => {
         console.log(e)

@@ -1,5 +1,7 @@
 <template>
-  <div class="rent">
+  <div class="rent"         
+      v-loading="loading"
+        element-loading-text="加载房源中">
     <!-- 对比房源 -->
     <div class="rent-compare">
       <div class="compare-wrap">
@@ -95,10 +97,6 @@
         v-for="(item,index) in nowHouse"
         :key="index"
         v-show="nowHouse.length > 0"
-        v-loading="imgLoading"
-        element-loading-text="加载房源中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(255, 255, 255,0.7)"
       >
         <router-link
           tag="div"
@@ -138,7 +136,6 @@ export default {
       compareList: [],
       isCompare: false,//是否进行了对比
       drawer: false,
-      imgLoading: true,
       allHouse: [], //保存所有的房源信息
       nowHouse: [],
       totalCount: 0, //当前请求数据的总条数
@@ -196,6 +193,7 @@ export default {
       this.allHouse = this.$route.params.likeData;
       this.totalCount = this.$route.params.likeData.length; //总长度
       this.dealData();
+      this.loading = false
     } else {
       //自己访问的页面
       api
@@ -206,6 +204,7 @@ export default {
           this.totalCount = res.data._Items.length; //总长度
           this.imgLoading = false;
           this.dealData();
+          this.loading = false
         })
         .catch(err => {
           console.log(err);

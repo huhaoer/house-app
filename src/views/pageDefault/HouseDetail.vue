@@ -167,7 +167,7 @@
     </div>
     <!-- 附近房源 -->
     <div class="houseDetail-recently">
-      <div class="recently-title">查看附近相似房源~</div>
+      <div class="recently-title">查看附近房源~</div>
       <div class="recently-house" v-if="recentlyData.length > 0">
         <el-card
           :body-style="{ padding: '0px' }"
@@ -720,6 +720,10 @@ export default {
       .el-card {
         width: 240px;
         height: 290px;
+        margin-bottom: 20px;
+        &:hover{
+          box-shadow: 2px 2px 3px 5px #ccc;
+        }
         .image {
           width: 100%;
           height: 160px;
@@ -733,7 +737,7 @@ export default {
             align-items: center;
             margin-top: 20px;
             span {
-              color: #ccc;
+              color: #a77171;
               font-size: 13px;
               &.name {
                 display: inline-block;

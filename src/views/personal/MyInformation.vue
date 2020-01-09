@@ -1,6 +1,6 @@
 <template>
   <div class="myInformation">
-    <div class="info-wrap">
+    <div class="info-wrap"  v-loading="loading" element-loading-text="加载数据中...">
       <!-- 左侧信息 -->
       <div class="info-left">
         <img src="http://pic.ziroom.com.cn/static/images/default.png" alt />
@@ -102,7 +102,8 @@ export default {
       userLike: "", //用户爱好
       userId: "", //用户id
       isSave: false, //是否点击保存页面
-      isRight: false
+      isRight: false,
+      loading: true,//是否加载
     }
   },
 
@@ -117,6 +118,7 @@ export default {
     this.userIdCard = this.$store.state.currentLoginUser.UserIdcard
     this.userLike = this.$store.state.currentLoginUser.UserLike
     this.userId = this.$store.state.currentLoginUser.UserId
+    this.loading = false
   },
 
   methods: {
